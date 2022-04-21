@@ -1,0 +1,29 @@
+// #抽屉分离成单独组件后抽离样式
+
+.box-card {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	.box-form {
+		padding: 20px;
+		box-sizing: border-box;
+		height: 0;
+		flex: 1;
+		width: 100%;
+		overflow: auto;
+		// 必须要有下面这个，在element专有样式里
+		// 抽屉body超出滚动条
+		// :deep(.el-drawer__body) {
+		//   overflow: auto;
+		// }
+	}
+	.box-button {
+		box-sizing: border-box;
+		height: 50px;
+		width: 100%;
+		text-align: right;
+		border-top: 1px solid #dfe6ec;
+		padding: 10px 20px;
+	}
+}

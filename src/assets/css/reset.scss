@@ -1,0 +1,89 @@
+/*
+ * @Descripttion: 初始化样式
+ * @version: 
+ * @Author: TJ
+ * @Date: 2021-04-06 18:27:09
+ * @LastEditors: TJ
+ * @LastEditTime: 2021-04-30 10:57:53
+ */
+html,body{
+  margin: 0;
+  padding: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+}
+address,
+cite,
+dfn,
+em,
+var {
+  font-style: normal;
+}
+code,
+kbd,
+pre,
+samp {
+  font-family: couriernew, courier, monospace;
+}
+small {
+  font-size: 12px;
+}
+ul,
+ol {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+sup {
+  vertical-align: text-top;
+}
+sub {
+  vertical-align: text-bottom;
+}
+legend {
+  color: #000;
+}
+fieldset,
+img {
+  border: 0;
+}
+button,
+input,
+select,
+textarea {
+  font-size: 100%;
+}
+
+
+.margin_bt{
+  margin-bottom: 1.5rem;
+}
+.padding_rl{
+  padding: 0 1.5rem;
+}
+.padding_right{
+  padding-right: 1.5rem;
+}
+.padding_left{
+  padding-right: 1rem;
+}
+.padding_bottom{
+  padding-right: 1rem;
+}
+.padding_top{
+  padding-right: 1rem;
+}
+.cursor:hover{
+  color: #1890ff;
+  cursor: pointer;
+}

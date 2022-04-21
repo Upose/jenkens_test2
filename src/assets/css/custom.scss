@@ -1,0 +1,8 @@
+// 表头右键点击控制dialog和级联样式
+:deep(.el-dialog__header) {
+  display: none;
+}
+:deep(.el-dialog__body) {
+  padding: 0;
+}
+

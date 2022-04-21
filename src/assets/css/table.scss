@@ -1,0 +1,100 @@
+/*
+ * @Descripttion: table表格公共样式
+ * @version: 
+ * @Author: TJ
+ * @Date: 2021-04-29 17:01:22
+ * @LastEditors: HYH
+ * @LastEditTime: 2021-09-23 15:24:44
+ */
+$border-color: #ebeef5;
+//#表头背景
+$header-bgcolor: #2881c7;
+// $header-bgcolor: #f8f8f9;
+// #表头字体颜色
+$header-color: #fff;
+// $header-color: #515a6e;
+:deep(.el-table--mini td) {
+  padding: 3px 0;
+}
+:deep(.el-table--mini th) {
+  // 表格头部样式
+  background-color: $header-bgcolor;
+  // border: none;
+  color: $header-color;
+  padding: 3px 0;
+}
+// 底部横线样式
+.el-table::before {
+  height: 0px;
+  border-bottom: 0.5px solid #ebeef5;
+}
+// 表格底部横线样式
+// :deep(.el-table--fit) {
+//   border-bottom: 0.5px solid #ebeef5;
+// }
+// :deep(.el-table--mini) {
+//   border-bottom: 0.5px solid #ebeef5;
+// }
+// table单元格文字超出长度用省略号代替,鼠标悬停并以悬浮框显示实例
+:deep(.el-table .cell) {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.need_wrap {
+  :deep(.el-table .cell) {
+    white-space:pre-line;
+    text-overflow:inherit;
+    overflow:inherit;
+  }
+}
+
+// 表格无任何边框
+.tableBorderNone {
+  :deep(.el-table--mini td) {
+    border: none;
+  }
+  :deep(.el-table--mini th) {
+    border: none;
+  }
+  .el-table::before {
+    border: none;
+  }
+}
+// #选中行背景
+:deep(.el-table__body tr.current-row > td) {
+  // 设置important以免被悬停样式覆盖
+  background-color: #fefae3 ;
+  color: #606266;
+}
+// #鼠标经过行背景
+:deep(.el-table--enable-row-hover .el-table__body tr:hover > td) {
+  background-color: #d3e0f3;
+  color: #606266;
+}
+// .el-table__body tr.current-row > td {
+//   // 设置important以免被悬停样式覆盖
+//   background-color: #fefae3 !important;
+// }
+// .el-table--enable-row-hover .el-table__body tr:hover > td {
+//   background-color: #d3e0f3;
+// }
+// #设置默认button的样式
+:deep(.el-button:focus.el-button--warning.el-button--mini) {
+  background-color: #f08300;
+}
+:deep(.el-button:hover.el-button--warning.el-button--mini) {
+  background-color: #f08300;
+}
+
+// #放在这里不生效
+// // 设置索引行表头字体大小
+// .header_cell_calss_name1 {
+//   font-size: 23px !important;
+//   line-height: 23px !important;
+// }
+// // 设置索引行背景
+// .cell_calss_name1 {
+//   background-color: #f6fcff !important;
+//   color: #5a5555 !important;
+// }
