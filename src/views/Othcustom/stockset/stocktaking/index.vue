@@ -1,3 +1,4 @@
+<!-- 调整单 -->
 <template>
   <div class="content ">
     <div class="left_cont">
@@ -74,35 +75,24 @@
 </template>
 
 <script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-  toRefs,
-  watch,
-  ref,
-  onActivated
-} from 'vue'
-import { MutationConstants, GetterConstants } from '@/store/modules/index/constants'
-import { stocktakingApi } from '@/http/api/othcustom/stockset/stocktaking'
 import { IRequest } from '@/@types/httpInterface'
-import dataStructure from '@/utils/dataStructure'
-import { ElMessageBox, ElMessage } from 'element-plus'
-import { useI18n } from 'vue-i18n'
 import { IPower } from '@/@types/iPower'
-import { useStore } from '@/store'
-import { useRoute, useRouter } from 'vue-router'
-import { IState, ISelection, IValid } from './typings'
-import { dateNormArray } from '@/utils/dateNorm'
-import { CUSTOM_TABLES } from '@/constant/bus/bus_custom_table'
 import Custom from '@/components/common/Custom/Custom.vue'
 import CommonTable from '@/components/common/Table/CommonTable.vue'
+import { CUSTOM_TABLES } from '@/constant/bus/bus_custom_table'
+import { stocktakingApi } from '@/http/api/othcustom/stockset/stocktaking'
+import { useStore } from '@/store'
+import dataStructure from '@/utils/dataStructure'
+import { dateNormArray } from '@/utils/dateNorm'
+import { computed, defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute, useRouter } from 'vue-router'
 import Add from './components/Add.vue'
-import ReversePurchase from './components/ReversePurchase.vue'
-import ReverseOutbound from './components/ReverseOutbound.vue'
-import ReverseSales from './components/ReverseSales.vue'
 import QuantityAdjuster from './components/QuantityAdjuster.vue'
+import ReverseOutbound from './components/ReverseOutbound.vue'
+import ReversePurchase from './components/ReversePurchase.vue'
+import ReverseSales from './components/ReverseSales.vue'
+import { ISelection, IState } from './typings'
 // const { t } = useI18n()
 export default defineComponent({
   components: {
@@ -137,7 +127,9 @@ export default defineComponent({
         typeList: [],
         allPurchaseList: [],
         allSalesList: [],
-        allOutboundList: []
+        allOutboundList: [],
+        /**所有仓库 */
+        wareHouseList: []
       },
       tableHeight: '100%',
       pagination: {
@@ -180,6 +172,24 @@ export default defineComponent({
     })
     const addRef = ref()
     const requests = {
+      /**查询所有仓库 */
+      getWareHouseList() {
+        const data = dataStructure(
+          {},
+          {
+            order_by: 1
+          }
+        )
+        stocktakingApi
+          .get_all_ware_house(data)
+          .then(res => {
+            let { status, custom_data, info } = res as IRequest
+            if (status === 200) {
+              state.commonLists.wareHouseList = custom_data
+            }
+          })
+          .catch(err => err)
+      },
       getPurchasePreSearch() {
         const data = dataStructure({}, {})
         stocktakingApi
@@ -255,7 +265,6 @@ export default defineComponent({
           .get_index(data)
           .then(res => {
             let { status, power } = res as IRequest
-
             if (status === 200) {
               let hasView
               power.forEach((item: IPower) => {
@@ -429,6 +438,9 @@ export default defineComponent({
         state.showAdd = true
         if (!state.commonLists.productGradeList.length) {
           requests.getStockTypeList()
+        }
+        if (!state.commonLists.wareHouseList.length) {
+          requests.getWareHouseList()
         }
         if (!state.commonLists.typeList.length) {
           requests.getTypeList()

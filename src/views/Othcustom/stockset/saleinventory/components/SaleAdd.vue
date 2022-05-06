@@ -3,8 +3,8 @@
  * @version: 
  * @Author: XJ
  * @Date: 2021-07-09 11:37:00
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-06 15:36:27
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-05 09:23:01
 -->
 <!--  -->
 <template>
@@ -18,32 +18,35 @@
         height="250"
         highlight-current-row
       >
+        <!-- 库存ID -->
         <el-table-column
           show-overflow-tooltip
           prop="inventory_id"
           :label="$t('common.inventory_id')"
         >
         </el-table-column>
-
+        <!-- 品名 -->
         <el-table-column
           show-overflow-tooltip
           prop="inventory_type_name"
           :label="$t('common.inventory_type_name')"
         >
         </el-table-column>
+        <!-- 型号 -->
         <el-table-column
           show-overflow-tooltip
           prop="model_number_name"
           :label="$t('common.model_number_name')"
         >
         </el-table-column>
-
+        <!-- 可追加数量 -->
         <el-table-column
           show-overflow-tooltip
           prop="unsold_number"
           :label="$t('common.unsold_number')"
         >
         </el-table-column>
+        <!-- 销售数量 -->
         <el-table-column show-overflow-tooltip prop="sale_number" :label="$t('common.sale_number')">
           <template #default="scope">
             <el-form-item
@@ -66,6 +69,7 @@
             </el-form-item>
           </template>
         </el-table-column>
+        <!-- 单价 -->
         <el-table-column
           show-overflow-tooltip
           prop="sale_unit_money"
@@ -90,6 +94,7 @@
             </el-form-item>
           </template>
         </el-table-column>
+        <!-- 应收金额 -->
         <el-table-column show-overflow-tooltip prop="sale_money" :label="$t('common.sale_money')">
         </el-table-column>
         <el-table-column
@@ -98,7 +103,7 @@
           :label="$t('common.inventory_enter_type_name')"
         >
         </el-table-column>
-
+        <!-- 操作 -->
         <el-table-column show-overflow-tooltip :label="$t('common.handle')">
           <template #default="scope">
             <el-button @click.stop="addDeleteRow(scope.$index, addForm.addFormData)" type="text">

@@ -236,9 +236,11 @@ li {
       }
       ul.left > li {
         background-color: #2881c7;
+        color: #fff;
       }
       ul.right > li {
         background-color: palevioletred;
+        color: #fff;
       }
     }
     .inner_cont:last-child {

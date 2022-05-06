@@ -3,8 +3,8 @@
  * @version:
  * @Author: XJ
  * @Date: 2021-05-06 11:17:19
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-31 17:53:13
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-24 16:16:26
  */
 //页面基础布局样式一
 import '@/assets/icon/iconfont.css'
@@ -33,6 +33,6 @@ document.addEventListener(
 )
 
 // 阻止整个页面所有的右击事件
-document.oncontextmenu = function() {
-  return false
-}
+// document.oncontextmenu = function() {
+//   return false
+// }

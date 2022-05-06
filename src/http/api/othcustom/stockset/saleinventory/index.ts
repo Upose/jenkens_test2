@@ -3,13 +3,14 @@
  * @version:
  * @Author: XJ
  * @Date: 2021-06-18 16:50:23
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-02 13:27:44
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-22 09:19:43
  */
 import request from '@/http/axios/request'
 import { IParams } from '@/@types/httpInterface'
 
 // 不需要传参
+/**销售相关Api */
 export const saleinventoryApi = {
   // 销售信息接口：V1/InventoryOrder/index
   get_index: (params: IParams) => request.post(`/V1/InventoryOrder/index`, params),

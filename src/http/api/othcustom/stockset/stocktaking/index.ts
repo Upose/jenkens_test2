@@ -3,12 +3,15 @@
  * @version:
  * @Author: TJ
  * @Date: 2021-04-30 14:17:56
- * @LastEditors: TJ
- * @LastEditTime: 2021-12-04 17:58:40
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-05 16:45:15
  */
 import request from '@/http/axios/request'
 import { IParams } from '@/@types/httpInterface'
 export const stocktakingApi = {
+  /**查询所有仓库 */
+  get_all_ware_house: (params: IParams) => request.post(`/V1/InventoryWarehouse/all_list`, params),
+
   // 库存盘点页面接口：V1/InventoryInformation/index
   get_index: (params: IParams) => request.post(`/V1/InventoryInformation/index`, params),
   // 库存盘点获取接口：V1/InventoryInformation/list

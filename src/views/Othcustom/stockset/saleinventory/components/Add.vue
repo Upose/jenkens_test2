@@ -3,8 +3,8 @@
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 11:42:28
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-07 09:24:53
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-22 14:11:36
 -->
 <!--  -->
 <template>
@@ -497,13 +497,8 @@ export default defineComponent({
         }
       },
 
-      buyUserChange() {
-        let findName = (el: any) => {
-          let obj = state.commonLists.customerList.find((e: any) => e.id === el)
-          let name = obj?.name
-          return name
-        }
-        state.addForm.company = findName(state.addForm.buy_user)
+      buyUserChange(name: string) {
+        state.addForm.company = name
       },
       onSubmitAdd() {
         const addref = addRef

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: XJ
  * @Date: 2021-06-18 11:24:37
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-29 12:01:08
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-22 14:53:10
 -->
 <!--  -->
 <template>
@@ -88,10 +88,11 @@
           :label="$t('common.this_payee')"
         >
         </el-table-column>
+        <!-- 收款证明 -->
         <el-table-column
           show-overflow-tooltip
           prop="picture"
-          :label="$t(`common.payer_certificate`)"
+          :label="$t(`common.payee_certificate`)"
         >
           <template #default="scope">
             <div style="height:22px;line-height:22px">
@@ -107,7 +108,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <!-- 修改记录 -->
+      <!-- 单据历史 -->
       <el-table
         v-else-if="activeTable === 'historical_documents'"
         border

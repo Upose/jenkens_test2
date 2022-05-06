@@ -3,12 +3,12 @@
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
- * @LastEditors: TJ
- * @LastEditTime: 2021-12-01 17:54:49
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-06 09:51:59
 -->
 <!--  -->
 <template>
-  <el-drawer :title="$t(`common.add`)" :size="576" v-model="showAdd">
+  <el-drawer :title="$t(`common.add`)" :size="700" v-model="showAdd">
     <div class="box-card formStyle">
       <div class="box-form">
         <el-form
@@ -18,6 +18,22 @@
           ref="addRef"
           label-position="left"
         >
+          <!-- 仓库 -->
+          <el-row>
+            <el-col :span="24">
+              <el-form-item :label="$t('common.inventory_warehouse_name')" prop="product_grade">
+                <el-select filterable v-model="addForm.warehouse">
+                  <el-option
+                    v-for="item of commonLists.wareHouseList"
+                    :key="item.id"
+                    :value="item.id"
+                    :label="item.id_name"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 调整前产品等级 -->
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('common.before_adjust_product_grade')" prop="product_grade">
@@ -37,6 +53,7 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- 品名 -->
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('common.inventory_type_name')" prop="product_grade">
@@ -57,6 +74,7 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- 型号 -->
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('common.model_number_name')" prop="product_grade">
@@ -79,35 +97,6 @@
           </el-row>
           <el-row>
             <el-col :span="24">
-              <el-form-item :label="$t('common.number')" prop="number">
-                <el-input v-model="addForm.number" disabled></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item :label="$t('common.stock')" prop="stock">
-                <el-input v-model="addForm.stock" disabled></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item :label="$t('common.sale_number')" prop="sale_number">
-                <el-input v-model="addForm.sale_number" disabled> </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item :label="$t('common.inventory_id')" prop="inventory_id">
-                <el-input v-model="addForm.inventory_id" disabled></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="24">
               <el-form-item :label="$t('common.adjust_type_name')" prop="adjust_type">
                 <el-radio-group v-model="addForm.adjust_type" @change="adjustTypeChange">
                   <el-radio :label="0">调增</el-radio>
@@ -116,6 +105,15 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- 可调数量 -->
+          <el-row v-if="addForm.adjust_type === 1">
+            <el-col :span="24">
+              <el-form-item label="可调数量" prop="number">
+                <el-input v-model="addForm.number" disabled></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 调减原因 -->
           <el-row v-if="addForm.adjust_type == 1">
             <el-col :span="24">
               <el-form-item :label="$t('common.minus_adjust_type_name')" prop="minus_adjust_type">
@@ -131,7 +129,14 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row v-if="addForm.adjust_type == 1 && addForm.minus_adjust_type == 1">
+          <!-- 调整后产品等级为递减&调减原因为 等级调整 -->
+          <el-row
+            v-if="
+              addForm.adjust_type == 1 &&
+                addForm.minus_adjust_type == 1 &&
+                addForm.product_grade !== 2
+            "
+          >
             <el-col :span="24">
               <el-form-item :label="$t('common.adjust_product_grade')" prop="adjust_product_grade">
                 <el-select clearable filterable v-model="addForm.adjust_product_grade">
@@ -146,13 +151,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="24">
-              <el-form-item :label="$t('common.reason')" prop="reason">
-                <el-input type="textarea" v-model="addForm.reason"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
+          <!-- 调整数量 -->
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('common.inventory_number')" prop="inventory_number">
@@ -160,8 +159,56 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- 原因 -->
+          <el-row>
+            <el-col :span="24">
+              <el-form-item :label="$t('common.reason')" prop="reason">
+                <el-input type="textarea" v-model="addForm.reason"></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
+        <!-- 递减才显示表格数据 -->
+        <div v-if="addForm.adjust_type === 1">
+          <el-table :data="tableData" stripe style="width: 100%">
+            <!-- 库存id -->
+            <el-table-column prop="inventory_id" :label="$t('common.inventory_id')" />
+            <!-- 批次号 -->
+            <el-table-column prop="order_number" :label="$t('common.order_number')" />
+            <!-- 存量 -->
+            <el-table-column prop="stock" :label="$t('common.stock')" />
+            <!-- 调整数量 -->
+            <el-table-column prop="adjust_number" :label="$t('common.inventory_number')">
+              <template #default="{row}">
+                <el-form>
+                  <!-- 验证输入是否合法 -->
+                  <el-form-item
+                    :inline-message="true"
+                    prop="adjust_number"
+                    :rules="[
+                      {
+                        validator: (rule, value, callback) => {
+                          checkValueValid(rule, value, callback, row)
+                        },
+                        trigger: ['blur', 'change']
+                      }
+                    ]"
+                  >
+                    <el-input v-model.number="row.adjust_number" />
+                  </el-form-item>
+                </el-form>
+              </template>
+            </el-table-column>
+            <!-- 调整后数量 -->
+            <el-table-column :label="$t('common.after_number')">
+              <template #default="{row}">
+                {{ row.stock - row.adjust_number }}
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
       </div>
+
       <div class="box-button">
         <el-button @click="onSubmitAdd" type="success" plain>{{ $t('common.submit') }}</el-button>
       </div>
@@ -177,10 +224,12 @@ import { useI18n } from 'vue-i18n'
 import { dateNormOne, datetimeNormOne, dateNormArray } from '@/utils/dateNorm'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { IValid } from '../typings'
-import { defineComponent, ref, reactive, toRefs, computed } from 'vue'
+import { defineComponent, ref, reactive, toRefs, computed, onMounted, watch } from 'vue'
 import { compareNumber } from '@/utils/regp'
 interface IState {
+  tableData: Array<any>
   addForm: {
+    warehouse: any
     inventory_type: any
     model_number: any
     number: any
@@ -213,13 +262,27 @@ export default defineComponent({
 
   setup(props, ctx) {
     const { t } = useI18n()
+    watch(
+      () => props.commonLists.wareHouseList,
+      () => {
+        if (props.commonLists.wareHouseList) {
+          state.addForm.warehouse = props.commonLists.wareHouseList[0].id
+        }
+      }
+    )
+
     const state: IState = reactive({
+      /**表格数据 */
+      tableData: [],
       addForm: {
+        /**仓库 */
+        warehouse: '',
         inventory_type: '',
         model_number: '',
         number: null,
         sale_number: null,
         inventory_number: null,
+        /**0递增 1递减 */
         adjust_type: null,
         reason: '',
         product_grade: 0, //初始值必须为零
@@ -347,7 +410,8 @@ export default defineComponent({
           {
             inventory_type: state.addForm.inventory_type,
             model_number: state.addForm.model_number,
-            product_grade: state.addForm.product_grade
+            product_grade: state.addForm.product_grade,
+            warehouse: state.addForm.warehouse
           }
         )
         stocktakingApi
@@ -355,18 +419,40 @@ export default defineComponent({
           .then(res => {
             let { status, custom_data, info } = res as IRequest
             if (status === 200) {
-              const { inventory_id, number, product_grade, sale_number, stock } = custom_data
-              state.addForm.inventory_id = inventory_id
-              state.addForm.number = number
-              state.addForm.product_grade = product_grade
-              state.addForm.sale_number = sale_number
-              state.addForm.stock = stock
+              console.log(custom_data)
+              for (let item of custom_data.data) {
+                item.adjust_number = 0
+              }
+              state.tableData = custom_data.data || []
+              // 设置可操作数量（递减显示）
+              state.addForm.number = custom_data.number
+              // const { inventory_id, number, product_grade, sale_number, stock } = custom_data
+              // state.addForm.inventory_id = inventory_id
+              // state.addForm.number = number
+              // state.addForm.product_grade = product_grade
+              // state.addForm.sale_number = sale_number
+              // state.addForm.stock = stock
             }
           })
           .catch(err => err)
       }
     }
     const methods = {
+      /**检测输入的值是否合法 */
+      checkValueValid(rule: any, value: any, callback: any, row: any) {
+        console.log(rule, value, callback, row)
+        // 调整数量不能大于库存数量
+        const regpOnlyNum = /^[0-9]*[1-9][0-9]*$/
+        if (!value) {
+          callback(new Error(t('common.not_empty')))
+        } else if (parseInt(row.adjust_number) > parseInt(row.stock)) {
+          callback(new Error(`${t('common.not_greater_than')}${row.handle_number}`))
+        } else if (!regpOnlyNum.test(value)) {
+          callback(new Error(t('common.regpOnlyNum')))
+        } else {
+          callback()
+        }
+      },
       adjustTypeChange() {
         state.addForm.inventory_number = null
       },
@@ -387,6 +473,7 @@ export default defineComponent({
       // 选择调整前产品等级后清空调整后产品等级
       productGradeChange() {
         state.addForm.adjust_product_grade = null
+        requests.getAddView()
       },
       onSubmitAdd() {
         const addref = addRef

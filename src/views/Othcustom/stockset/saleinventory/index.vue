@@ -1,3 +1,9 @@
+<!--
+ * @Descripttion: 
+ * @Author: HYH
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-25 10:57:20
+-->
 <template>
   <div class="content ">
     <div class="left_cont">
@@ -5,6 +11,7 @@
         <!-- <div class="part_line"></div> -->
         <div class="reset_top">
           <div class="headerFormStyle">
+            <!-- 销售公司 -->
             <el-select
               style="margin-right:10px;margin-bottom:5px"
               filterable
@@ -23,6 +30,7 @@
                 <span style="float: right;color: #999999;">{{ item.com_code }}</span>
               </el-option>
             </el-select>
+            <!-- 客户名称 -->
             <el-select
               style="margin-right:10px;margin-bottom:5px"
               filterable
@@ -39,7 +47,7 @@
               >
               </el-option>
             </el-select>
-
+            <!-- 付款状态 -->
             <el-select
               style="margin-right:10px;margin-bottom:5px"
               filterable
@@ -49,7 +57,7 @@
               :placeholder="$t('common.payment_status_name')"
             >
               <el-option
-                v-for="item in commonLists.paymentStatusList3"
+                v-for="item in commonLists.payStatusList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.id"
@@ -66,6 +74,7 @@
               :unlink-panels="true"
             >
             </el-date-picker>
+            <!-- 搜索区 -->
             <el-input
               type="text"
               style="margin-right:10px;margin-bottom:5px"
@@ -160,6 +169,7 @@
         </div>
         <!-- 分割线 -->
         <div class="part_line" v-if="!isEmeptyObj"></div>
+        <!-- 详情模块  （底部） -->
         <div class="tab_cont tabStyle" v-if="!isEmeptyObj" ref="tabContRef">
           <SaleinfoChild ref="childRef"></SaleinfoChild>
         </div>
@@ -346,7 +356,8 @@ export default defineComponent({
           { id: 2, name: t('common.collect_no') },
           { id: 4, name: t('common.collect_part') }
         ],
-        paymentStatusList3: [
+        /**付款状态 */
+        payStatusList: [
           { id: 'all', name: t('common.all') },
           { id: 0, name: t('common.collect_no') },
           { id: 1, name: t('common.collect_has') },

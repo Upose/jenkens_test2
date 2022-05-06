@@ -3,8 +3,8 @@
  * @version:
  * @Author: XJ
  * @Date: 2021-06-08 18:25:12
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-21 11:49:45
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-21 17:17:38
  */
 import { configChild } from './config/index'
 import { summaryChild } from './summary/index'
@@ -41,6 +41,7 @@ export const stocksetChild = [
     component: () => import('@/views/Othcustom/stockset/config/index.vue'),
     children: configChild
   },
+  // 销售单
   {
     path: 'saleinventory',
     name: 'saleinventory',

@@ -3,46 +3,57 @@
  * @version: 
  * @Author: TJ
  * @Date: 2021-04-07 10:07:16
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-31 15:41:11
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-25 10:13:12
 -->
 <template>
   <div class="layout">
     <div class="container">
       <div class="header">
-        <Header />
+        <Header></Header>
       </div>
       <div class="inner_container">
-        <!--即使不写，也会默认 width="300px" -->
-        <div class="aside">
-          <el-scrollbar :height="scrollbarMaxHeight">
-            <!-- <LeftBar :isCollapse="isCollapse"  :LeftBarMenu="LeftBarMenu" /> -->
-            <!-- 左侧自适应宽度，加载时没内容，宽度为零，使用骨架屏过度 -->
-            <el-skeleton
-              :rows="10"
-              animated
-              style="width: 200px; height: 100%"
-              :loading="!LeftBarMenu.length"
-              :throttle="500"
+        <!--左侧菜单-->
+        <div class="left_menu" :style="!isCollapse ? '' : 'min-width:40px;width:40px'">
+          <el-scrollbar>
+            <el-menu
+              :default-active="leftbarActiveIndex"
+              router
+              text-color="#333"
+              :collapse="isCollapse"
+              style="border-right: none;"
             >
-              <!-- <template #template>
-                <el-skeleton-item variant="text" style="width: 100%; height: 100%" />
-              </template> -->
-              <template #default>
-                <LeftBar :isCollapse="isCollapse" :LeftBarMenu="LeftBarMenu" />
-              </template>
-            </el-skeleton>
-            <div
-              class="switch_trigger"
-              :class="!isCollapse ? 'el-icon-arrow-left' : 'el-icon-arrow-right'"
-              @click="switchIsCollapse"
-            ></div>
+              <MenuItem :menuList="LeftBarMenu"></MenuItem>
+            </el-menu>
           </el-scrollbar>
+          <!-- 底部按钮组 -->
+          <div class="left_menu_bottom_btns">
+            <div v-if="!isCollapse" class="btns_item">
+              <i class="el-icon-message-solid"></i>
+            </div>
+            <div v-if="!isCollapse" class="btns_item">
+              <i class="el-icon-success"></i>
+            </div>
+            <div v-if="!isCollapse" class="btns_item">
+              <i class="el-icon-help"></i>
+            </div>
+            <!-- 展开 收起 -->
+            <div class="btns_item" @click="isCollapse = !isCollapse">
+              <i
+                class="el-icon-arrow-left"
+                :style="
+                  isCollapse
+                    ? 'transform: rotate(180deg);transition:all 0.5s;'
+                    : 'transition:all 0.5s;'
+                "
+              ></i>
+            </div>
+          </div>
         </div>
         <div class="main">
           <!-- tabs切换组件 -->
           <Tabs class="tabs"></Tabs>
-          <!-- 内容去入口 -->
+          <!-- 内容 -->
           <router-view></router-view>
         </div>
       </div>
@@ -50,16 +61,16 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, reactive, toRefs, onActivated } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs, onActivated, computed } from 'vue'
 import Header from '@/components/common/Layout/Header.vue'
-import LeftBar from '@/components/common/Layout/Leftbar.vue'
+import MenuItem from '@/components/common/Layout/MenuItem.vue'
 import Tabs from '@/components/common/Layout/Tabs.vue'
 import { commonApi } from '@/http/api/common'
 import dataStructure from '@/utils/dataStructure'
 import { IRequest } from '@/@types/httpInterface'
 import { IMenutree } from '@/@types/menuInterface'
 import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import {
   MutationConstants as indexMutationConstants,
   GetterConstants as indexGetterConstants
@@ -68,20 +79,23 @@ import { GetterConstants } from '@/store/modules/users/constants'
 export default defineComponent({
   components: {
     Header,
-    LeftBar,
-    Tabs
+    Tabs,
+    MenuItem
   },
   setup() {
     const store = useStore()
-    const Router = useRouter()
+    const route = useRoute()
     const state = reactive({
-      scrollbarMaxHeight: '100%',
+      /**左侧菜单的默认选中项 */
+      leftbarActiveIndex: computed(() => {
+        return route.path
+      }),
       LeftBarMenu: [] as Array<IMenutree>,
-      isCollapse: false,
-      elAsideWidth: '300px'
+      /**折叠与隐藏 */
+      isCollapse: false
     })
     const requests = {
-      // 多级菜单
+      /**多级菜单 */
       getMenuMultistage() {
         let user_id = store.getters[GetterConstants.GET_USERID]
         const data = dataStructure(
@@ -124,15 +138,7 @@ export default defineComponent({
           .catch(err => err)
       }
     }
-    const methods = {
-      async switchIsCollapse() {
-        state.isCollapse = !state.isCollapse
-        // 延迟更新左侧菜单宽度，避免内容还在，宽度过快缩小
-        setTimeout(() => {
-          state.elAsideWidth = !state.isCollapse ? '300px' : '64px'
-        }, 300)
-      }
-    }
+    const methods = {}
     onMounted(() => {
       requests.getMenuMultistage()
     })
@@ -149,72 +155,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.layout {
-  width: 100%;
-  height: 100%;
-
-  .container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    // min-width: 1920px;
-    // min-height: 1080px;
-    .header {
-      width: 100%;
-      height: 45px;
-      border-bottom: 1px solid #e6ebf5; //边框占高度
-      padding: 0 15px;
-      box-sizing: border-box;
-    }
-    .inner_container {
-      box-sizing: border-box;
-      width: 100%;
-      flex: 1;
-      height: 0; //没有会出现滚动条
-      display: flex;
-      flex-direction: row; //不写会继承
-      .aside {
-        height: 100%;
-        width: fit-content;
-        // min-width: 200px;
-        // border-right: 1px solid #e6ebf5;
-        // background-color: #191a23; //保持el-menu菜单背景和此div背景一致
-        .el-scrollbar {
-          position: relative;
-          .switch_trigger {
-            cursor: pointer;
-            width: 100%;
-            position: absolute;
-            bottom: 0;
-            color: #fff;
-            font-size: 40px;
-            background-color: #1f76bb;
-            text-align: center;
-          }
-        }
-      }
-      .main {
-        box-sizing: border-box;
-        height: 100%;
-        flex: 1;
-        width: 0;
-        background-color: #f5f7f9;
-        padding: 10px;
-        padding-top: 0px;
-        display: flex;
-        flex-direction: column;
-        .tabs {
-          width: 100%;
-          height: 40px;
-        }
-        .content {
-          width: 100%;
-          height: 0;
-          flex: 1;
-        }
-      }
-    }
-  }
-}
+// 左侧菜单折叠样式
+@import '@/assets/css/layout.scss';
 </style>

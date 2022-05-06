@@ -3,8 +3,8 @@
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-02 14:42:23
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-22 14:46:34
 -->
 <!--  -->
 <template>
@@ -141,23 +141,6 @@
             </el-col>
           </el-row>
         </el-form>
-        <!-- 上传付款证明 -->
-        <el-divider content-position="left">{{ $t('common.upload_payee_certificate') }}</el-divider>
-        <el-upload
-          ref="uploadRef"
-          :before-upload="beforeUpload"
-          action="#"
-          :http-request="httpRequest"
-          list-type="picture-card"
-          multiple
-          :limit="5"
-          :on-exceed="onExceed"
-          :on-remove="onRemove"
-        >
-          <template #default>
-            <i class="el-icon-plus"></i>
-          </template>
-        </el-upload>
 
         <!-- 动态信息 -->
         <el-divider content-position="left">{{ $t('common.dynamic_info') }}</el-divider>
@@ -212,6 +195,23 @@
             </el-col>
           </el-row>
         </el-form>
+        <!-- 上传付款证明 -->
+        <el-divider content-position="left">{{ $t('common.upload_payee_certificate') }}</el-divider>
+        <el-upload
+          ref="uploadRef"
+          :before-upload="beforeUpload"
+          action="#"
+          :http-request="httpRequest"
+          list-type="picture-card"
+          multiple
+          :limit="5"
+          :on-exceed="onExceed"
+          :on-remove="onRemove"
+        >
+          <template #default>
+            <i class="el-icon-plus"></i>
+          </template>
+        </el-upload>
         <div style="text-align:right">
           <el-button type="success" plain @click="addRow">{{ $t('common.add_data') }}</el-button>
         </div>
@@ -412,10 +412,7 @@ export default defineComponent({
           let { status, custom_data, info } = res as IRequest
           if (status === 200) {
             requests.getStockNumberSearch()
-            ElMessage({
-              type: 'success',
-              message: info
-            })
+            ElMessage.success(info)
           }
         })
       },
@@ -533,10 +530,10 @@ export default defineComponent({
             if (status === 200) {
               // 本地数据删除对应图片
               state.fileData.splice(index, 1)
-              ElMessage({
-                type: 'success',
-                message: info
-              })
+              // ElMessage({
+              //   type: 'success',
+              //   message: info
+              // })
             }
           })
           .catch(err => err)

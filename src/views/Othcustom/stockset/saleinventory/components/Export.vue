@@ -3,8 +3,8 @@
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 15:24:12
- * @LastEditors: TJ
- * @LastEditTime: 2022-02-18 11:58:36
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-21 18:30:43
 -->
 <!--  -->
 <template>
@@ -19,22 +19,6 @@
           ref="exportRef"
           label-position="left"
         >
-          <el-row>
-            <el-col :span="24">
-              <el-form-item :label="$t('common.sale_type_name')" prop="sale_type">
-                <el-select filterable clearable v-model="exportForm.sale_type">
-                  <el-option
-                    v-for="item in commonLists.saleTypeList2"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('common.collection_status_name')" prop="payment_status">
@@ -136,7 +120,6 @@ import { IValid } from '../typings'
 import { defineComponent, ref, reactive, toRefs, computed } from 'vue'
 interface IState {
   exportForm: {
-    sale_type: any
     payment_status: any
     buy_type: any
     start_at: any
@@ -165,7 +148,6 @@ export default defineComponent({
     const { t } = useI18n()
     const state: IState = reactive({
       exportForm: {
-        sale_type: 3,
         payment_status: 3,
         buy_type: 3,
         start_at: '',
@@ -291,7 +273,6 @@ export default defineComponent({
         const data = dataStructure(
           { power_url: 'V1/InventoryOrder/export' },
           {
-            sale_type: state.exportForm.sale_type,
             payment_status: state.exportForm.payment_status,
             buy_type: state.exportForm.buy_type,
             start_at: dateNormOne(state.exportForm.start_at),

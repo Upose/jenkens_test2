@@ -3,8 +3,8 @@
  * @version: 
  * @Author: XJ
  * @Date: 2021-06-18 11:24:37
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-29 13:39:09
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-22 09:43:23
 -->
 <!--  -->
 <template>
@@ -221,41 +221,10 @@
         default-expand-all
       >
         <el-table-column type="index"> </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="inventory_order_id"
-          :label="$t('common.inventory_order_id')"
-        >
-        </el-table-column>
-        <!-- 创建时间 -->
-        <el-table-column show-overflow-tooltip prop="created_at" :label="$t('common.created_at')">
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="account_number"
-          :label="$t('common.account_number')"
-        >
-        </el-table-column>
-        <el-table-column show-overflow-tooltip prop="created_name" :label="$t('common.payee')">
-        </el-table-column>
-        <!-- 数量 -->
-        <el-table-column show-overflow-tooltip prop="number" :label="$t('common.number')">
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          prop="currency_unit_name"
-          :label="$t('common.settlement_currency')"
-        >
-        </el-table-column>
-        <el-table-column show-overflow-tooltip prop="paid_amount" :label="$t('common.paid_amount')">
-        </el-table-column>
-
-        <el-table-column
-          show-overflow-tooltip
-          prop="real_payment_money"
-          :label="$t('common.this_payee')"
-        >
-        </el-table-column>
+        <template v-for="(item, index) in customArgs.all_array" :key="index">
+          <el-table-column show-overflow-tooltip :prop="item" :label="$t(`common.${item}`)">
+          </el-table-column>
+        </template>
       </el-table>
       <!-- 退货记录 -->
       <el-table
@@ -368,6 +337,8 @@ export default defineComponent({
               state.customArgs.all_array = custom_data.all_array
               let tableData: any = dateNormArray(custom_data.data)
               state.tableData = tableData
+              console.log(state.customArgs.all_array)
+              console.log(tableData)
             }
           })
           .catch(err => err)
@@ -420,6 +391,9 @@ export default defineComponent({
       },
       // 收款记录
       getCertificatePaymentList() {
+        // 先清空再赋值
+        state.tableData = []
+        state.customArgs.all_array = []
         const args = dataStructure(
           {},
           {
@@ -432,6 +406,8 @@ export default defineComponent({
           .then(res => {
             let { status, custom_data, info } = res as IRequest
             if (status === 200) {
+              state.customArgs.all_array = custom_data.all_array
+
               let tableData: any = dateNormArray(custom_data.data)
               state.tableData = tableData
             }

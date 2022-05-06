@@ -3,216 +3,146 @@
  * @version: 
  * @Author: HYH
  * @Date: 2021-10-25 16:06:14
- * @LastEditors: TJ
- * @LastEditTime: 2022-03-08 15:59:17
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-04-25 10:40:47
 -->
 <template>
-	<div class="tabs_content">
-		<!-- tag区超过长度显示箭头，箭头让里面的tag区定位发生变化 -->
-		<!-- <div v-if="showArrow" @click="clickLeftArrow" class="left_arrow">
-			<i class="el-icon-arrow-left"></i>
-		</div> -->
-		<!-- v-for="(item, index) in $store.state.index.tabs" -->
-		<div ref="tabsTagsRef" class="tabs_tags">
-			<div ref="tagsInnerRef" class="tags_inner">
-				<el-tag
-					style="margin-right:10px"
-					effect="plain"
-					size="large"
-					v-for="(item, index) in $store.state.index.tabs"
-					:key="index"
-					:closable="index === 0 ? false : true"
-					:type="item.isChecked === true ? '' : 'info'"
-					@close="closeTag(item.id)"
-					@click="clickTag(item.id, item.menu_url)"
-					class="el_tag"
-				>
-					{{ item.name }}
-				</el-tag>
-			</div>
-		</div>
-		<!-- <div v-if="showArrow" @click="clickRightArrow" class="right_arrow">
-			<i class="el-icon-arrow-right"></i>
-		</div> -->
-		<div class="bottom_arrows">
-			<!-- style="float:right" -->
-			<el-dropdown class="close_btn" @command="dropdownClick">
-				<el-button class="el-dropdown-link">
-					<i class="el-icon-arrow-down"></i>
-				</el-button>
-				<template #dropdown>
-					<el-dropdown-menu>
-						<el-dropdown-item command="left">关闭左侧</el-dropdown-item>
-						<el-dropdown-item command="right">关闭右侧</el-dropdown-item>
-						<el-dropdown-item command="other">关闭其他</el-dropdown-item>
-						<el-dropdown-item command="all">全部关闭</el-dropdown-item>
-					</el-dropdown-menu>
-				</template>
-			</el-dropdown>
-		</div>
-	</div>
+  <div class="tabs">
+    <div class="dragList">
+      <!-- 
+        v-model="$store.state.index.tabs"
+			 -->
+      <draggable
+        v-model="$store.state.index.tabs"
+        animation="400"
+        item-key="id"
+        group="people"
+        @end="onEnd"
+      >
+        <template #item="{ element }">
+          <div
+            :style="element.isChecked ? 'background: #d9ecff;' : ''"
+            class="item"
+            @click="handleJumpUrl(element.menu_url)"
+          >
+            {{ element.name }}
+            <!-- 首页不显示关闭 -->
+            <i
+              @click.stop="handleClosePage(element.menu_url)"
+              v-if="element.menu_url !== '/index/service'"
+              class="el-icon-close"
+            ></i>
+          </div>
+        </template>
+      </draggable>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {
-	computed,
-	defineComponent,
-	nextTick,
-	onMounted,
-	reactive,
-	ref,
-	toRefs,
-	watch,
-} from 'vue'
-import {
-	MutationConstants,
-	GetterConstants,
-} from '@/store/modules/index/constants'
+import { computed, defineComponent, nextTick, onMounted, reactive, ref, toRefs, watch } from 'vue'
+import { MutationConstants, GetterConstants } from '@/store/modules/index/constants'
 import { useRoute, useRouter } from 'vue-router'
-import { operationSub } from '@/utils/operation'
 import { useStore } from '@/store'
-import { bus } from '@/utils/bus'
-import { BUS_TABS } from '@/constant/bus/bus_tabs'
-interface IState {
-	showArrow: boolean
-	tabs: any[]
-}
+import draggable from 'vuedraggable'
+import router from '@/router'
+
 export default defineComponent({
-	setup() {
-		const store = useStore()
-		const route = useRoute()
-		const Router = useRouter()
-		const state: IState = reactive({
-			showArrow: true,
-			tabs: store.state.index.tabs,
-		})
-		const tagsInnerRef = ref()
-		const tabsTagsRef = ref()
-
-		const methods = {
-			// 点击标签跳转
-			clickTag(id: any, url: any) {
-				Router.push(url)
-				let tabs = store.getters[GetterConstants.GET_TABS]
-				tabs.forEach((el: any) => {
-					if (el.id === id) {
-						el.isChecked = true
-					} else {
-						el.isChecked = false
-					}
-				})
-				store.commit(MutationConstants.SET_TABS, tabs)
-			},
-			// 关闭标签
-			closeTag(id: any) {
-				let tabs = store.getters[GetterConstants.GET_TABS]
-				let closeIndex = tabs.findIndex((el: any) => el.id === id)
-				let checkedIndex = tabs.findIndex((el: any) => el.isChecked === true)
-				// 当要关闭和当前选中是同一个，需特殊处理；否则直接删除无影响
-				if (closeIndex === checkedIndex) {
-					// 需要关闭的是最后一个时
-					if (closeIndex === tabs.length - 1) {
-						tabs[closeIndex - 1].isChecked = true
-						Router.push(tabs[closeIndex - 1].menu_url)
-					}
-					// 需要关闭的是中间一个时
-					else {
-						tabs[closeIndex + 1].isChecked = true
-						Router.push(tabs[closeIndex + 1].menu_url)
-					}
-				}
-				tabs.splice(closeIndex, 1)
-				store.commit(MutationConstants.SET_TABS, tabs)
-				//点击标签关闭之后判断是否显示左右箭头
-
-				// methods.judgeShowArrow()
-			},
-			// 右侧下拉菜单批量删除
-			dropdownClick(command: string) {
-				let tabs = store.getters[GetterConstants.GET_TABS]
-				let checkedIndex = tabs.findIndex((el: any) => el.isChecked === true)
-				switch (command) {
-					case 'left':
-						tabs.splice(1, checkedIndex - 1)
-						break
-					case 'right':
-						tabs.splice(checkedIndex + 1, tabs.length - checkedIndex - 1)
-						break
-					case 'all':
-						tabs.splice(1, tabs.length - 1)
-						tabs[0].isChecked = true
-						Router.push(tabs[0].menu_url)
-						break
-					case 'other':
-						tabs.splice(checkedIndex + 1, tabs.length - checkedIndex - 1)
-						tabs.splice(1, checkedIndex - 1)
-						break
-					default:
-						break
-				}
-				store.commit(MutationConstants.SET_TABS, tabs)
-				//右侧下拉菜单批量删除判断是否显示左右箭头
-
-				// methods.judgeShowArrow()
-			},
-		}
-		onMounted(() => {})
-		return {
-			...toRefs(state),
-			...methods,
-			tagsInnerRef,
-			tabsTagsRef,
-		}
-	},
+  components: { draggable },
+  setup() {
+    const store = useStore()
+    const route = useRoute()
+    const Router = useRouter()
+    const state = reactive({
+      tabs: computed(() => {
+        return store.getters.GET_TABS
+      })
+    })
+    const methods = {
+      /**处理路由跳转 */
+      handleJumpUrl(url: string) {
+        let tabs = store.getters[GetterConstants.GET_TABS]
+        const path = route.path
+        for (let item of tabs) {
+          item.isChecked = false
+        }
+        for (let item of tabs) {
+          if (item.menu_url === url) {
+            item.isChecked = true
+            store.commit(MutationConstants.SET_TABS, tabs)
+          }
+        }
+        router.push(url)
+      },
+      /**处理关闭页面 */
+      handleClosePage(url: string) {
+        let tabs = store.getters[GetterConstants.GET_TABS]
+        for (let i = 0; i < tabs.length; i++) {
+          if (tabs[i].menu_url === url) {
+            tabs.splice(i, 1)
+          }
+        }
+        tabs[tabs.length - 1].isChecked = true
+        router.push(tabs[tabs.length - 1].menu_url)
+        store.commit(MutationConstants.SET_TABS, tabs)
+      },
+      onEnd() {
+        store.commit(MutationConstants.SET_TABS, store.getters.GET_TABS)
+      }
+    }
+    onMounted(() => {
+      let tabs = store.getters[GetterConstants.GET_TABS]
+      const path = route.path
+      for (let item of tabs) {
+        item.isChecked = false
+      }
+      for (let item of tabs) {
+        if (item.menu_url === path) {
+          item.isChecked = true
+        }
+        store.commit(MutationConstants.SET_TABS, tabs)
+      }
+    })
+    return {
+      ...toRefs(state),
+      ...methods
+    }
+  }
 })
 </script>
 <style lang="scss" scoped>
-.el_tag:hover {
-	cursor: pointer;
-	color: #40b8ff;
+.tabs {
+  height: 30px;
+  border-bottom: 1px solid #e6e6e6;
 }
-.el-dropdown-link {
-	cursor: pointer;
-	color: #409eff;
+.item {
+  cursor: pointer;
+  float: left;
+  background: #fff;
+  min-width: 50px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-size: 14px;
+  border-right: 1px solid #e6e6e6;
+  padding: 0 10px;
+  color: rgb(103, 104, 106);
+  i {
+    font-size: 13px;
+    margin-left: 5px;
+    &:hover {
+      color: red;
+    }
+  }
+  &:hover {
+    background: #d9ecff;
+    transition: all 0.5s;
+  }
 }
-
-.tabs_content {
-	width: 100%;
-	height: 100%;
-	display: flex;
-
-	.tabs_tags {
-		height: 100%;
-		width: 0;
-		flex: 1;
-		margin: 4px 0;
-		position: relative;
-		overflow: hidden; //超出隐藏
-		white-space: nowrap; //强制不换行
-		.tags_inner {
-			position: absolute;
-			// width: 100%;
-			height: 100%;
-			// text-overflow: ellipsis; //显示省略号
-		}
-	}
-	.right_arrow,
-	.left_arrow {
-		height: 100%;
-		width: 40px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		cursor: pointer;
-		align-items: center;
-	}
-
-	.bottom_arrows {
-		height: 100%;
-		width: 40px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-	}
+.dragList {
+  overflow: auto;
+}
+.dragList .sortable-ghost {
+  opacity: 0.5;
 }
 </style>

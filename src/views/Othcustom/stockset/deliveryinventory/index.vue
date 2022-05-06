@@ -1,3 +1,9 @@
+<!--
+ * @Descripttion: 出库单
+ * @Author: HYH
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-05 15:39:07
+-->
 <template>
   <div class="content">
     <div class="left_cont">
@@ -7,6 +13,7 @@
 				</div> -->
         <!-- <div class="part_line"></div> -->
         <div class="reset_top">
+          <!-- 核对人 -->
           <div class="headerFormStyle">
             <el-select
               style="margin-right:10px;margin-bottom:5px"
@@ -24,6 +31,7 @@
               >
               </el-option>
             </el-select>
+            <!-- 装货人 -->
             <el-select
               style="margin-right:10px;margin-bottom:5px"
               filterable
@@ -40,6 +48,7 @@
               >
               </el-option>
             </el-select>
+            <!-- 开始 结束时间 -->
             <el-date-picker
               @change="headerChange"
               style="margin-right:10px;margin-bottom:5px"
@@ -50,6 +59,7 @@
               :end-placeholder="$t('common.end_at')"
             >
             </el-date-picker>
+            <!-- 出库单号，销售单号，备注 -->
             <el-input
               style="margin-right:10px;margin-bottom:5px"
               type="text"
@@ -71,13 +81,13 @@
           </div>
           <div>
             <template v-for="item in buttonData" :key="item.widget_id">
-              <!-- =1且无子集时遍历出按钮 -->
+              <!-- =1且无子集时遍历出按钮  出库只有在 is_delivery 等于 0 才能点击-->
               <el-button
                 style="margin-bottom:5px"
                 type="success"
                 plain
                 v-if="item.widget_type == 1 && !item.children"
-                :disabled="item.widget_id == 'add' ? false : isEmeptyObj"
+                :disabled="item.widget_id === 'outbound' && tableCheck.is_delivery !== 0"
                 @click="handle(item.widget_id, item.name)"
                 >{{ item.name }}</el-button
               >
@@ -184,7 +194,13 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import { ISelection, IState, IValid } from './typings'
 import { IPower } from '@/@types/iPower'
 import { useI18n } from 'vue-i18n'
-import { dateNormArray, datetimeNormOne, dateNormOne, dateNormDateRange } from '@/utils/dateNorm'
+import {
+  dateNormArray,
+  datetimeNormOne,
+  dateNormOne,
+  dateNormDateRange,
+  getCurMonthFirstDayAndLastDay
+} from '@/utils/dateNorm'
 import { checkTwoDeci, checkSaleNumber2, checkAt } from '@/utils/regp'
 import { CUSTOM_TABLES } from '@/constant/bus/bus_custom_table'
 import DeinfoChild from './components/DeinfoChild.vue'
@@ -219,6 +235,8 @@ export default defineComponent({
     })
 
     const state: IState = reactive({
+      /**选中的表格数据 */
+      tableCheck: {} as any,
       dialog: {
         dialogVisible: false,
         language_id: store.state.users.language
@@ -289,6 +307,7 @@ export default defineComponent({
             .catch(err => err)
         })
       },
+      /**获取员工信息 */
       getStaffInfo() {
         const data = dataStructure(
           {},
@@ -346,12 +365,14 @@ export default defineComponent({
               let hasView
               power.forEach((item: IPower) => {
                 if (item.widget_id === 'view') {
-                  requests.getStartAt().then(() => {
-                    if (!state.commonLists.staffList.length) {
-                      requests.getStaffInfo()
-                    }
-                    requests.getList()
-                  }) //拿到时间后在加载数据
+                  // requests.getStartAt().then(() => {
+
+                  // }) //拿到时间后在加载数据
+                  if (!state.commonLists.staffList.length) {
+                    requests.getStaffInfo()
+                  }
+
+                  requests.getList()
                   state.buttonData = power
                   hasView = true
                 }
@@ -430,7 +451,7 @@ export default defineComponent({
         state.showSortableCustom = false
       },
 
-      handle(arg: any, name: string) {
+      handle(arg: any, name?: string) {
         switch (arg) {
           case 'add':
             methods.doAdd()
@@ -438,7 +459,7 @@ export default defineComponent({
           case 'export':
             methods.doExport()
             break
-          case 'outbound_order':
+          case 'outbound':
             methods.doOutboundOrder()
             break
           case 'detail':
@@ -489,9 +510,30 @@ export default defineComponent({
             break
         }
       },
+      /**确认出库 */
       doOutboundOrder() {
-        state.itemName = 'outboundOrder'
-        state.dialog.dialogVisible = true
+        const data = dataStructure(
+          { power_url: 'V1/InventoryDelivery/is_delivery' },
+          { id: state.tableCheck.id }
+        )
+        ElMessageBox.confirm(t('common.confirmDe'), t('common.tip'), {
+          confirmButtonText: t('common.confirm'),
+          cancelButtonText: t('common.cancel'),
+          type: 'warning'
+        })
+          .then(() => {
+            deliveryinventoryApi
+              .sure_delivery(data)
+              .then(res => {
+                let { status, custom_data, info } = res as IRequest
+                if (status === 200) {
+                  ElMessage.success(info)
+                  requests.getList()
+                }
+              })
+              .catch(err => err)
+          })
+          .catch(e => e)
       },
 
       doExport() {
@@ -550,6 +592,7 @@ export default defineComponent({
 
       // 单击事件
       async rowClick(row: any, column: any, event: any) {
+        state.tableCheck = row
         let id = selection.singleSelection?.id
         if (id === row.id) {
           const CommonTableref = CommonTableRef.value
@@ -566,6 +609,7 @@ export default defineComponent({
     }
     onMounted(() => {
       requests.getIndex()
+      state.pagination.date = getCurMonthFirstDayAndLastDay()
     })
     return {
       ...toRefs(state),

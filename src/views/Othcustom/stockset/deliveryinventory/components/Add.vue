@@ -1,16 +1,17 @@
 <!--
- * @Descripttion: 
+ * @Descripttion: 开单
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
- * @LastEditors: TJ
- * @LastEditTime: 2022-02-22 11:45:04
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-05 16:30:38
 -->
-<!--  -->
 <template>
+  <!-- 开单 -->
   <el-drawer :title="$t(`common.billing`)" :size="800" v-model="showAdd">
     <div class="box-card">
       <div class="box-form">
+        <!-- 基本信息 -->
         <el-divider content-position="left">{{ $t('common.base_info') }}</el-divider>
         <el-form
           class="formStyle2"
@@ -23,8 +24,11 @@
         >
           <el-row>
             <el-col :span="12">
+              <!-- 销售单号 -->
               <el-form-item :label="$t('common.sale_order_number')" prop="sale_order_number">
+                <!--  inputAndSelect: '输入后选择' 远程搜索 -->
                 <el-select
+                  multiple
                   v-model="addForm.sale_order_number"
                   filterable
                   remote
@@ -44,6 +48,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
+              <!-- 出库单号 -->
               <el-form-item
                 :label="$t('common.delivery_order_number')"
                 prop="delivery_order_number"
@@ -54,6 +59,7 @@
           </el-row>
           <el-row>
             <el-col :span="24">
+              <!-- 运送地点 -->
               <el-form-item
                 class="inputStyle500"
                 :label="$t('common.destination')"
@@ -65,6 +71,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
+              <!-- 核对人 -->
               <el-form-item :label="$t('common.collator')" prop="collator">
                 <el-select filterable clearable v-model="addForm.collator">
                   <el-option
@@ -79,6 +86,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
+              <!-- 装货人 -->
               <el-form-item :label="$t('common.shipper')" prop="shipper">
                 <el-select filterable clearable v-model="addForm.shipper">
                   <el-option
@@ -95,11 +103,13 @@
           </el-row>
           <el-row>
             <el-col :span="12">
+              <!-- 出库日期 -->
               <el-form-item :label="$t('common.delivery_at')" prop="delivery_at">
                 <el-date-picker v-model="addForm.delivery_at" type="datetime"> </el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="12">
+              <!-- 车牌号 -->
               <el-form-item :label="$t('common.license_plate_number')" prop="license_plate_number">
                 <el-input v-model="addForm.license_plate_number"></el-input>
               </el-form-item>
@@ -107,6 +117,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
+              <!-- 取货人 -->
               <el-form-item :label="$t('common.claim_goods')" prop="claim_goods">
                 <el-input v-model="addForm.claim_goods"></el-input>
               </el-form-item>
@@ -114,6 +125,7 @@
           </el-row>
           <el-row>
             <el-col :span="24">
+              <!-- 备注 -->
               <el-form-item :label="$t('common.explain')">
                 <el-input type="textarea" v-model="addForm.explain"></el-input>
               </el-form-item>
@@ -127,7 +139,14 @@
           ref="DeinfoAddRef"
         ></DeinfoAdd>
       </div>
+      <!-- 勾选是否确认出库 -->
+      <div style="margin: 20px;">
+        <el-checkbox size="large" border v-model="is_delivery">{{
+          $t('common.confirmDe')
+        }}</el-checkbox>
+      </div>
       <div class="box-button">
+        <!-- 提交 -->
         <el-button @click="onSubmitAdd" type="success" plain>{{ $t('common.submit') }}</el-button>
       </div>
     </div>
@@ -145,8 +164,11 @@ import { IValid } from '../typings'
 import DeinfoAdd from './DeinfoAdd.vue'
 import { defineComponent, ref, reactive, toRefs, computed } from 'vue'
 interface IState {
+  /**是否确认出库 */
+  is_delivery: number | null
   addForm: {
     delivery_order_number: any
+    /**销售单号 */
     sale_order_number: any
     destination: any
     license_plate_number: any
@@ -180,9 +202,12 @@ export default defineComponent({
   setup(props, ctx) {
     const { t } = useI18n()
     const state: IState = reactive({
+      /**是否确认出库 */
+      is_delivery: null,
       addForm: {
         delivery_order_number: '',
-        sale_order_number: '',
+        /**销售单号 */
+        sale_order_number: null,
         destination: '',
         license_plate_number: '',
         collator: '',
@@ -290,8 +315,8 @@ export default defineComponent({
         const data = dataStructure(
           { power_url: 'V1/InventoryDelivery/add' },
           {
+            is_delivery: state.is_delivery ? state.is_delivery : false,
             delivery_order_number: state.addForm.delivery_order_number,
-            sale_order_number: state.addForm.sale_order_number,
             destination: state.addForm.destination,
             license_plate_number: state.addForm.license_plate_number,
             collator: state.addForm.collator,
@@ -302,15 +327,14 @@ export default defineComponent({
             data: state.addForm.addFormData
           }
         )
+        console.log(data)
+
         deliveryinventoryApi
           .get_add(data)
           .then(res => {
             let { status, custom_data, info, field_name } = res as IRequest
             if (status === 200) {
-              ElMessage({
-                type: 'success',
-                message: info
-              })
+              ElMessage.success(info)
               methods.reset('add')
             } else if (status === 421) {
               // 特殊信息显示在表单下面
@@ -419,7 +443,9 @@ export default defineComponent({
         }
       },
 
-      saleOrderNumberSearch() {
+      saleOrderNumberSearch(v: any) {
+        console.log(v)
+
         // 搜索之前清空连个table
         state.addForm.addFormData = []
         state.addSearchData = []
