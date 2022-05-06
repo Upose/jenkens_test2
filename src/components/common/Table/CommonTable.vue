@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2021-08-05 18:26:53
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-05 15:24:57
+ * @LastEditTime: 2022-05-06 10:49:50
 -->
 <!--  -->
 <template>
@@ -73,8 +73,9 @@
           <div style="height:22px;line-height:22px">
             <el-image
               style="width:22px;height:22px;"
-              :src="configUrl + scope.row.photo"
-              :preview-src-list="[configUrl + scope.row.photo]"
+              :src="scope.row.photo"
+              :preview-src-list="[scope.row.photo]"
+              :onerror="defaultImg"
               alt="#"
             />
           </div>
@@ -94,8 +95,8 @@
               v-for="(item2, index2) in scope.row.picture"
               :key="index2"
               style="width:22px;height:22px;"
-              :src="configUrl + item2.url"
-              :preview-src-list="[configUrl + item2.url]"
+              :src="item2.url"
+              :preview-src-list="[item2.url]"
               alt="#"
             />
           </div>
@@ -115,8 +116,8 @@
               v-for="(item2, index2) in scope.row.picture"
               :key="index2"
               style="width:22px;height:22px;"
-              :src="configUrl + item2.url"
-              :preview-src-list="[configUrl + item2.url]"
+              :src="item2.url"
+              :preview-src-list="[item2.url]"
               alt="#"
             />
           </div>
@@ -175,6 +176,7 @@ import { commonApi } from '@/http/api/common'
 import { IRequest } from '@/@types/httpInterface'
 import { bus } from '@/utils/bus'
 interface IState {
+  defaultImg: any
   all_array: any
   tableHeight: any
   showTable: boolean
@@ -208,7 +210,8 @@ export default defineComponent({
     const store = useStore()
     const singleTable = ref()
     const state: IState = reactive({
-      configUrl: process.env.VUE_APP_QIHONG_URL,
+      /**加载失败图片 */
+      defaultImg: 'this.src="' + require('@/assets/img/common/avatar.jpg') + '"',
       all_array: [],
       tableHeight: '100%',
       showTable: true,

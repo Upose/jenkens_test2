@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-06 09:51:59
+ * @LastEditTime: 2022-05-06 10:27:07
 -->
 <!--  -->
 <template>
@@ -194,7 +194,7 @@
                       }
                     ]"
                   >
-                    <el-input v-model.number="row.adjust_number" />
+                    <el-input style="width: auto;" v-model.number="row.adjust_number" />
                   </el-form-item>
                 </el-form>
               </template>
