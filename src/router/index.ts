@@ -3,8 +3,8 @@
  * @version:
  * @Author: XJ
  * @Date: 2021-05-06 11:17:19
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-31 13:29:20
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-07 16:40:35
  */
 
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
@@ -16,8 +16,11 @@ import i18n from '@/locales'
 import { handlesChild } from '@/router/handles'
 import { financecustomChild } from '@/router/financecustom'
 import { GetterConstants } from '@/store/modules/users/constants'
+import { GetterConstants as getters, MutationConstants } from '@/store/modules/index/constants'
 import { useStore } from '@/store'
 import { getNewToken } from '@/utils/getNewToken'
+import { approval } from './approval/index'
+import { certifacation } from './certifacation/index'
 export const constantRoutes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -29,6 +32,13 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     redirect: '/index/service', //tabs标签决定初始页
     component: () => import('@/views/Layout/index.vue'),
     children: [
+      // 审批 => 流程审批 => 审批中心
+      {
+        path: 'certifacation',
+        name: 'Certifacation',
+        component: () => import('@/views/Certifacation/index.vue'),
+        children: certifacation
+      },
       {
         path: 'service',
         name: 'Service',
@@ -39,6 +49,13 @@ export const constantRoutes: Array<RouteRecordRaw> = [
         name: 'Users',
         component: () => import('@/views/Users/index.vue'),
         children: usersChild
+      },
+      // 审批
+      {
+        path: 'approval',
+        name: 'Approval',
+        component: () => import('@/views/Approval/index.vue'),
+        children: approval
       },
       {
         path: 'othcustom',
@@ -88,6 +105,12 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     path: '/404',
     name: '404',
     component: () => import('@/views/404/404.vue') //懒加载，需要时在引入
+  },
+  // 无权限页面
+  {
+    path: '/noaccess',
+    name: 'Noaccess',
+    component: () => import('@/views/NoAccess/index.vue')
   }
 ]
 
@@ -115,23 +138,32 @@ router.beforeEach(async (to, from, next) => {
   const store = useStore()
   let token = store.getters[GetterConstants.GET_TOKEN]
   let userId = getUserId()
+  // 解决没有权限重复点击tabs进入无权限页面
+  if (to.path === '/noaccess') {
+    const tabs = store.getters[getters.GET_TABS]
+    for (let i = 0; i < tabs.length; i++) {
+      if (tabs[i].menu_url === from.fullPath) {
+        tabs.splice(i, 1)
+      }
+    }
+    store.commit(MutationConstants.SET_TABS, tabs)
+  }
   // 登录权限验证
   if (to.path === '/login' || to.path === '/404' || to.path === '/getupd') {
     next()
   } else {
     if (token) {
       next()
+    } else {
+      next({
+        path: '/login'
+      })
     }
     // else if (userId) {
     // 	// 如果选择了免登录，则就刷新token
     // 	await getNewToken.apiRefreshToken()
     // 	next()
     // }
-    else {
-      next({
-        path: '/login'
-      })
-    }
   }
 })
 

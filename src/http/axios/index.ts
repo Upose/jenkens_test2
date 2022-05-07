@@ -3,8 +3,8 @@
  * @version:
  * @Author: TJ
  * @Date: 2021-03-29 16:36:39
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-01 09:11:06
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-07 14:36:25
  */
 import * as codes from '@/constant/code'
 import { MutationConstants, GetterConstants } from '@/store/modules/users/constants'
@@ -16,6 +16,7 @@ import { ElLoading } from 'element-plus'
 import { getNewToken } from '@/utils/getNewToken'
 import { removeUserId, getUserId } from '@/utils/cookie'
 import router from '@/router'
+import { useRoute } from 'vue-router'
 // 定义接口
 interface PendingType {
   url?: string
@@ -142,6 +143,9 @@ instance.interceptors.response.use(
       case codes.CODE_SUCCESS:
         // 成功直接退出
         break
+      case codes.CODE_NOT_PERMISSION:
+        router.push('/noaccess')
+        break
       // case codes.CODE_TOKEN_ABNORMAL: //token信息不存在401
       // 	if (userId) {
       // 		getNewToken()
@@ -164,22 +168,13 @@ instance.interceptors.response.use(
         // })
         break
       case codes.CODE_HANDLE_DATA:
-        ElMessage({
-          type: 'warning',
-          message: reponsrType.info
-        })
+        ElMessage.warning(reponsrType.info)
         break
       case codes.CODE_HANDLE_DATA:
-        ElMessage({
-          type: 'warning',
-          message: reponsrType.info
-        })
+        ElMessage.warning(reponsrType.info)
         break
       default:
-        ElMessage({
-          type: 'warning',
-          message: '未知错误'
-        })
+        ElMessage.warning('未知错误')
         break
     }
     // 解码之后返回解码后的数据
@@ -191,7 +186,6 @@ instance.interceptors.response.use(
     endLoading()
     //Cancel {message: '操作太频繁，请稍后再试'}
     const response = error?.response
-
     // 根据返回的http状态码做不同的处理
     switch (response?.status) {
       case codes.CODE_ERROR:

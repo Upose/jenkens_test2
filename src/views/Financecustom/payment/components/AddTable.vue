@@ -3,8 +3,8 @@
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-25 14:16:36
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-31 14:13:11
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-06 11:49:46
 -->
 <!--  -->
 <template>
@@ -57,8 +57,8 @@
               v-for="(item2, index2) in scope.row.file"
               :key="index2"
               style="width:22px;height:22px;"
-              :src="configUrl + item2"
-              :preview-src-list="[configUrl + item2]"
+              :src="item2"
+              :preview-src-list="[item2]"
               alt="#"
             />
           </div>
@@ -76,7 +76,6 @@
 <script lang="ts">
 interface IState {
   tableData: any
-  configUrl: any
 }
 import { defineComponent, ref, reactive, toRefs, onMounted, computed } from 'vue'
 export default defineComponent({
@@ -89,7 +88,6 @@ export default defineComponent({
   emits: ['updateTableData'],
   setup(props, ctx) {
     const state: IState = reactive({
-      configUrl: process.env.VUE_APP_QIHONG_URL,
       // tableData:  props.tableData, //这样赋值不会响应
       tableData: []
     })

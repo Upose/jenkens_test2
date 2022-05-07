@@ -4,11 +4,15 @@
  * @Author: TJ
  * @Date: 2021-04-30 14:17:56
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-05 16:45:15
+ * @LastEditTime: 2022-05-07 11:02:00
  */
 import request from '@/http/axios/request'
 import { IParams } from '@/@types/httpInterface'
 export const stocktakingApi = {
+  /**货位调整 */
+  adjust_product_position: (params: IParams) =>
+    request.post(`/V1/InventoryInformation/adjust_product_position`, params),
+
   /**查询所有仓库 */
   get_all_ware_house: (params: IParams) => request.post(`/V1/InventoryWarehouse/all_list`, params),
 

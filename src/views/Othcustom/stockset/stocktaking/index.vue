@@ -48,6 +48,12 @@
     </div>
     <!-- 添加 -->
     <Add v-model="showAdd" @reset="reset" :commonLists="commonLists" @typeChange="typeChange"></Add>
+    <AjustPosition
+      v-model="showEdit"
+      @reset="reset"
+      :commonLists="commonLists"
+      @typeChange="typeChange"
+    />
     <ReversePurchase
       v-model="showPurchase"
       @reset="reset"
@@ -88,6 +94,8 @@ import { computed, defineComponent, onMounted, reactive, ref, toRefs } from 'vue
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import Add from './components/Add.vue'
+/**调整货位 */
+import AjustPosition from './components/AjustPosition.vue'
 import QuantityAdjuster from './components/QuantityAdjuster.vue'
 import ReverseOutbound from './components/ReverseOutbound.vue'
 import ReversePurchase from './components/ReversePurchase.vue'
@@ -102,7 +110,8 @@ export default defineComponent({
     ReversePurchase,
     ReverseSales,
     ReverseOutbound,
-    QuantityAdjuster
+    QuantityAdjuster,
+    AjustPosition
   },
   setup() {
     const { t } = useI18n()
@@ -118,8 +127,11 @@ export default defineComponent({
 
     const state: IState = reactive({
       commonLists: {
+        /**调减原因 */
         minusAdjustTypeList: [
+          // 物品丢失
           { id: 0, name: t('common.produce_lose') },
+          // 等级调整
           { id: 1, name: t('common.adjust_grade') }
         ],
         productGradeList: [],
@@ -139,7 +151,6 @@ export default defineComponent({
         order_by: 1, //0升序   1降序(请默认传1)
         field: ''
       },
-      itemName: 'add',
       addForm: {
         inventory_type: '',
         model_number: '',
@@ -162,6 +173,7 @@ export default defineComponent({
         // showCustom: store.state.index.showCustom,
       },
       showAdd: false,
+      showEdit: false,
       showPurchase: false,
       showSales: false,
       showOutbound: false,
@@ -351,6 +363,11 @@ export default defineComponent({
           case 'add':
             methods.doAdd()
             break
+          // 货位调整
+          case 'adjust_product_position':
+            methods.doEdit()
+
+            break
           // 进货单红冲
           case 'order':
             methods.doOrder()
@@ -375,21 +392,18 @@ export default defineComponent({
         state.showQuantity = true
       },
       doOrder() {
-        // state.itemName = 'add'
         state.showPurchase = true
         if (!state.commonLists.allPurchaseList.length) {
           requests.getPurchasePreSearch()
         }
       },
       doSales() {
-        // state.itemName = 'add'
         state.showSales = true
         if (!state.commonLists.allOutboundList.length) {
           requests.getSalesPreSearch()
         }
       },
       doOutbound() {
-        // state.itemName = 'add'
         state.showOutbound = true
         if (!state.commonLists.allOutboundList.length) {
           requests.getOutboundPreSearch()
@@ -399,6 +413,12 @@ export default defineComponent({
         switch (arg) {
           case 'add':
             state.showAdd = false
+            requests.getList()
+            // 取消选中状态
+            selection.singleSelection = {}
+            break
+          case 'edit':
+            state.showEdit = false
             requests.getList()
             // 取消选中状态
             selection.singleSelection = {}
@@ -434,8 +454,19 @@ export default defineComponent({
       },
       // 添加按钮
       doAdd() {
-        state.itemName = 'add'
         state.showAdd = true
+        if (!state.commonLists.productGradeList.length) {
+          requests.getStockTypeList()
+        }
+        if (!state.commonLists.wareHouseList.length) {
+          requests.getWareHouseList()
+        }
+        if (!state.commonLists.typeList.length) {
+          requests.getTypeList()
+        }
+      },
+      doEdit() {
+        state.showEdit = true
         if (!state.commonLists.productGradeList.length) {
           requests.getStockTypeList()
         }

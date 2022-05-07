@@ -3,8 +3,8 @@
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-02 14:11:00
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-06 11:52:53
 -->
 <!--  -->
 <template>
@@ -207,7 +207,6 @@ import { operationAdd } from '@/utils/operation'
 import { changeNumber } from '@/utils/moneyToMicrometer'
 import { defineComponent, ref, reactive, toRefs, computed, onMounted } from 'vue'
 interface IState {
-  configUrl: any
   addForm: {
     id: any
     pay_at: any
@@ -251,7 +250,6 @@ export default defineComponent({
     const store = useStore()
     const { t } = useI18n()
     const state: IState = reactive({
-      configUrl: process.env.VUE_APP_QIHONG_URL,
       addForm: {
         id: '',
         pay_at: '',
@@ -502,7 +500,7 @@ export default defineComponent({
                 name: file.name,
                 uid: file.uid,
                 path: custom_data.path,
-                url: state.configUrl + custom_data.path
+                url: custom_data.path
               }
               state.fileData.push(fileObj)
             }
@@ -518,11 +516,6 @@ export default defineComponent({
             if (status === 200) {
               // 本地数据删除对应图片
               state.fileData.splice(index, 1)
-
-              ElMessage({
-                type: 'success',
-                message: info
-              })
             }
           })
           .catch(err => err)

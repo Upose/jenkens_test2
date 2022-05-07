@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-06 10:27:07
+ * @LastEditTime: 2022-05-07 09:52:12
 -->
 <!--  -->
 <template>
@@ -22,7 +22,7 @@
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('common.inventory_warehouse_name')" prop="product_grade">
-                <el-select filterable v-model="addForm.warehouse">
+                <el-select @change="getNewList" filterable v-model="addForm.warehouse">
                   <el-option
                     v-for="item of commonLists.wareHouseList"
                     :key="item.id"
@@ -33,7 +33,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!-- 调整前产品等级 -->
+          <!-- 调整前产品等级 (本身产品等级)-->
           <el-row>
             <el-col :span="24">
               <el-form-item :label="$t('common.before_adjust_product_grade')" prop="product_grade">
@@ -116,8 +116,8 @@
           <!-- 调减原因 -->
           <el-row v-if="addForm.adjust_type == 1">
             <el-col :span="24">
-              <el-form-item :label="$t('common.minus_adjust_type_name')" prop="minus_adjust_type">
-                <el-select clearable filterable v-model="addForm.minus_adjust_type">
+              <el-form-item :label="$t('common.minus_adjust_type_name')" prop="adjust_type_reason">
+                <el-select clearable filterable v-model="addForm.adjust_type_reason">
                   <el-option
                     v-for="(item, index) of commonLists.minusAdjustTypeList"
                     :key="index"
@@ -133,7 +133,7 @@
           <el-row
             v-if="
               addForm.adjust_type == 1 &&
-                addForm.minus_adjust_type == 1 &&
+                addForm.adjust_type_reason == 1 &&
                 addForm.product_grade !== 2
             "
           >
@@ -152,10 +152,20 @@
             </el-col>
           </el-row>
           <!-- 调整数量 -->
-          <el-row>
+          <el-row v-if="!canEdit">
             <el-col :span="24">
               <el-form-item :label="$t('common.inventory_number')" prop="inventory_number">
-                <el-input v-model="addForm.inventory_number"></el-input>
+                <el-input
+                  @blur="autoChangeTableValue"
+                  v-model.number="addForm.inventory_number"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row v-if="canEdit">
+            <el-col :span="24">
+              <el-form-item :label="$t('common.inventory_number')">
+                <el-input disabled v-model.number="addForm.inventory_number"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -167,6 +177,13 @@
               </el-form-item>
             </el-col>
           </el-row>
+          <!-- 是否启用手动编辑 -->
+          <div>
+            <div style="font-size: 16px;margin: 10px 0;">
+              手动编辑
+              <el-switch @change="switchChange" v-model="canEdit" />
+            </div>
+          </div>
         </el-form>
         <!-- 递减才显示表格数据 -->
         <div v-if="addForm.adjust_type === 1">
@@ -180,7 +197,7 @@
             <!-- 调整数量 -->
             <el-table-column prop="adjust_number" :label="$t('common.inventory_number')">
               <template #default="{row}">
-                <el-form>
+                <el-form ref="addChildRef" :model="row" :inline-message="true">
                   <!-- 验证输入是否合法 -->
                   <el-form-item
                     :inline-message="true"
@@ -194,7 +211,11 @@
                       }
                     ]"
                   >
-                    <el-input style="width: auto;" v-model.number="row.adjust_number" />
+                    <el-input
+                      :disabled="!canEdit"
+                      style="width: auto;"
+                      v-model.number="row.adjust_number"
+                    />
                   </el-form-item>
                 </el-form>
               </template>
@@ -202,7 +223,7 @@
             <!-- 调整后数量 -->
             <el-table-column :label="$t('common.after_number')">
               <template #default="{row}">
-                {{ row.stock - row.adjust_number }}
+                {{ delComma(row.stock) - delComma(row.adjust_number) }}
               </template>
             </el-table-column>
           </el-table>
@@ -221,32 +242,31 @@ import { stocktakingApi } from '@/http/api/othcustom/stockset/stocktaking'
 import { IRequest } from '@/@types/httpInterface'
 import dataStructure from '@/utils/dataStructure'
 import { useI18n } from 'vue-i18n'
-import { dateNormOne, datetimeNormOne, dateNormArray } from '@/utils/dateNorm'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { IValid } from '../typings'
-import { defineComponent, ref, reactive, toRefs, computed, onMounted, watch } from 'vue'
-import { compareNumber } from '@/utils/regp'
+import { defineComponent, ref, reactive, toRefs, computed, watch } from 'vue'
+import { formatNumber, delComma } from '@/utils/thousand'
 interface IState {
+  /**是否可以编辑 */
+  canEdit: boolean
   tableData: Array<any>
   addForm: {
     warehouse: any
     inventory_type: any
     model_number: any
     number: any
-    sale_number: any
     inventory_number: any
     adjust_type: any
     reason: any
     product_grade: any
     adjust_product_grade: any
-    inventory_id: any
-    // 其他不必传后端辅助字段
-    minus_adjust_type: any
-    stock: any
+    /**调减原因 */
+    adjust_type_reason: any
   }
   commonLists: any
   showAdd: boolean
 }
+
 export default defineComponent({
   props: {
     commonLists: {
@@ -272,25 +292,31 @@ export default defineComponent({
     )
 
     const state: IState = reactive({
+      /**是否可以编辑 */
+      canEdit: false,
       /**表格数据 */
       tableData: [],
       addForm: {
         /**仓库 */
         warehouse: '',
+        /**品名 */
         inventory_type: '',
-        model_number: '',
-        number: null,
-        sale_number: null,
-        inventory_number: null,
+        /**型号 */
+        model_number: '' as any,
+        /**可调数量 */
+        number: null as any,
+        /**调整数量 */
+        inventory_number: null as any,
         /**0递增 1递减 */
-        adjust_type: null,
+        adjust_type: null as any,
+        /**调减原因   调增不需要  1 物品丢失  2 等级调整 */
+        adjust_type_reason: '',
+        /**调整原因*/
         reason: '',
+        /**本身产品等级 */
         product_grade: 0, //初始值必须为零
-        adjust_product_grade: null,
-        inventory_id: '',
-        // 其他不必传后端辅助字段
-        minus_adjust_type: null,
-        stock: null
+        /**调整后产品等级 */
+        adjust_product_grade: null as any
       },
       commonLists: props.commonLists,
       showAdd: props.showAdd
@@ -326,6 +352,7 @@ export default defineComponent({
       }
     })
     const addRef = ref()
+    const addChildRef = ref()
     const addRule = computed(() => {
       const rule = {
         model_number: [
@@ -348,15 +375,26 @@ export default defineComponent({
           { required: true, message: t('common.not_empty') },
           { validator: valid.checkOthers.validatorFun }
         ],
+        // 调整数量
         inventory_number: [
           {
             required: true,
+            trigger: ['blur', 'change'],
             validator: (rule: object, value: string, callback: Function) => {
-              let arg1 = state.addForm.inventory_number
-              let arg2 = state.addForm.stock
-              // 调减1 时就比较，初始null和调增0不比较
-              let isCompare = state.addForm.adjust_type
-              compareNumber(rule, value, callback, arg1, arg2, isCompare)
+              // 调整数量不能大于库存数量
+              const regpOnlyNum = /^[0-9]*[1-9][0-9]*$/
+              if (!value) {
+                callback(new Error(t('common.not_empty')))
+              } else if (
+                delComma(value) > delComma(state.addForm.number) &&
+                state.addForm.adjust_type === 1
+              ) {
+                callback(new Error(`${t('common.not_greater_than')}${state.addForm.number}`))
+              } else if (!regpOnlyNum.test(value.toString())) {
+                callback(new Error(t('common.regpOnlyNum')))
+              } else {
+                callback()
+              }
             }
           },
           { validator: valid.checkOthers.validatorFun }
@@ -373,7 +411,7 @@ export default defineComponent({
           { required: true, message: t('common.not_empty') },
           { validator: valid.checkOthers.validatorFun }
         ],
-        minus_adjust_type: [
+        adjust_type_reason: [
           { required: true, message: t('common.not_empty') },
           { validator: valid.checkOthers.validatorFun }
         ]
@@ -382,17 +420,33 @@ export default defineComponent({
     })
 
     const requests = {
-      getAdd() {
-        const data = dataStructure({ power_url: 'V1/InventoryInformation/add' }, state.addForm)
+      sureAdd() {
+        //设置调整数量为千分符
+        const form = JSON.parse(JSON.stringify(state.addForm))
+        const tableDate = JSON.parse(JSON.stringify(state.tableData))
+        form.inventory_number = formatNumber(form.inventory_number)
+        for (let item of tableDate) {
+          // 调整后数量
+          item.adjust_after_number = formatNumber(
+            delComma(item.stock) - delComma(item.adjust_number)
+          )
+          // 设置调整数量 千分符
+          item.adjust_number = formatNumber(item.adjust_number)
+        }
+        const data = dataStructure(
+          { power_url: 'V1/InventoryInformation/add' },
+          {
+            ...form,
+            data: tableDate
+          }
+        )
         stocktakingApi
           .get_add(data)
           .then(res => {
+            console.log(res)
             let { status, custom_data, info, field_name } = res as IRequest
             if (status === 200) {
-              ElMessage({
-                type: 'success',
-                message: info
-              })
+              ElMessage.success(info)
               methods.reset('add')
             } else if (status === 421) {
               // 特殊信息显示在表单下面
@@ -417,39 +471,79 @@ export default defineComponent({
         stocktakingApi
           .get_add_view(data)
           .then(res => {
+            console.log(res)
+
             let { status, custom_data, info } = res as IRequest
             if (status === 200) {
-              console.log(custom_data)
-              for (let item of custom_data.data) {
-                item.adjust_number = 0
+              if (custom_data.data) {
+                for (let item of custom_data.data) {
+                  item.adjust_number = 0
+                }
               }
               state.tableData = custom_data.data || []
               // 设置可操作数量（递减显示）
-              state.addForm.number = custom_data.number
-              // const { inventory_id, number, product_grade, sale_number, stock } = custom_data
-              // state.addForm.inventory_id = inventory_id
-              // state.addForm.number = number
-              // state.addForm.product_grade = product_grade
-              // state.addForm.sale_number = sale_number
-              // state.addForm.stock = stock
+              state.addForm.number = custom_data.number || 0
             }
           })
           .catch(err => err)
       }
     }
     const methods = {
+      /**点击可编辑之后 清除相关信息 */
+      switchChange() {
+        state.addForm.inventory_number = 0
+        for (let content of state.tableData) {
+          content.adjust_number = 0
+        }
+      },
+      /**根据输入的调整数量 自动分配给表格中的调整数量 */
+      autoChangeTableValue() {
+        let inputNum = state.addForm.inventory_number
+        if (state.addForm.adjust_type === 1 && state.tableData.length) {
+          // 在(调整数量小于等于库存)&(递减) 的时候去自动填充
+          if (
+            delComma(state.addForm.inventory_number) <= delComma(state.addForm.number) &&
+            state.addForm.inventory_number
+          ) {
+            for (let item of state.tableData) {
+              item.adjust_number = 0
+            }
+            const table = state.tableData
+            for (let i = 0; i < table.length; i++) {
+              if (inputNum === 0) return
+              if (delComma(table[i].stock) <= inputNum) {
+                table[i].adjust_number = delComma(table[i].stock)
+                inputNum -= delComma(table[i].adjust_number)
+              } else {
+                table[i].adjust_number = inputNum
+                inputNum = 0
+              }
+            }
+          }
+        }
+      },
+      getNewList() {
+        requests.getAddView()
+        state.addForm.inventory_number = null
+      },
       /**检测输入的值是否合法 */
       checkValueValid(rule: any, value: any, callback: any, row: any) {
-        console.log(rule, value, callback, row)
-        // 调整数量不能大于库存数量
-        const regpOnlyNum = /^[0-9]*[1-9][0-9]*$/
-        if (!value) {
+        // 是否是数字（包括0 正负数）
+        const regpOnlyNum = /^([0-9]+\.?[0-9]*|-[0-9]+\.?[0-9]*)$/
+        if (!value && value !== 0) {
           callback(new Error(t('common.not_empty')))
-        } else if (parseInt(row.adjust_number) > parseInt(row.stock)) {
-          callback(new Error(`${t('common.not_greater_than')}${row.handle_number}`))
-        } else if (!regpOnlyNum.test(value)) {
+        } else if (delComma(row.adjust_number) > delComma(row.stock)) {
+          callback(new Error(`${t('common.not_greater_than')}${row.stock}`))
+        } else if (!regpOnlyNum.test(value.toString())) {
           callback(new Error(t('common.regpOnlyNum')))
         } else {
+          state.addForm.inventory_number = 0
+          for (let item of state.tableData) {
+            state.addForm.inventory_number += Number(item.adjust_number)
+          }
+          if (state.canEdit) {
+            state.addForm.inventory_number = formatNumber(state.addForm.inventory_number)
+          }
           callback()
         }
       },
@@ -457,11 +551,17 @@ export default defineComponent({
         state.addForm.inventory_number = null
       },
       modelChange() {
+        state.addForm.inventory_number = null
         requests.getAddView()
       },
+      /**切换品名 */
       typeChange() {
+        state.addForm.inventory_number = null
+
         state.addForm.model_number = null
         let arg = state.addForm.inventory_type
+        state.tableData = []
+        state.addForm.number = 0
         ctx.emit('typeChange', arg)
       },
       reset(arg: any) {
@@ -479,21 +579,37 @@ export default defineComponent({
         const addref = addRef
         addref.value.validate((valid: boolean) => {
           if (valid) {
-            // 用户输入的内容校验成功才发起请求
-            ElMessageBox.confirm(t('common.confirmAdd'), t('common.tip'), {
-              confirmButtonText: t('common.confirm'),
-              cancelButtonText: t('common.cancel'),
-              type: 'warning'
-            })
-              .then(() => {
-                requests.getAdd()
+            // 判断是递增还是递减 0递增 1递减
+            if (state.addForm.adjust_type === 0) {
+              //递增
+              ElMessageBox.confirm(t('common.confirmAdd'), t('common.tip'), {
+                confirmButtonText: t('common.confirm'),
+                cancelButtonText: t('common.cancel'),
+                type: 'warning'
               })
-              .catch(() => {
-                ElMessage({
-                  type: 'info',
-                  message: t('common.cancelAdd')
+                .then(() => {
+                  requests.sureAdd()
                 })
+                .catch(e => e)
+            } else {
+              // 递减
+              const form = addChildRef
+              form.value.validate((vali: boolean) => {
+                if (vali) {
+                  // 用户输入的内容校验成功才发起请求
+                  ElMessageBox.confirm(t('common.confirmAdd'), t('common.tip'), {
+                    confirmButtonText: t('common.confirm'),
+                    cancelButtonText: t('common.cancel'),
+                    type: 'warning'
+                  })
+                    .then(() => {
+                      requests.sureAdd()
+                      return
+                    })
+                    .catch(e => e)
+                }
               })
+            }
           }
         })
       }
@@ -503,7 +619,10 @@ export default defineComponent({
       ...methods,
       ...requests,
       addRule,
-      addRef
+      addRef,
+      addChildRef,
+      delComma,
+      formatNumber
     }
   }
 })

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 09:20:30
- * @LastEditors: TJ
- * @LastEditTime: 2022-03-09 13:40:15
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-06 11:01:25
 -->
 <!--  -->
 <template>
@@ -143,7 +143,7 @@
                 :http-request="uploadHttp"
                 :show-file-list="false"
               >
-                <img v-if="updForm.photo" :src="configUrl + updForm.photo" class="avatar" />
+                <img v-if="updForm.photo" :src="updForm.photo" class="avatar" />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-form-item>

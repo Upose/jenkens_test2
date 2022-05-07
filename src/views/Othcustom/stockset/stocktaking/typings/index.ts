@@ -4,7 +4,7 @@
  * @Author: XJ
  * @Date: 2021-05-13 11:57:26
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-05 17:07:14
+ * @LastEditTime: 2022-05-07 10:37:13
  */
 export interface ISelection {
   singleSelection: {
@@ -31,7 +31,6 @@ export interface IState {
     order_by: any
     field: any
   }
-  itemName: string
   customArgs: {
     common_array: any[]
     table: string
@@ -53,6 +52,7 @@ export interface IState {
     stock: any
   }
   showAdd: boolean
+  showEdit: boolean
   showPurchase: boolean
   showSales: boolean
   showOutbound: boolean

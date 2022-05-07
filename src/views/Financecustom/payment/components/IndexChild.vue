@@ -3,8 +3,8 @@
  * @version: 
  * @Author: XJ
  * @Date: 2021-06-18 11:24:37
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-29 12:00:56
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-06 11:48:19
 -->
 <!--  -->
 <template>
@@ -94,8 +94,8 @@
                 v-for="(item, index) in scope.row.picture"
                 :key="index"
                 style="width:22px;height:22px;"
-                :src="configUrl + item.url"
-                :preview-src-list="[configUrl + item.url]"
+                :src="item.url"
+                :preview-src-list="[item.url]"
                 alt="#"
               />
             </div>
@@ -140,14 +140,12 @@ interface IState {
   activeTable: any
   tableData: any[]
   id: any
-  configUrl: any
 }
 export default defineComponent({
   setup() {
     const { t } = useI18n()
     const router = useRouter()
     const state: IState = reactive({
-      configUrl: process.env.VUE_APP_QIHONG_URL,
       tableHeight: '100%',
       activeTable: 'detail',
       tableData: [],

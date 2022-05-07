@@ -4,7 +4,7 @@
  * @Author: XJ
  * @Date: 2021-06-18 11:24:37
  * @LastEditors: HYH
- * @LastEditTime: 2022-04-22 14:53:10
+ * @LastEditTime: 2022-05-06 11:47:19
 -->
 <!--  -->
 <template>
@@ -100,8 +100,8 @@
                 v-for="(item2, index2) in scope.row.picture"
                 :key="index2"
                 style="width:22px;height:22px;"
-                :src="configUrl + item2.url"
-                :preview-src-list="[configUrl + item2.url]"
+                :src="item2.url"
+                :preview-src-list="[item2.url]"
                 alt="#"
               />
             </div>
@@ -112,7 +112,6 @@
       <el-table
         v-else-if="activeTable === 'historical_documents'"
         border
-        :key="Math.random()"
         :data="tableData"
         :height="tableHeight"
         highlight-current-row
@@ -146,14 +145,12 @@ interface IState {
   activeTable: any
   tableData: any[]
   id: any
-  configUrl: any
 }
 export default defineComponent({
   setup() {
     const { t } = useI18n()
     const router = useRouter()
     const state: IState = reactive({
-      configUrl: process.env.VUE_APP_QIHONG_URL,
       tableHeight: '100%',
       activeTable: 'detail',
       tableData: [],

@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-04-29 17:01:22
  * @LastEditors: HYH
- * @LastEditTime: 2021-09-23 15:24:44
+ * @LastEditTime: 2022-05-06 11:42:01
  */
 $border-color: #ebeef5;
 //#表头背景
@@ -43,9 +43,9 @@ $header-color: #fff;
 }
 .need_wrap {
   :deep(.el-table .cell) {
-    white-space:pre-line;
-    text-overflow:inherit;
-    overflow:inherit;
+    white-space: pre-line;
+    text-overflow: inherit;
+    overflow: inherit;
   }
 }
 
@@ -61,10 +61,29 @@ $header-color: #fff;
     border: none;
   }
 }
+.el-table {
+  // switch开关
+  &:deep(.el-switch) {
+    .el-switch__core {
+      width: 30px !important;
+      height: 16px;
+      .el-switch__action {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+  // switch开关 选择样式
+  &:deep(.is-checked) {
+    .el-switch__action {
+      margin-left: -13px;
+    }
+  }
+}
 // #选中行背景
 :deep(.el-table__body tr.current-row > td) {
   // 设置important以免被悬停样式覆盖
-  background-color: #fefae3 ;
+  background-color: #fefae3;
   color: #606266;
 }
 // #鼠标经过行背景

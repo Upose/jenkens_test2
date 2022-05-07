@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-03-31 14:23:38
  * @LastEditors: HYH
- * @LastEditTime: 2021-09-01 10:42:03
+ * @LastEditTime: 2022-05-07 15:08:39
  */
 // 参数对象
 export interface IParams {
@@ -39,7 +39,7 @@ export interface IRequest {
   status: number
   custom_data: any
   info: string
+  power?: any
   field_name: string
   [propName: string]: any
 }
-
