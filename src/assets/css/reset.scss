@@ -3,10 +3,11 @@
  * @version: 
  * @Author: TJ
  * @Date: 2021-04-06 18:27:09
- * @LastEditors: TJ
- * @LastEditTime: 2021-04-30 10:57:53
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-09 17:39:55
  */
-html,body{
+html,
+body {
   margin: 0;
   padding: 0;
 }
@@ -64,26 +65,25 @@ textarea {
   font-size: 100%;
 }
 
-
-.margin_bt{
+.margin_bt {
   margin-bottom: 1.5rem;
 }
-.padding_rl{
+.padding_rl {
   padding: 0 1.5rem;
 }
-.padding_right{
+.padding_right {
   padding-right: 1.5rem;
 }
-.padding_left{
+.padding_left {
   padding-right: 1rem;
 }
-.padding_bottom{
+.padding_bottom {
   padding-right: 1rem;
 }
-.padding_top{
+.padding_top {
   padding-right: 1rem;
 }
-.cursor:hover{
+.cursor:hover {
   color: #1890ff;
   cursor: pointer;
 }

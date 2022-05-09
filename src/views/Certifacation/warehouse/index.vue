@@ -1,11 +1,18 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: TJ
  * @Date: 2021-04-25 09:06:53
- * @LastEditors: TJ
- * @LastEditTime: 2021-11-11 19:13:35
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-09 18:12:24
 -->
 <template>
-	<router-view></router-view>
+  <div class="content_area">
+    <router-view></router-view>
+  </div>
 </template>
+<style>
+.content_area {
+  height: calc(100vh - 75px);
+}
+</style>

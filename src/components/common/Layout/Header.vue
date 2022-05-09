@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-04-07 09:50:15
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-06 10:50:33
+ * @LastEditTime: 2022-05-09 15:18:00
 -->
 <template>
   <header class="header">
@@ -81,7 +81,6 @@ export default defineComponent({
     const state = reactive({
       /**加载失败图片 */
       defaultImg: 'this.src="' + require('@/assets/img/common/avatar.jpg') + '"',
-      configUrl: process.env.VUE_APP_QIHONG_URL,
       userInfo: {} as any,
       headerActiveIndex: computed(() => {
         //获取当前路由渲染页面菜单

@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-03-29 16:36:39
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-07 14:36:25
+ * @LastEditTime: 2022-05-09 15:48:14
  */
 import * as codes from '@/constant/code'
 import { MutationConstants, GetterConstants } from '@/store/modules/users/constants'
@@ -182,7 +182,6 @@ instance.interceptors.response.use(
   },
   // 任何超出2xx范围的状态码都会触发此函数
   function(error) {
-    console.log(error)
     endLoading()
     //Cancel {message: '操作太频繁，请稍后再试'}
     const response = error?.response
