@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 头部公共组件
+ * @Description: 头部公共组件
  * @version: 
  * @Author: TJ
  * @Date: 2021-04-07 09:50:15
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-09 15:18:00
+ * @LastEditTime: 2022-05-10 17:21:05
 -->
 <template>
   <header class="header">
@@ -64,7 +64,7 @@ import dataStructure from '@/utils/dataStructure'
 import { useStore } from '@/store'
 import { useRoute, useRouter } from 'vue-router'
 import { IRequest } from '@/@types/httpInterface'
-import { MutationConstants } from '@/store/modules/users/constants'
+import { MutationConstants } from '@/store/modules/index/constants'
 export default defineComponent({
   emits: ['getChildMenu'],
   components: {
@@ -115,7 +115,9 @@ export default defineComponent({
           .then(res => {
             let { status, custom_data, info } = res as IRequest
             if (status === 200) {
-              removeUserId(), router.push('/login')
+              store.commit(MutationConstants.SET_TABS, [])
+              removeUserId()
+              router.push('/login')
             }
           })
           .catch(err => err)

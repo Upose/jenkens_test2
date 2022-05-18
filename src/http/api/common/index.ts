@@ -1,15 +1,17 @@
 /*
- * @Descripttion: 公共请求模块
+ * @Description: 公共请求模块
  * @version:
  * @Author: TJ
  * @Date: 2021-03-29 17:27:15
  * @LastEditors: HYH
- * @LastEditTime: 2022-04-25 10:10:10
+ * @LastEditTime: 2022-05-18 17:03:43
  */
 import request from '../../axios/request'
 import { IParams } from '@/@types/httpInterface'
 
 export const commonApi = {
+  /**查询所有国家 不分页 */
+  get_country_list: (params: IParams) => request.post(`/V1/Area/all_list`, params),
   //# 登录V1/Login/index
   log_in: (params: IParams) => request.post(`/V1/Login/index`, params),
   //# 获取语言接口

@@ -1,5 +1,19 @@
 const common_en = {
   common: {
+    /********************************表单校验相关***********************************/
+    inputInfo: 'Please enter ...',
+    selectInfo: 'Please select ...',
+    inputNumber: 'Please enter numbers',
+    inputLength3To500: '3 to 500 characters',
+    lessThan3Words: 'Please enter a short name less than three letters long',
+    input0to10Number: 'Please enter a number from 0 to 10 or keep one decimal place',
+    // 请输入0-100的数字	Please enter a number from 0 to 100	Entrez un chiffre de 0 à 100
+    input0to100: 'Please enter a number from 0 to 100',
+    // 输入不合法 Format incorrect   Entrée incorrecte
+    inputNotAllowed: 'Format incorrect',
+    emailWarning: 'Please enter the email',
+    emailRegpWarning: 'Wrong email format',
+    /********************************表单校验相关end***********************************/
     billing: 'Issue a receipt',
     all: 'All',
     view: 'Browse',

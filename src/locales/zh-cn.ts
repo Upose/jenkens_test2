@@ -1,5 +1,19 @@
 const common_zh = {
   common: {
+    /********************************表单校验相关***********************************/
+    inputInfo: '请输入',
+    selectInfo: '请选择',
+    inputNumber: '请输入数字',
+    inputLength3To500: '长度在3-500',
+    lessThan3Words: '请输入小于三个字母的简称',
+    input0to10Number: '请输入0-10的数字或保留一位小数',
+    // 请输入0-100的数字
+    input0to100: '请输入0-100的数字',
+    // 输入不合法
+    inputNotAllowed: '输入不合法',
+    emailWarning: '请输入邮箱',
+    emailRegpWarning: '您输入的邮箱有误',
+    /********************************表单校验相关end***********************************/
     is_delivery: '出库状态',
     billing: '开单',
     all: '全部',

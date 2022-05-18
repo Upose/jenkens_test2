@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 左边侧边栏组件
+ * @Description: 左边侧边栏组件
  * @version: 
  * @Author: TJ
  * @Date: 2021-04-07 09:50:57
  * @LastEditors: HYH
- * @LastEditTime: 2022-04-24 18:34:39
+ * @LastEditTime: 2022-05-10 09:26:40
 -->
 <template>
   <template v-for="item of menuList" :key="item.menuId">

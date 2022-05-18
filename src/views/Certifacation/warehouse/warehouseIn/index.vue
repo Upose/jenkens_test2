@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-09 17:40:46
+ * @LastEditTime: 2022-05-18 14:23:53
 -->
 <template>
   <el-card style="width: 600px;height: 100%;">
@@ -57,7 +57,7 @@
         </el-table>
         <!-- 原因 -->
         <el-form-item :label="$t('common.reason')">
-          <el-input type="textarea" :rows="5" v-model="Form.reason" />
+          <el-input type="textarea" :rows="5" v-model="Form.explain" />
         </el-form-item>
         <!-- 下级审批人 -->
         <el-form-item label="下级审批人" prop="next_approver">
@@ -78,17 +78,15 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, toRefs, onMounted, ref, computed } from 'vue'
-import warehouseApi from './api'
+import { warehouseInApi } from '../api'
 import dataStructure from '@/utils/dataStructure'
 import { IRequest } from '@/@types/httpInterface'
 import { ElMessage } from 'element-plus'
-import { useI18n } from 'vue-i18n'
+import { formRef, Form, Rule } from './index'
 export default defineComponent({
   name: '',
   props: {},
   setup() {
-    const { t } = useI18n()
-    const formRef = ref()
     const state = reactive({
       /**查询参数 */
       search_value: '',
@@ -108,42 +106,6 @@ export default defineComponent({
       /**流程审批人列表 */
       flowApproverList: [] as any
     })
-    const Form = reactive({
-      /**原因*/
-      reason: '',
-
-      /**待审批的进货单号 */
-      order_number: '',
-      /**申请部门ID */
-      applicant_dept_id: '',
-      /**下级审批人 */
-      next_approver: ''
-    })
-    const Rule = reactive({
-      reason: [{ required: true, message: t('common.not_empty'), trigger: ['blur', 'change'] }],
-      order_number: [
-        {
-          required: true,
-          message: t('common.select'),
-          trigger: ['blur', 'change']
-        }
-      ],
-
-      applicant_dept_id: [
-        {
-          required: true,
-          message: t('common.select'),
-          trigger: ['blur', 'change']
-        }
-      ],
-      next_approver: [
-        {
-          required: true,
-          message: t('common.select'),
-          trigger: ['blur', 'change']
-        }
-      ]
-    })
     const methods = {
       /**流程审批 */
       submit() {
@@ -161,16 +123,18 @@ export default defineComponent({
         const form = formRef
         form.value.validate((valid: boolean) => {
           if (valid) {
-            console.log(data)
-            warehouseApi
+            warehouseInApi
               .flow_apply(data)
               .then(res => {
                 let { status, info } = res as IRequest
                 if (status === 200) {
                   ElMessage.success(info)
-                  setTimeout(() => {
-                    location.reload()
-                  }, 500)
+                  // 重置选中的信息
+                  Form.applicant_dept_id = ''
+                  Form.order_number = ''
+                  Form.next_approver = ''
+                  Form.explain = ''
+                  state.tableData = []
                 }
               })
               .catch(err => err)
@@ -208,9 +172,7 @@ export default defineComponent({
             ...state.getFlowApprovalInfo
           }
         )
-        console.log(data)
-
-        warehouseApi
+        warehouseInApi
           .get_flow_approver_list(data)
           .then(res => {
             console.log(res)
@@ -232,7 +194,7 @@ export default defineComponent({
             search_value
           }
         )
-        warehouseApi
+        warehouseInApi
           .get_details_by_id(data)
           .then(res => {
             let { status, custom_data } = res as IRequest
@@ -249,7 +211,7 @@ export default defineComponent({
             search_value: state.search_value
           }
         )
-        warehouseApi
+        warehouseInApi
           .get_list(data)
           .then(res => {
             let { status, custom_data } = res as IRequest
@@ -262,7 +224,7 @@ export default defineComponent({
       /**查询部门 */
       getDepartmentList() {
         const data = dataStructure({}, {})
-        warehouseApi
+        warehouseInApi
           .get_department(data)
           .then(res => {
             let { status, custom_data } = res as IRequest

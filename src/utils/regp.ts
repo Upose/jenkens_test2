@@ -1,10 +1,10 @@
 /*
- * @Descripttion: 校验公共文件
+ * @Description: 校验公共文件
  * @version:
  * @Author: TJ
  * @Date: 2021-03-30 10:41:44
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-06 11:01:19
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-18 10:06:32
  */
 // ##表单验证相关方法
 import i18n from '@/locales'

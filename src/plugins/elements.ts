@@ -1,10 +1,10 @@
 /*
- * @Descripttion: elemnent结合i18n国际化处理
+ * @Description: element结合i18n国际化处理
  * @version:
  * @Author: TJ
  * @Date: 2021-05-06 11:51:09
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-31 18:01:03
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-10 13:42:13
  */
 // import '@/assets/css/element-variables.scss'//生效了
 // import 'element-plus/packages/theme-chalk/src/base.scss'
