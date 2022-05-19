@@ -2,7 +2,7 @@
  * @Description: 退票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 15:23:00
+ * @LastEditTime: 2022-05-19 10:23:18
 -->
 <template>
   <div>
@@ -11,9 +11,9 @@
       <el-descriptions-item :label="$t('common.flow_id')" label-align="right">{{
         form.item.flow_id
       }}</el-descriptions-item>
-      <!-- 销售单号 -->
-      <el-descriptions-item :label="$t('common.sale_order_number')" label-align="right">{{
-        form.item.sale_order_number
+      <!-- 退票单号 -->
+      <el-descriptions-item label="退票单号" label-align="right">{{
+        form.item.invoice_return_order_number
       }}</el-descriptions-item>
       <!-- 公司编码 -->
       <el-descriptions-item :label="$t('common.com_code')" label-align="right">{{

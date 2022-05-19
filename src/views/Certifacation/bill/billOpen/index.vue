@@ -2,7 +2,7 @@
  * @Description: 多收
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 18:19:58
+ * @LastEditTime: 2022-05-19 10:11:54
 -->
 <template>
   <el-card style="width: 600px;height: 100%;">
@@ -265,21 +265,25 @@ export default defineComponent({
       /**流程审批 */
       submit() {
         const userInfo = JSON.parse(localStorage.getItem('userInfo') as string)
+        // let invoice_money = 0
+        // for (const item of state.tableCheck) {
+        //   invoice_money += Number(item.sale_money)
+        // }
         const data = dataStructure(
           {},
           {
             /**公司编码 */
             com_code: userInfo.com_code,
             ...Form,
-            ...state.getFlowApprovalInfo
+            ...state.getFlowApprovalInfo,
+            data: state.tableCheck
+            // invoice_money: invoice_money
           }
         )
-
         const form = formRef
         form.value.validate((valid: boolean) => {
           if (valid) {
             console.log(data)
-            return
             billOpenApi
               .submit_approval(data)
               .then(res => {
@@ -291,6 +295,7 @@ export default defineComponent({
                   Form.invoice_order_number = ''
                   Form.next_approver = ''
                   Form.explain = ''
+                  request.getGetMoneyList()
                 }
               })
               .catch(err => err)

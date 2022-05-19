@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2022-05-09 15:49:26
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 18:07:02
+ * @LastEditTime: 2022-05-19 09:47:52
  */
 import request from '@/http/axios/request'
 import { IParams } from '@/@types/httpInterface'
@@ -45,17 +45,21 @@ const billOpenApi = {
 /**退票 */
 const billReturnApi = {
   /**查询部门 */
-  get_department: (params: IParams) => request.post(`/V1/ApprovalLittlecharge/view`, params),
+  get_department: (params: IParams) => request.post(`/V1/ApprovalInvoiceReturn/view`, params),
 
-  /**查询待审核列表 */
-  get_list: (params: IParams) => request.post(`/V1/ApprovalLittlecharge/view_search`, params),
+  /**查询列表 */
+  get_list: (params: IParams) => request.post(`/V1/ApprovalInvoiceReturn/view_search`, params),
+
+  /**生成退票单号 */
+  generate_no: (params: IParams) =>
+    request.post(`/V1/ApprovalInvoiceReturn/invoice_return_order_number`, params),
 
   /**获取流程审批人列表（创建） */
   get_flow_approver_list: (params: IParams) =>
     request.post(`/V1/FlowApps/getApproverCreated`, params),
 
   /**提交审核 */
-  submit_approval: (params: IParams) => request.post(`/V1/ApprovalLittlecharge/flowApply`, params)
+  submit_approval: (params: IParams) => request.post(`/V1/ApprovalInvoiceReturn/flowApply`, params)
 }
 
 export { billReturnApi, billOpenApi }

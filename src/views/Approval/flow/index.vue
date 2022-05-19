@@ -2,7 +2,7 @@
  * @Description: 流程
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 15:03:08
+ * @LastEditTime: 2022-05-19 10:32:32
 -->
 <template>
   <el-card style="height: 100%;">
@@ -388,6 +388,8 @@ import warehouseOutDetails from './components/details/warehouseOut.vue'
 import saleOrderDetails from './components/details/saleOrder.vue'
 import overChargeDetails from './components/details/overCharge.vue'
 import underChargeDetails from './components/details/underCharge.vue'
+import billReturnDetails from './components/details/billReturn.vue'
+import billOpenDetails from './components/details/billOpen.vue'
 
 export default defineComponent({
   name: '',
@@ -397,7 +399,9 @@ export default defineComponent({
     saleOrderDetails,
     warehouseOutDetails,
     overChargeDetails,
-    underChargeDetails
+    underChargeDetails,
+    billReturnDetails,
+    billOpenDetails
   },
   setup() {
     const { t } = useI18n()
@@ -468,6 +472,10 @@ export default defineComponent({
             break
           case flowTypeId.UNDER_CHARGE:
             componentName.value = flowTypeName.UNDER_CHARGE
+          case flowTypeId.BILL_OPEN:
+            componentName.value = flowTypeName.BILL_OPEN
+          case flowTypeId.BILL_RETURN:
+            componentName.value = flowTypeName.BILL_RETURN
             break
 
           default:
@@ -552,7 +560,8 @@ export default defineComponent({
       },
       //    #分页功能
       changePage(page: number) {
-        state.page.perpage = page
+        state.page.page = page
+        methods.getNewList()
       },
       /**撤销流程 */
       revokeFlow(get_id: any, flow_type: any) {
@@ -593,6 +602,7 @@ export default defineComponent({
                 detailsForm[key] = data[key]
               })
               state.flowDetailsDrawer = true
+              console.log(detailsForm)
             }
           })
           .catch(err => err)

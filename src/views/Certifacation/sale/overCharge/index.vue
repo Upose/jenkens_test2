@@ -2,7 +2,7 @@
  * @Description: 多收
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 14:59:35
+ * @LastEditTime: 2022-05-19 10:12:07
 -->
 <template>
   <el-card style="width: 600px;height: 100%;">
@@ -117,6 +117,7 @@ export default defineComponent({
                   Form.sale_order_number = ''
                   Form.next_approver = ''
                   Form.explain = ''
+                  request.getOrderNumList()
                 }
               })
               .catch(err => err)

@@ -2,7 +2,7 @@
  * @Description:流程名称
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 15:03:04
+ * @LastEditTime: 2022-05-19 10:19:58
  */
 /**流程id */
 export enum flowTypeId {
@@ -32,9 +32,9 @@ export enum flowTypeName {
   /**退货单 */
   GOODS_RETURN = 20,
   /**开票 */
-  BILL_OPEN = 21,
+  BILL_OPEN = 'billOpenDetails',
   /**退票 */
-  BILL_RETURN = 22,
+  BILL_RETURN = 'billReturnDetails',
   /**入库 */
   WAREHOUSE_IN = 'warehouseInDetails',
   /**多收 */
