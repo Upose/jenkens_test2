@@ -113,6 +113,9 @@
           height: 0;
           flex: 1;
         }
+        .content_area {
+          height: calc(100vh - 90px);
+        }
       }
     }
   }

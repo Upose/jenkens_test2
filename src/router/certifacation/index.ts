@@ -1,11 +1,12 @@
 /*
- * @Descripttion:审批
+ * @Description:审批
  * @version:
  * @Author: XJ
  * @Date: 2021-06-08 18:20:36
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-07 17:21:02
+ * @LastEditTime: 2022-05-20 11:19:23
  */
+import i18n from '@/locales'
 export const certifacation = [
   // 开票相关
   {
@@ -17,7 +18,10 @@ export const certifacation = [
       {
         path: 'billOpen',
         name: 'BillOpen',
-        component: () => import('@/views/Certifacation/bill/billOpen/index.vue')
+        component: () => import('@/views/Certifacation/bill/billOpen/index.vue'),
+        meta: {
+          name: ''
+        }
       },
       // 退票
       {

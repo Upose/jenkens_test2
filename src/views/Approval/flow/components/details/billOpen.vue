@@ -2,7 +2,7 @@
  * @Description: 开票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 15:22:31
+ * @LastEditTime: 2022-05-20 17:28:45
 -->
 <template>
   <div>
@@ -11,9 +11,9 @@
       <el-descriptions-item :label="$t('common.flow_id')" label-align="right">{{
         form.item.flow_id
       }}</el-descriptions-item>
-      <!-- 销售单号 -->
-      <el-descriptions-item :label="$t('common.sale_order_number')" label-align="right">{{
-        form.item.sale_order_number
+      <!-- 开票单号 -->
+      <el-descriptions-item label="开票单号" label-align="right">{{
+        form.item.invoice_order_number
       }}</el-descriptions-item>
       <!-- 公司编码 -->
       <el-descriptions-item :label="$t('common.com_code')" label-align="right">{{
@@ -23,6 +23,10 @@
       <el-descriptions-item label="部门" label-align="right">{{
         form.item.applicant_dept_name
       }}</el-descriptions-item>
+      <!-- 图片 收款证明 -->
+      <el-descriptions-item :label="$t('common.upload_payee_certificate')" label-align="right">
+        <el-image v-for="item in imgList" :src="item.url" />
+      </el-descriptions-item>
       <!-- 原因 -->
       <el-descriptions-item :label="$t('common.reason')" label-align="right">{{
         form.item.explain
@@ -52,7 +56,8 @@ export default defineComponent({
     const methods = {}
     const state = reactive({
       form: props.form,
-      operationName: props.operationName
+      operationName: props.operationName,
+      imgList: props.form.item?.picture
     })
     return { ...methods, ...toRefs(state) }
   }

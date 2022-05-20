@@ -2,7 +2,7 @@
  * @Description: 流程
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-19 10:32:32
+ * @LastEditTime: 2022-05-20 18:13:20
 -->
 <template>
   <el-card style="height: 100%;">
@@ -423,7 +423,7 @@ export default defineComponent({
       /**流程状态列表 */
       flowStatusList: [] as any,
       /**流程状态 */
-      flowStatus: '' as any,
+      flowStatus: 2 as any,
       /**流程类型列表 */
       flowTypeList: [] as any,
       /**流程类型 */
@@ -472,8 +472,10 @@ export default defineComponent({
             break
           case flowTypeId.UNDER_CHARGE:
             componentName.value = flowTypeName.UNDER_CHARGE
+            break
           case flowTypeId.BILL_OPEN:
             componentName.value = flowTypeName.BILL_OPEN
+            break
           case flowTypeId.BILL_RETURN:
             componentName.value = flowTypeName.BILL_RETURN
             break
@@ -632,7 +634,6 @@ export default defineComponent({
       /**处理点击tab */
       handleClickTab(item: any) {
         state.page.page = 1
-        // state.flowStatus = ''
         state.flowType = ''
         state.search_value = ''
         switch (item.props.name) {
@@ -648,7 +649,6 @@ export default defineComponent({
       },
       /**处理跳转 和新建tag */
       handleJumpUrl(item: any) {
-        router.push(item.url)
         const { id, name, url } = item
         let tabs = store.getters[GetterConstants.GET_TABS]
         let res = false
@@ -663,12 +663,13 @@ export default defineComponent({
         if (!res) {
           // 点击新的菜单
           tabs.push({ id, name, menu_url: url, isChecked: true })
-          if (tabs.length > 5) {
+          if (tabs.length > 8) {
             //大于五个删除第二个
             tabs.splice(1, 1)
           }
           store.commit(MutationConstants.SET_TABS, tabs)
         }
+        router.push(item.url)
       }
     }
     const request = {

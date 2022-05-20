@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2022-05-18 10:07:26
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 16:47:27
+ * @LastEditTime: 2022-05-20 15:02:51
  */
 import i18n from '@/locales'
 let currentPassword = '' //定义一个空字符串接受密码
@@ -121,7 +121,7 @@ function debounce(fn: Function, delay: number) {
   }
 }
 /**公共校验规则 Element-plus=>Form */
-const trigger = ['change', 'change']
+const trigger = ['change', 'blur']
 const required = true
 const { t } = i18n.global
 export const defineRules = {
@@ -140,3 +140,9 @@ export const defineRules = {
   /**节流 */
   debounce
 }
+/**
+ * @description 检测文件类型是否是图片
+ * @param type 文件类型
+ */
+export const checkIsImg = (type: string) =>
+  type === 'image/jpg' || type === 'image/png' || type === 'image/gif' || type === 'image/jpeg'

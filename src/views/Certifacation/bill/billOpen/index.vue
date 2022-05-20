@@ -1,12 +1,12 @@
 <!--
- * @Description: 多收
+ * @Description: 开票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-19 10:11:54
+ * @LastEditTime: 2022-05-20 17:33:09
 -->
 <template>
-  <el-card style="width: 600px;height: 100%;">
-    <el-scrollbar style="height: calc(100vh - 120px);">
+  <el-card style="width: 600px;height: 95%;">
+    <el-scrollbar style="height: calc(100vh - 140px);">
       <el-form ref="formRef" :model="Form" :rules="Rule">
         <!-- 部门 -->
         <el-form-item label="部门" prop="applicant_dept_id">
@@ -64,24 +64,7 @@
         <el-form-item label="开票单号" prop="invoice_order_number">
           <el-input v-model="Form.invoice_order_number" />
         </el-form-item>
-        <!-- 收款单号  -->
-        <el-form-item
-          :label="$t('common.collection_order_number')"
-          prop="inventory_order_payment_record_id"
-        >
-          <el-select
-            @change="getSaleOrderListById"
-            style="width: 100%;"
-            v-model="Form.inventory_order_payment_record_id"
-          >
-            <el-option
-              v-for="item in getMoneyList"
-              :label="item.order_number"
-              :value="item.order_number"
-              :key="item.order_number"
-            />
-          </el-select>
-        </el-form-item>
+
         <!-- 销售单号  -->
         <el-form-item :label="$t('common.inventory_order_id')" prop="inventory_order_id">
           <el-select
@@ -89,13 +72,13 @@
             style="width: 100%;"
             v-model="Form.inventory_order_id"
             multiple
+            filterable
+            collapse-tags
+            allow-create
+            default-first-option
+            :reserve-keyword="false"
           >
-            <el-option
-              v-for="item in saleOrderList"
-              :label="item.order_number"
-              :value="item.order_number"
-              :key="item.order_number"
-            />
+            <el-option v-for="item in options" :key="item" :label="item" :value="item" />
           </el-select>
         </el-form-item>
         <el-table
@@ -113,10 +96,6 @@
         <!-- 税号-->
         <el-form-item label="税号" prop="ein">
           <el-input v-model="Form.ein" />
-        </el-form-item>
-        <!-- 金额-->
-        <el-form-item :label="$t('common.money')" prop="ein">
-          <el-input v-model="Form.invoice_money" />
         </el-form-item>
         <!-- 公司-->
         <el-form-item label="公司" prop="company">
@@ -138,6 +117,29 @@
         <el-form-item :label="$t('common.reason')">
           <el-input type="textarea" :rows="5" v-model="Form.explain" />
         </el-form-item>
+        <!-- 图片 收款证明 -->
+        <el-form-item :label="$t('common.upload_payee_certificate')"> </el-form-item>
+        <el-upload
+          ref="uploadRef"
+          multiple
+          :limit="5"
+          action="#"
+          list-type="picture-card"
+          :auto-upload="false"
+          :on-change="onFileChange"
+        >
+          <i class="el-icon-plus"></i>
+          <template #file="{ file }">
+            <div>
+              <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+              <span class="el-upload-list__item-actions">
+                <span class="el-upload-list__item-delete" @click="handleRemove(file)">
+                  <i class="el-icon-delete"></i>
+                </span>
+              </span>
+            </div>
+          </template>
+        </el-upload>
         <!-- 下级审批人 -->
         <el-form-item label="下级审批人" prop="next_approver">
           <el-select style="width: 100%;" v-model="Form.next_approver">
@@ -161,13 +163,19 @@ import { billOpenApi } from '../api'
 import dataStructure from '@/utils/dataStructure'
 import { IRequest } from '@/@types/httpInterface'
 import { ElMessage } from 'element-plus'
-import { formRef, Form, Rule, multipleTableRef } from './index'
+import { formRef, Form, Rule, multipleTableRef, uploadRef, debounce } from './index'
 import { commonApi } from '@/http/api/common'
+import store from '@/store'
+import { GetterConstants } from '@/store/modules/users/constants'
+import { useI18n } from 'vue-i18n'
+import { checkIsImg } from '@/utils/formValid'
 export default defineComponent({
   name: '',
   props: {},
   setup() {
+    const { t } = useI18n()
     const state = reactive({
+      options: [''],
       tableData: [] as any,
       tableCheck: [] as any,
       /**查询参数 */
@@ -193,28 +201,48 @@ export default defineComponent({
       flowApproverList: [] as any
     })
     const methods = {
-      choseDataArr(row: any) {
-        // console.log(multipleTableRef.value)
-        state.tableCheck = row
-        const arr = state.tableCheck.map((item: any) => {
-          return item.id
-        })
+      onFileChange(file: any, fileList: any) {
+        //自动过滤不是图片的文件
+        for (let i = 0; i < fileList.length; i++) {
+          const isImg = checkIsImg(fileList[i].raw.type)
+
+          if (!isImg) {
+            fileList.splice(i, 1)
+          }
+        }
+      },
+      handleRemove(file: any) {
+        const files = uploadRef.value.uploadFiles
+        for (let i = 0; i < files.length; i++) {
+          if (file.name === files[i].name) {
+            files.splice(i, 1)
+          }
+        }
+      },
+      /**验证销售单号 */
+      authSaleOrder: debounce(() => {
         const data = dataStructure(
           {},
           {
-            sale_order_number: Form.inventory_order_id, //销售单号
-            data: arr //销售id
+            search_value: Form.inventory_order_id //销售单号  精确搜索  如果满足条件 可以叠加
           }
         )
         billOpenApi
-          .checkSaleOrderStatus(data)
+          .checkSaleOrder(data)
           .then(res => {
             console.log(res)
-            let { status, custom_data } = res as IRequest
+            let { status, custom_data, info } = res as IRequest
             if (status === 200) {
+              Form.inventory_order_id = custom_data.data || null
+              if (!custom_data.data) {
+                ElMessage(info)
+              }
             }
           })
           .catch(err => err)
+      }, 1000),
+      choseDataArr(row: any) {
+        state.tableCheck = row
       },
       /**根据收款单号查询销售单号 */
       getSaleOrderListById(id: any) {
@@ -231,8 +259,8 @@ export default defineComponent({
           .catch(err => err)
       },
       /**查询销售单详情 */
-      getSaleOrderDetails(id: any) {
-        const data = dataStructure({}, { search_value: id })
+      getSaleOrderDetails() {
+        const data = dataStructure({}, { search_value: Form.inventory_order_id })
         billOpenApi
           .get_sale_order_details(data)
           .then(res => {
@@ -264,38 +292,70 @@ export default defineComponent({
       },
       /**流程审批 */
       submit() {
-        const userInfo = JSON.parse(localStorage.getItem('userInfo') as string)
-        // let invoice_money = 0
-        // for (const item of state.tableCheck) {
-        //   invoice_money += Number(item.sale_money)
-        // }
-        const data = dataStructure(
-          {},
-          {
-            /**公司编码 */
-            com_code: userInfo.com_code,
-            ...Form,
-            ...state.getFlowApprovalInfo,
-            data: state.tableCheck
-            // invoice_money: invoice_money
-          }
-        )
+        //判断选择销售单没有
+        if (state.tableCheck.length === 0) return ElMessage.warning('请选择销售单')
+        const files = uploadRef.value.uploadFiles
         const form = formRef
         form.value.validate((valid: boolean) => {
           if (valid) {
-            console.log(data)
+            //上传图片
+            let user_id = store.getters[GetterConstants.GET_USERID]
+            let language_id = store.getters[GetterConstants.GET_LANGUAGE]
+            const formData: any = new FormData()
+            formData.append('user_id', user_id)
+            formData.append('language_id', language_id)
+            formData.append('access_sys_code', 'web')
+            for (const item of files) {
+              formData.append('picture[]', item.raw)
+            }
             billOpenApi
-              .submit_approval(data)
+              .upload_img(formData)
               .then(res => {
-                let { status, info } = res as IRequest
+                let { status, custom_data } = res as IRequest
                 if (status === 200) {
-                  ElMessage.success(info)
-                  // 重置选中的信息
-                  Form.applicant_dept_id = ''
-                  Form.invoice_order_number = ''
-                  Form.next_approver = ''
-                  Form.explain = ''
-                  request.getGetMoneyList()
+                  Form.file_data = []
+                  for (const item of custom_data.path) {
+                    let obj = {
+                      url: item
+                    }
+                    Form.file_data.push(obj)
+                  }
+                  let invoice_money = 0
+                  for (const cont of state.tableCheck) {
+                    invoice_money += Number(cont.sale_money) || 0
+                  }
+                  const userInfo = JSON.parse(localStorage.getItem('userInfo') as string)
+                  const data = dataStructure(
+                    {},
+                    {
+                      /**公司编码 */
+                      com_code: userInfo.com_code,
+                      ...Form,
+                      ...state.getFlowApprovalInfo,
+                      data: state.tableCheck,
+                      invoice_money
+                    }
+                  )
+                  const form = formRef
+                  form.value.validate((valid: boolean) => {
+                    if (valid) {
+                      console.log(data)
+                      billOpenApi
+                        .submit_approval(data)
+                        .then(res => {
+                          let { status, info } = res as IRequest
+                          if (status === 200) {
+                            ElMessage.success(info)
+                            Object.keys(Form).forEach((key: string) => {
+                              ;(Form as any)[key] = ''
+                            })
+                            state.tableData = []
+                            uploadRef.value.uploadFiles = []
+                          }
+                        })
+                        .catch(err => err)
+                    }
+                  })
                 }
               })
               .catch(err => err)
@@ -390,7 +450,6 @@ export default defineComponent({
               state.getFlowApprovalInfo.tid = custom_data.data.tid
               state.getFlowApprovalInfo.uid = custom_data.data.uid
               state.getFlowApprovalInfo.up_uid = custom_data.data.up_uid
-              request.getGetMoneyList()
             }
           })
           .catch(err => err)
@@ -401,7 +460,7 @@ export default defineComponent({
       request.getBillTypeList()
       request.getCountryList()
     })
-    return { ...methods, ...toRefs(state), formRef, multipleTableRef, Rule, Form }
+    return { ...methods, ...toRefs(state), formRef, multipleTableRef, uploadRef, Rule, Form }
   }
 })
 </script>

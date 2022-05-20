@@ -2,14 +2,17 @@
  * @Description:
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 18:01:41
+ * @LastEditTime: 2022-05-20 16:34:06
  */
+import i18n from '@/locales'
 import { defineRules } from '@/utils/formValid'
 import { reactive, ref } from 'vue'
 const { inputInfo, selectInfo, email, number, debounce } = defineRules
 
 const formRef = ref()
 const multipleTableRef = ref()
+const { t } = i18n.global
+
 const Form = reactive({
   /**原因*/
   explain: '',
@@ -39,11 +42,12 @@ const Form = reactive({
   ein: '',
   /**开票所在国家  */
   area: '',
-  /**开票金额 */
-  invoice_money: null as any,
   /**销售单号 */
-  inventory_order_id: ''
+  inventory_order_id: null as any,
+  /**图片列表 */
+  file_data: [] as any
 })
+
 const Rule = reactive({
   explain: inputInfo,
   invoice_order_number: selectInfo,
@@ -60,6 +64,8 @@ const Rule = reactive({
   ein: inputInfo,
   area: selectInfo,
   invoice_money: number,
+  // inventory_order_id: [{ required: true, message: t('common.inputInfo'), trigger: 'blur' }]
   inventory_order_id: selectInfo
 })
-export { formRef, Form, Rule, multipleTableRef }
+const uploadRef = ref()
+export { formRef, Form, Rule, multipleTableRef, uploadRef, debounce }

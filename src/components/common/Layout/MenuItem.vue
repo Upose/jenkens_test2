@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-04-07 09:50:57
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-10 09:26:40
+ * @LastEditTime: 2022-05-20 10:15:43
 -->
 <template>
   <template v-for="item of menuList" :key="item.menuId">
@@ -62,7 +62,7 @@ export default defineComponent({
         if (!res) {
           // 点击新的菜单
           tabs.push({ id: id, name, menu_url, isChecked: true })
-          if (tabs.length > 5) {
+          if (tabs.length > 8) {
             //大于五个删除第二个
             tabs.splice(1, 1)
           }

@@ -1,10 +1,10 @@
 /*
- * @Descripttion:审批
+ * @Description:审批
  * @version:
  * @Author: XJ
  * @Date: 2021-06-08 18:20:36
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-07 13:46:53
+ * @LastEditTime: 2022-05-20 11:17:39
  */
 export const approval = [
   // 流程审批

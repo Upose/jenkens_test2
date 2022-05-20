@@ -1,10 +1,10 @@
 /*
- * @Descripttion:
+ * @Description:
  * @version:
  * @Author: XJ
  * @Date: 2021-05-06 11:17:19
  * @LastEditors: HYH
- * @LastEditTime: 2022-04-24 16:16:26
+ * @LastEditTime: 2022-05-20 16:29:42
  */
 //页面基础布局样式一
 import '@/assets/icon/iconfont.css'

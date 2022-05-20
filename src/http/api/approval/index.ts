@@ -4,7 +4,7 @@
  * @Author: XJ
  * @Date: 2021-06-17 14:17:22
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-19 10:25:33
+ * @LastEditTime: 2022-05-20 16:45:10
  */
 import request from '../../axios/request'
 import { IParams } from '@/@types/httpInterface'
@@ -47,8 +47,10 @@ const approvalApi = {
         break
       case flowTypeId.UNDER_CHARGE:
         url = 'ApprovalLittlecharge'
+        break
       case flowTypeId.BILL_OPEN:
         url = 'ApprovalInvoice'
+        break
       case flowTypeId.BILL_RETURN:
         url = 'ApprovalInvoiceReturn'
         break

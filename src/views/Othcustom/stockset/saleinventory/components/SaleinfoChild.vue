@@ -4,7 +4,7 @@
  * @Author: XJ
  * @Date: 2021-06-18 11:24:37
  * @LastEditors: HYH
- * @LastEditTime: 2022-04-22 09:43:23
+ * @LastEditTime: 2022-05-20 10:46:00
 -->
 <!--  -->
 <template>
@@ -337,8 +337,6 @@ export default defineComponent({
               state.customArgs.all_array = custom_data.all_array
               let tableData: any = dateNormArray(custom_data.data)
               state.tableData = tableData
-              console.log(state.customArgs.all_array)
-              console.log(tableData)
             }
           })
           .catch(err => err)
