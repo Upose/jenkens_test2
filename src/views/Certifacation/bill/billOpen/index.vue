@@ -2,7 +2,7 @@
  * @Description: 开票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 17:33:09
+ * @LastEditTime: 2022-05-23 09:06:32
 -->
 <template>
   <el-card style="width: 600px;height: 95%;">
@@ -69,6 +69,7 @@
         <el-form-item :label="$t('common.inventory_order_id')" prop="inventory_order_id">
           <el-select
             @change="getSaleOrderDetails"
+            :placeholder="$t('common.inputAndSelect')"
             style="width: 100%;"
             v-model="Form.inventory_order_id"
             multiple

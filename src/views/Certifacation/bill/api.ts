@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2022-05-09 15:49:26
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 18:23:54
+ * @LastEditTime: 2022-05-23 09:12:33
  */
 import request from '@/http/axios/request'
 import { IParams } from '@/@types/httpInterface'
@@ -50,7 +50,7 @@ const billReturnApi = {
   /**查询部门 */
   get_department: (params: IParams) => request.post(`/V1/ApprovalInvoiceReturn/view`, params),
 
-  /**查询列表 */
+  /**查询列表 （未红冲开票单号搜索 ）*/
   get_list: (params: IParams) => request.post(`/V1/ApprovalInvoiceReturn/view_search`, params),
 
   /**生成退票单号 */

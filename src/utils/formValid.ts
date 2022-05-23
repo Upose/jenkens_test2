@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2022-05-18 10:07:26
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 15:02:51
+ * @LastEditTime: 2022-05-23 10:47:15
  */
 import i18n from '@/locales'
 let currentPassword = '' //定义一个空字符串接受密码
@@ -59,9 +59,9 @@ export async function checkpasswordAgain(rule: object, value: string, callback: 
 export async function checkDiscount(rule: object, value: string, callback: Function) {
   const regp = /^[0-9]{1}(\.[0-9])?$/
   if (!value) {
-    callback(new Error(i18n.global.t('inputForm.inputInfo')))
+    callback(new Error(i18n.global.t('common.inputInfo')))
   } else if (!regp.test(value) || Number(value) === 0) {
-    callback(new Error(i18n.global.t('inputForm.input0to10Number')))
+    callback(new Error(i18n.global.t('common.input0to10Number')))
   } else {
     callback()
   }
@@ -70,9 +70,9 @@ export async function checkDiscount(rule: object, value: string, callback: Funct
 export async function checkPrice(rule: object, value: string, callback: Function) {
   const regpPrice = /^[\+\-]?(0|[1-9]\d{0,11}|0\.\d{1,2}|[1-9]\d{0,11}\.\d{1,2})$/
   if (!value) {
-    callback(new Error(i18n.global.t('inputForm.inputInfo')))
+    callback(new Error(i18n.global.t('common.inputInfo')))
   } else if (!regpPrice.test(value) || Number(value) === 0) {
-    callback(new Error(i18n.global.t('inputForm.inputNotAllowed')))
+    callback(new Error(i18n.global.t('common.inputNotAllowed')))
   } else {
     callback()
   }
@@ -81,9 +81,9 @@ export async function checkPrice(rule: object, value: string, callback: Function
 export async function checkIfNumber(rule: object, value: string, callback: Function) {
   const regp = /^(\-|\+)?\d+(\.\d+)?$/
   if (!value) {
-    callback(new Error(i18n.global.t('inputForm.inputInfo')))
+    callback(new Error(i18n.global.t('common.inputInfo')))
   } else if (!regp.test(value) || Number(value) === 0) {
-    callback(new Error(i18n.global.t('inputForm.inputNumber')))
+    callback(new Error(i18n.global.t('common.inputNumber')))
   } else {
     callback()
   }

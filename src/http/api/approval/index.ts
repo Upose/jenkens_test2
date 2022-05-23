@@ -4,7 +4,7 @@
  * @Author: XJ
  * @Date: 2021-06-17 14:17:22
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 16:45:10
+ * @LastEditTime: 2022-05-23 13:54:20
  */
 import request from '../../axios/request'
 import { IParams } from '@/@types/httpInterface'
@@ -54,6 +54,9 @@ const approvalApi = {
       case flowTypeId.BILL_RETURN:
         url = 'ApprovalInvoiceReturn'
         break
+      case flowTypeId.GOODS_RETURN:
+        url = 'ApprovalReturn'
+        break
       default:
         break
     }
@@ -87,6 +90,9 @@ const approvalApi = {
         url = 'ApprovalInvoice'
       case flowTypeId.BILL_RETURN:
         url = 'ApprovalInvoiceReturn'
+        break
+      case flowTypeId.GOODS_RETURN:
+        url = 'ApprovalReturn'
         break
       default:
         break

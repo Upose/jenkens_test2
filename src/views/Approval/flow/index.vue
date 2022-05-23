@@ -2,7 +2,7 @@
  * @Description: 流程
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 18:13:20
+ * @LastEditTime: 2022-05-23 17:32:42
 -->
 <template>
   <el-card style="height: 100%;">
@@ -97,7 +97,7 @@
               <!-- 审批中才显示撤销 -->
               <el-button
                 type="text"
-                v-if="row.flow_state === 2"
+                v-if="row.flow_state === 2 && row.flow_revoke === 0"
                 @click="revokeFlow(row.flow_id, row.flow_type)"
                 >撤销</el-button
               >
@@ -279,7 +279,12 @@
   <el-drawer v-model="approvalFlowDrawer" size="700px" :title="detailsForm.title_name">
     <el-scrollbar style="padding: 20px;height: calc(100vh - 150px);">
       <!-- 审批详情 -->
-      <component :is="componentName" :form="detailsForm" :operationName="operationName">
+      <component
+        :is="componentName"
+        :form="detailsForm"
+        :module_parameters="detailsForm.module_parameters"
+        :operationName="operationName"
+      >
         <template #step>
           <div class="flow_step">
             <div class="flow_name">审核流程</div>
@@ -381,7 +386,7 @@ import dataStructure from '@/utils/dataStructure'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { approvalRule, detailsForm, approvalRef, debounce } from './index'
+import { approvalRule, detailsForm, approvalRef, debounce, handleRefreshModuleName } from './index'
 import { flowTypeId, flowTypeName } from '@/constant/flowType'
 import warehouseInDetails from './components/details/warehouseIn.vue'
 import warehouseOutDetails from './components/details/warehouseOut.vue'
@@ -390,6 +395,7 @@ import overChargeDetails from './components/details/overCharge.vue'
 import underChargeDetails from './components/details/underCharge.vue'
 import billReturnDetails from './components/details/billReturn.vue'
 import billOpenDetails from './components/details/billOpen.vue'
+import goodsReturnDetails from './components/details/goodsReturn.vue'
 
 export default defineComponent({
   name: '',
@@ -401,7 +407,8 @@ export default defineComponent({
     overChargeDetails,
     underChargeDetails,
     billReturnDetails,
-    billOpenDetails
+    billOpenDetails,
+    goodsReturnDetails
   },
   setup() {
     const { t } = useI18n()
@@ -479,6 +486,9 @@ export default defineComponent({
           case flowTypeId.BILL_RETURN:
             componentName.value = flowTypeName.BILL_RETURN
             break
+          case flowTypeId.GOODS_RETURN:
+            componentName.value = flowTypeName.GOODS_RETURN
+            break
 
           default:
             break
@@ -486,6 +496,10 @@ export default defineComponent({
       },
       /**确认审核 */
       sureApproval() {
+        let otherData: any = {}
+        if (detailsForm.module_parameters) {
+          otherData = handleRefreshModuleName(detailsForm)
+        }
         const data = dataStructure(
           {},
           {
@@ -496,9 +510,11 @@ export default defineComponent({
             flow_id: detailsForm.item.flow_id,
             result_id: state.approvalResultForm.result_id,
             approval_comments: state.approvalResultForm.approval_comments,
-            next_approver: state.approvalResultForm.next_approver
+            next_approver: state.approvalResultForm.next_approver,
+            ...otherData
           }
         )
+        console.log(data)
         const form = approvalRef
         form.value.validate((valid: boolean) => {
           if (valid) {
@@ -550,6 +566,10 @@ export default defineComponent({
             let { status, custom_data } = res as IRequest
             if (status === 200) {
               const result = custom_data.data || []
+              // 清空数据重新赋值
+              Object.keys(detailsForm).forEach((key: any) => {
+                detailsForm[key] = ''
+              })
               // 字段过多 直接使用Object.keys 赋值给detailsForm
               Object.keys(result).forEach((key: any) => {
                 detailsForm[key] = result[key]
@@ -557,6 +577,7 @@ export default defineComponent({
               state.approvalFlowDrawer = true
               state.approvalResultForm.flow_type = flow_type
             }
+            console.log(detailsForm)
           })
           .catch(err => err)
       },
@@ -599,6 +620,10 @@ export default defineComponent({
             let { status, custom_data } = res as IRequest
             if (status === 200) {
               const data = custom_data.data || []
+              // 清空数据重新赋值
+              Object.keys(detailsForm).forEach((key: any) => {
+                detailsForm[key] = ''
+              })
               // 字段过多 直接使用Object.keys 赋值给detailsForm
               Object.keys(data).forEach((key: any) => {
                 detailsForm[key] = data[key]
