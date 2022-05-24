@@ -2,7 +2,7 @@
  * @Description: 开票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-23 09:06:32
+ * @LastEditTime: 2022-05-24 14:48:45
 -->
 <template>
   <el-card style="width: 600px;height: 95%;">
@@ -60,11 +60,26 @@
             />
           </el-select>
         </el-form-item>
+
         <!-- 开票单号 -->
         <el-form-item label="开票单号" prop="invoice_order_number">
           <el-input v-model="Form.invoice_order_number" />
         </el-form-item>
-
+        <!-- 货币单位 -->
+        <el-form-item filterable :label="$t('common.currency_unit_name')" prop="currency_unit">
+          <el-select
+            @change="getSaleOrderDetails"
+            style="width: 100%;"
+            v-model="Form.currency_unit"
+          >
+            <el-option
+              v-for="item in moneyUnitList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            />
+          </el-select>
+        </el-form-item>
         <!-- 销售单号  -->
         <el-form-item :label="$t('common.inventory_order_id')" prop="inventory_order_id">
           <el-select
@@ -170,6 +185,7 @@ import store from '@/store'
 import { GetterConstants } from '@/store/modules/users/constants'
 import { useI18n } from 'vue-i18n'
 import { checkIsImg } from '@/utils/formValid'
+import { returnOrderApi } from '../../goodsReturn/api'
 export default defineComponent({
   name: '',
   props: {},
@@ -183,6 +199,8 @@ export default defineComponent({
       search_value: '',
       /**部门列表 */
       departmentList: [] as any,
+      /**货币单位列表 */
+      moneyUnitList: [] as any,
       /**收款单列表 */
       getMoneyList: [] as any,
       /**开票类型列表 */
@@ -261,7 +279,13 @@ export default defineComponent({
       },
       /**查询销售单详情 */
       getSaleOrderDetails() {
-        const data = dataStructure({}, { search_value: Form.inventory_order_id })
+        const data = dataStructure(
+          {},
+          {
+            currency_unit: Form.currency_unit,
+            search_value: Form.inventory_order_id
+          }
+        )
         billOpenApi
           .get_sale_order_details(data)
           .then(res => {
@@ -376,6 +400,19 @@ export default defineComponent({
       }
     }
     const request = {
+      /**获取货币单位 */
+      getMoneyUnitList() {
+        const data = dataStructure({}, {})
+        returnOrderApi
+          .get_money_unit_list(data)
+          .then(res => {
+            let { status, custom_data } = res as IRequest
+            if (status === 200) {
+              state.moneyUnitList = custom_data
+            }
+          })
+          .catch(err => err)
+      },
       /**查询国家列表 */
       getCountryList() {
         const data = dataStructure({}, {})
@@ -460,6 +497,7 @@ export default defineComponent({
       request.getDepartmentList()
       request.getBillTypeList()
       request.getCountryList()
+      request.getMoneyUnitList()
     })
     return { ...methods, ...toRefs(state), formRef, multipleTableRef, uploadRef, Rule, Form }
   }

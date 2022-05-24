@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-05 18:26:53
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-06 10:49:50
+ * @LastEditTime: 2022-05-24 15:08:16
 -->
 <!--  -->
 <template>
@@ -25,7 +25,9 @@
     :row-style="rowStyle"
   >
     <el-table-column type="index" label="⚙" v-if="showConfig"> </el-table-column>
+
     <el-table-column type="index" v-else> </el-table-column>
+
     <template v-for="(item, index) in all_array" :key="index">
       <!-- 不需要特殊处理的 -->
       <el-table-column

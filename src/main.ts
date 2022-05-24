@@ -4,7 +4,7 @@
  * @Author: XJ
  * @Date: 2021-05-06 11:17:19
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 16:29:42
+ * @LastEditTime: 2022-05-24 14:56:52
  */
 //页面基础布局样式一
 import '@/assets/icon/iconfont.css'
@@ -13,13 +13,16 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import directives from './directives/index'
 // 引入插件文件
 import { loadAllPlugins } from './plugins'
 const app = createApp(App)
 loadAllPlugins(app)
-app.use(store)
-app.use(router)
-app.mount('#app')
+app
+  .use(store)
+  .use(router)
+  .use(directives)
+  .mount('#app')
 
 // #监听鼠标落下事件：存储控制可选择列的变量
 document.addEventListener(

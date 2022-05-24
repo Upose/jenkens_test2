@@ -55,7 +55,7 @@
 
 <script lang="ts">
 // 设置免登录
-import { MutationConstants } from '@/store/modules/users/constants'
+import { GetterConstants, MutationConstants } from '@/store/modules/users/constants'
 import {
   MutationConstants as indexMutationConstants,
   GetterConstants as indexGetterConstants
@@ -134,8 +134,36 @@ export default defineComponent({
             let { status, custom_data } = res as IRequest
             if (status === 200) {
               methods.checkLoginType(custom_data.user_id, custom_data.token).then(() => {
-                Router.push('/index/service')
+                requests.getLeftMenu()
               })
+            }
+          })
+          .catch(err => err)
+      },
+      /**获取左侧菜单 */
+      getLeftMenu() {
+        let user_id = store.getters[GetterConstants.GET_USERID]
+        const data = dataStructure(
+          {},
+          {
+            user_id,
+            menu_id: null //为空则传所有菜单 ,
+          }
+        )
+        commonApi
+          .get_menu_multistage(data)
+          .then(res => {
+            let { status, custom_data } = res as IRequest
+            if (status === 200) {
+              const { data, flat_data } = custom_data
+              store.commit(indexMutationConstants.SET_MENUS, data)
+              let tabs = store.getters[indexGetterConstants.GET_TABS]
+              // 设置默认第一个菜单选中状态
+              let { id, name, menu_url } = data[0]
+              store.commit(indexMutationConstants.SET_TABS, [
+                { id: id, name, menu_url, isChecked: true }
+              ])
+              Router.push('/index/service')
             }
           })
           .catch(err => err)

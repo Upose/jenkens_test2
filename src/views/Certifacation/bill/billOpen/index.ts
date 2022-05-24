@@ -2,7 +2,7 @@
  * @Description:
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 16:34:06
+ * @LastEditTime: 2022-05-24 14:41:22
  */
 import i18n from '@/locales'
 import { defineRules } from '@/utils/formValid'
@@ -44,6 +44,8 @@ const Form = reactive({
   area: '',
   /**销售单号 */
   inventory_order_id: null as any,
+  /**币种 */
+  currency_unit: '',
   /**图片列表 */
   file_data: [] as any
 })
@@ -65,7 +67,8 @@ const Rule = reactive({
   area: selectInfo,
   invoice_money: number,
   // inventory_order_id: [{ required: true, message: t('common.inputInfo'), trigger: 'blur' }]
-  inventory_order_id: selectInfo
+  inventory_order_id: selectInfo,
+  currency_unit: selectInfo
 })
 const uploadRef = ref()
 export { formRef, Form, Rule, multipleTableRef, uploadRef, debounce }
