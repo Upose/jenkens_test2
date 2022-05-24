@@ -1,26 +1,27 @@
 /*
- * @Descripttion:
+ * @Description:
  * @version:
  * @Author: XJ
  * @Date: 2021-05-10 10:29:01
- * @LastEditors: XJ
- * @LastEditTime: 2021-06-08 18:34:27
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-24 18:14:46
  */
 import { manageChild } from './manage/index'
 import { setsChild } from './sets/index'
-export const systemChild = [
+const system = [
   {
     path: 'manage',
     name: 'Manage',
     redirect: '/index/system/manage/roleinfo',
     component: () => import('@/views/System/manage/index.vue'),
-    children: manageChild,
+    children: manageChild
   },
   {
     path: 'sets',
     name: 'Sets',
     redirect: '/index/system/sets/cominfo',
     component: () => import('@/views/System/sets/index.vue'),
-    children: setsChild,
-  },
+    children: setsChild
+  }
 ]
+export default system

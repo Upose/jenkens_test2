@@ -1,20 +1,22 @@
 /*
- * @Descripttion:
+ * @Description:路由文件
  * @version:
  * @Author: XJ
  * @Date: 2021-05-06 11:17:19
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-07 16:40:35
+ * @LastEditTime: 2022-05-24 18:15:01
  */
 
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { getUserId } from '@/utils/cookie'
 import { usersChild } from '@/router/users'
-import { othcustomChild } from '@/router/othcustom'
-import { systemChild } from '@/router/system'
+import warehouse from '@/router/warehouse'
+import purchase from '@/router/purchase'
+import sale from '@/router/sale'
+import finance from '@/router/finance'
+import system from '@/router/system'
 import i18n from '@/locales'
 import { handlesChild } from '@/router/handles'
-import { financecustomChild } from '@/router/financecustom'
 import { GetterConstants } from '@/store/modules/users/constants'
 import { GetterConstants as getters, MutationConstants } from '@/store/modules/index/constants'
 import { useStore } from '@/store'
@@ -39,11 +41,13 @@ export const constantRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Certifacation/index.vue'),
         children: certifacation
       },
+      // 首页
       {
         path: 'service',
         name: 'Service',
         component: () => import('@/views/Service/index.vue')
       },
+      // 员工
       {
         path: 'users',
         name: 'Users',
@@ -57,23 +61,40 @@ export const constantRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Approval/index.vue'),
         children: approval
       },
+      // 仓库 相关
       {
-        path: 'othcustom',
-        name: 'othcustom',
-        component: () => import('@/views/Othcustom/index.vue'),
-        children: othcustomChild
+        path: 'warehouse',
+        name: 'Warehouse',
+        component: () => import('@/views/WareHouse/index.vue'),
+        children: warehouse
       },
+      // 进货
       {
-        path: 'financecustom',
-        name: 'Financecustom',
-        component: () => import('@/views/Financecustom/index.vue'),
-        children: financecustomChild
+        path: 'purchase',
+        name: 'Purchase',
+        component: () => import('@/views/purchase/index.vue'),
+        children: purchase
       },
+      // 销售
+      {
+        path: 'sale',
+        name: 'Sale',
+        component: () => import('@/views/sale/index.vue'),
+        children: sale
+      },
+      // 财务
+      {
+        path: 'finance',
+        name: 'Finance',
+        component: () => import('@/views/Finance/index.vue'),
+        children: finance
+      },
+      // 系统
       {
         path: 'system',
         name: 'System',
         component: () => import('@/views/System/index.vue'),
-        children: systemChild
+        children: system
       },
       // ========以下非后端配置路由
       {
