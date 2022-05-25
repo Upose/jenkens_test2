@@ -1,98 +1,98 @@
 //页面基础布局样式一
 .content {
-	width: 100%;
-	height: 100%;
-	.left_cont {
-		width: 100%;
-		height: 100%;
-		background-color: #fff;
-		.box {
-			width: 100%;
-			height: 100%;
-			box-sizing: border-box;
-			padding: 15px;
-			padding-bottom: 5px;
-			display: flex;
-			flex-direction: column;
-			.header {
-				width: 100%;
-				height: 40px;
-			}
-			.part_line {
-				width: 100%;
-				height: 1px;
-				background-color: #dfe6ec;
-				z-index: 100;
-				margin: 5px 0 10px;
-			}
-			// 搜索框和按钮较少情况
-			.top {
-				box-sizing: border-box;
-				width: 100%;
-				height: fit-content;
-				display: flex;
-				justify-content: space-between;
-				margin-bottom: 5px;
-			}
-			// 搜索框和按钮较多情况
-			.reset_top {
-				box-sizing: border-box;
-				width: 100%;
-				height: fit-content;
-			}
+  width: 100%;
+  height: 100%;
+  .left_cont {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    .box {
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding: 15px;
+      padding-bottom: 5px;
+      display: flex;
+      flex-direction: column;
+      .header {
+        width: 100%;
+        height: 40px;
+      }
+      .part_line {
+        width: 100%;
+        height: 1px;
+        background-color: #dfe6ec;
+        z-index: 100;
+        margin: 5px 0 10px;
+      }
+      // 搜索框和按钮较少情况
+      .top {
+        box-sizing: border-box;
+        width: 100%;
+        height: fit-content;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      // 搜索框和按钮较多情况
+      .reset_top {
+        box-sizing: border-box;
+        width: 100%;
+        height: fit-content;
+      }
 
-			.tab {
-				box-sizing: border-box;
-				height: 60%;
-				min-height: 10%;
-				max-height: 80%;
-				width: 100%;
-				position: relative;
-				resize: vertical;
-				overflow: hidden;
-			}
-			.tab_cont {
-				flex: 1;
-				height: 0;
-				width: 100%;
-				display: flex;
-				justify-content: space-between;
-				position: relative;
-			}
-			.bot {
-				box-sizing: border-box;
-				width: 100%;
-				height: 33px; //分页宽度
-				margin-top: 5px;
-				text-align: right;
-			}
-		}
-	}
+      .tab {
+        box-sizing: border-box;
+        height: 60%;
+        min-height: 10%;
+        max-height: 80%;
+        width: 100%;
+        position: relative;
+        resize: vertical;
+        overflow: hidden;
+      }
+      .tab_cont {
+        flex: 1;
+        height: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+      }
+      .bot {
+        box-sizing: border-box;
+        width: 100%;
+        height: 33px; //分页宽度
+        margin-top: 5px;
+        text-align: right;
+      }
+    }
+  }
 
-	.box-card {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		.box-form {
-			padding: 20px;
-			box-sizing: border-box;
-			height: 100%;
-			width: 100%;
-			overflow: auto;
-			// 必须要有下面这个，在element专有样式里
-			// 抽屉body超出滚动条
-			// :deep(.el-drawer__body) {
-			//   overflow: auto;
-			// }
-		}
-		.box-button {
-			box-sizing: border-box;
-			height: 50px;
-			width: 100%;
-			text-align: right;
-			border-top: 1px solid #dfe6ec;
-			padding: 10px 20px;
-		}
-	}
+  .box-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .box-form {
+      padding: 20px;
+      box-sizing: border-box;
+      height: 100%;
+      width: 100%;
+      overflow: auto;
+      // 必须要有下面这个，在element专有样式里
+      // 抽屉body超出滚动条
+      // :deep(.el-drawer__body) {
+      //   overflow: auto;
+      // }
+    }
+    .box-button {
+      box-sizing: border-box;
+      height: 50px;
+      width: 100%;
+      text-align: right;
+      border-top: 1px solid #dfe6ec;
+      padding: 10px 20px;
+    }
+  }
 }

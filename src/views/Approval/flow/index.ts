@@ -2,7 +2,7 @@
  * @Description:
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-23 17:28:54
+ * @LastEditTime: 2022-05-25 11:14:45
  */
 import { defineRules } from '@/utils/formValid'
 import { reactive, ref } from 'vue'
@@ -58,7 +58,7 @@ const handleRefreshModuleName = (form: any) => {
     }
   }
   // 退款
-  if (name == refreshModuleName.REFUND && form.is_return_money === 1) {
+  if (name == refreshModuleName.REFUND && form.item.is_return_money === 1) {
     return {
       ...form,
       data: form.list

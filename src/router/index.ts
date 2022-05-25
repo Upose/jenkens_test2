@@ -1,10 +1,10 @@
 /*
  * @Description:路由文件
  * @version:
- * @Author: XJ
- * @Date: 2021-05-06 11:17:19
+ * @Author: HYH
+ * @Date: 2022-05-25 10:11:02
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 10:11:02
+ * @LastEditTime: 2022-05-25 10:48:50
  */
 
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
