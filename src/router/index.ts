@@ -4,12 +4,13 @@
  * @Author: XJ
  * @Date: 2021-05-06 11:17:19
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 18:15:01
+ * @LastEditTime: 2022-05-25 10:11:02
  */
 
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import { getUserId } from '@/utils/cookie'
-import { usersChild } from '@/router/users'
+import staff from '@/router/staff'
+import product from '@/router/product'
 import warehouse from '@/router/warehouse'
 import purchase from '@/router/purchase'
 import sale from '@/router/sale'
@@ -34,6 +35,12 @@ export const constantRoutes: Array<RouteRecordRaw> = [
     redirect: '/index/service', //tabs标签决定初始页
     component: () => import('@/views/Layout/index.vue'),
     children: [
+      // 首页
+      {
+        path: 'service',
+        name: 'Service',
+        component: () => import('@/views/Service/index.vue')
+      },
       // 审批 => 流程审批 => 审批中心
       {
         path: 'certifacation',
@@ -41,18 +48,19 @@ export const constantRoutes: Array<RouteRecordRaw> = [
         component: () => import('@/views/Certifacation/index.vue'),
         children: certifacation
       },
-      // 首页
+      // 产品
       {
-        path: 'service',
-        name: 'Service',
-        component: () => import('@/views/Service/index.vue')
+        path: 'product',
+        name: 'Product',
+        component: () => import('@/views/Product/index.vue'),
+        children: product
       },
       // 员工
       {
-        path: 'users',
-        name: 'Users',
-        component: () => import('@/views/Users/index.vue'),
-        children: usersChild
+        path: 'staff',
+        name: 'Staff',
+        component: () => import('@/views/Staff/index.vue'),
+        children: staff
       },
       // 审批
       {

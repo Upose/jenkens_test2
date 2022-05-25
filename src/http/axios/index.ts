@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-03-29 16:36:39
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 17:47:31
+ * @LastEditTime: 2022-05-25 09:35:31
  */
 import * as codes from '@/constant/code'
 import { MutationConstants, GetterConstants } from '@/store/modules/users/constants'
@@ -144,7 +144,7 @@ instance.interceptors.response.use(
         // 成功直接退出
         break
       case codes.CODE_NOT_PERMISSION:
-        // router.push('/noaccess')
+        router.push('/noaccess')
         break
       // case codes.CODE_TOKEN_ABNORMAL: //token信息不存在401
       // 	if (userId) {
