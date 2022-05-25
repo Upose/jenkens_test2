@@ -457,4 +457,9 @@ export default defineComponent({
 @import '@/assets/css/element-common-style.scss';
 
 @import '@/assets/css/page-common.scss'; //页面基础布局样式一v
+.el-table {
+  &:deep(.el-table__body-wrapper::-webkit-scrollbar) {
+    display: block;
+  }
+}
 </style>

@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-04-07 10:07:16
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 15:31:11
+ * @LastEditTime: 2022-05-25 16:56:39
 -->
 <template>
   <div class="layout">
@@ -72,6 +72,7 @@ import MenuItem from '@/components/common/Layout/MenuItem.vue'
 import Tabs from '@/components/common/Layout/Tabs.vue'
 import { useStore } from '@/store'
 import { useRoute } from 'vue-router'
+
 export default defineComponent({
   components: {
     Header,
