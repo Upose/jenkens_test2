@@ -4,9 +4,8 @@
  * @Author: XJ
  * @Date: 2021-06-08 18:20:36
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 11:19:23
+ * @LastEditTime: 2022-05-25 10:41:51
  */
-import i18n from '@/locales'
 export const certifacation = [
   // 开票相关
   {
@@ -18,10 +17,7 @@ export const certifacation = [
       {
         path: 'billOpen',
         name: 'BillOpen',
-        component: () => import('@/views/Certifacation/bill/billOpen/index.vue'),
-        meta: {
-          name: ''
-        }
+        component: () => import('@/views/Certifacation/bill/billOpen/index.vue')
       },
       // 退票
       {
@@ -34,7 +30,7 @@ export const certifacation = [
   // 仓库（出库 入库相关）
   {
     path: 'warehouse',
-    name: 'Warehouse',
+    name: 'warehouse',
     component: () => import('@/views/Certifacation/warehouse/index.vue'),
     children: [
       // 入库
@@ -54,13 +50,13 @@ export const certifacation = [
   // 销售审核（销售单审核 多收审核 少收审核）
   {
     path: 'sale',
-    name: 'Sale',
+    name: 'sale',
     component: () => import('@/views/Certifacation/sale/index.vue'),
     children: [
       // 销售单审核
       {
         path: 'saleOrder',
-        name: 'SaleOrder',
+        name: 'saleOrder',
         component: () => import('@/views/Certifacation/sale/saleOrder/index.vue')
       },
       // 多收审核

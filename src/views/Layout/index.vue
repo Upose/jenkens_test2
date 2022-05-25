@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-04-07 10:07:16
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 15:47:06
+ * @LastEditTime: 2022-05-25 10:37:37
 -->
 <template>
   <div class="layout">
@@ -53,8 +53,10 @@
         <div class="main">
           <!-- tabs切换组件 -->
           <Tabs class="tabs"></Tabs>
-          <!-- 内容 -->
           <router-view></router-view>
+
+          <!-- 内容展示区域 -->
+          <!-- <div class="content-area"></div> -->
         </div>
       </div>
     </div>

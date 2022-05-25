@@ -1,10 +1,10 @@
 /*
  * @Description:
  * @version:
- * @Author: XJ
+ * @Author: HYH
  * @Date: 2021-06-08 18:15:39
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 10:17:49
+ * @LastEditTime: 2022-05-25 10:29:33
  */
 const staff = [
   // 员工列表
@@ -19,11 +19,6 @@ const staff = [
     name: 'organization',
     component: () => import('@/views/Staff/organization/index.vue')
   }
-  // {
-  //   path: 'timetable',
-  //   name: 'timetable',
-  //   component: () => import('@/views/Users/usersset/timetable/index.vue')
-  // }
 ]
 
 export default staff

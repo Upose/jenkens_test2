@@ -1,10 +1,10 @@
 /*
  * @Description:仓库路由
  * @version:
- * @Author: XJ
- * @Date: 2021-06-08 18:22:37
+ * @Author: HYH
+ * @Date:2022-05-25 10:33:48
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 18:29:15
+ * @LastEditTime: 2022-05-25 10:35:57
  */
 import Config from './config'
 import Count from './count'
@@ -28,7 +28,7 @@ const warehouse = [
     name: 'AdjustOrder',
     component: () => import('@/views/WareHouse/adjustOrder/index.vue')
   },
-  Count,
+  // Count,
   Config
 ]
 export default warehouse
