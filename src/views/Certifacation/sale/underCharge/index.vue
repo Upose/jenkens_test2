@@ -2,10 +2,10 @@
  * @Description: 少收
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 18:20:27
+ * @LastEditTime: 2022-05-25 18:39:24
 -->
 <template>
-  <el-card style="width: 600px;height: 100%;">
+  <el-card style="width: 600px;height: 100%;margin-top: 3px;">
     <el-scrollbar>
       <el-form ref="formRef" :model="Form" :rules="Rule">
         <!-- 部门 -->

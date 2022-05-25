@@ -2,10 +2,10 @@
  * @Description: 开票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 18:18:13
+ * @LastEditTime: 2022-05-25 18:37:49
 -->
 <template>
-  <el-card style="width: 600px;height: 95%;">
+  <el-card style="width: 600px;height: 95%;margin-top: 3px;">
     <el-scrollbar style="height: calc(100vh - 140px);">
       <el-form ref="formRef" :model="Form" :rules="Rule">
         <!-- 部门 -->

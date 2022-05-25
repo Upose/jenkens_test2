@@ -2,10 +2,10 @@
  * @Description: 退货单
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 18:18:52
+ * @LastEditTime: 2022-05-25 18:39:05
 -->
 <template>
-  <el-card style="width: 700px;height: 100%;">
+  <el-card style="width: 700px;height: 100%;margin-top: 3px;">
     <el-scrollbar style="height: calc(100vh - 140px);">
       <el-form ref="formRef" :model="Form" :rules="Rule">
         <!-- 部门 -->
