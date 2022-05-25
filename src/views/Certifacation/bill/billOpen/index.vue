@@ -2,7 +2,7 @@
  * @Description: 开票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 14:48:45
+ * @LastEditTime: 2022-05-25 18:18:13
 -->
 <template>
   <el-card style="width: 600px;height: 95%;">
@@ -174,7 +174,7 @@
   </el-card>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, ref, computed } from 'vue'
+import { defineComponent, reactive, toRefs, onMounted, ref, computed, onUnmounted } from 'vue'
 import { billOpenApi } from '../api'
 import dataStructure from '@/utils/dataStructure'
 import { IRequest } from '@/@types/httpInterface'
@@ -498,6 +498,11 @@ export default defineComponent({
       request.getBillTypeList()
       request.getCountryList()
       request.getMoneyUnitList()
+    })
+    onUnmounted(() => {
+      Object.keys(Form).forEach((key: string) => {
+        ;(Form as any)[key] = ''
+      })
     })
     return { ...methods, ...toRefs(state), formRef, multipleTableRef, uploadRef, Rule, Form }
   }

@@ -2,10 +2,10 @@
  * @Description: 流程
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 14:33:50
+ * @LastEditTime: 2022-05-25 17:51:32
 -->
 <template>
-  <el-card style="height: 100%;">
+  <el-card style="height: 100%;margin-top: 3px;">
     <el-tabs v-model="activeName" type="card" @tab-click="handleClickTab">
       <el-tab-pane label="流程中心" name="flow_center">
         <el-scrollbar style="height:calc(100vh - 150px);">
@@ -48,7 +48,7 @@
               filterable
               @change="getNewList"
               placeholder="流程状态"
-              v-model="flowStatus"
+              v-model="startFlowStatus"
             >
               <el-option
                 v-for="item in flowStatusList"
@@ -147,7 +147,7 @@
               filterable
               @change="getNewList"
               placeholder="流程状态"
-              v-model="flowStatus"
+              v-model="approvalFlowStatus"
             >
               <el-option
                 v-for="item in flowStatusList"
@@ -431,6 +431,10 @@ export default defineComponent({
       flowStatusList: [] as any,
       /**流程状态 */
       flowStatus: 2 as any,
+      /**发起的流程状态 */
+      startFlowStatus: 2 as any,
+      /**审批的流程状态 */
+      approvalFlowStatus: 2 as any,
       /**流程类型列表 */
       flowTypeList: [] as any,
       /**流程类型 */
@@ -724,7 +728,7 @@ export default defineComponent({
             /**所有流程 */
             search_one: state.flowType,
             /**审批状态 */
-            search_two: state.flowStatus,
+            search_two: state.startFlowStatus,
             /**搜索内容 */
             search_value: state.search_value,
             ...state.page
@@ -752,7 +756,7 @@ export default defineComponent({
             /**所有流程 */
             search_one: state.flowType,
             /**审批状态 */
-            search_two: state.flowStatus,
+            search_two: state.approvalFlowStatus,
             /**搜索内容 */
             search_value: state.search_value,
             ...state.page

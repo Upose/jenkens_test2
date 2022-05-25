@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-19 10:13:14
+ * @LastEditTime: 2022-05-25 18:17:03
 -->
 <template>
   <el-card style="width: 600px;height: 100%;">
@@ -77,7 +77,7 @@
   </el-card>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, ref, computed } from 'vue'
+import { defineComponent, reactive, toRefs, onMounted, onUnmounted, ref, computed } from 'vue'
 import { warehouseInApi } from '../api'
 import dataStructure from '@/utils/dataStructure'
 import { IRequest } from '@/@types/httpInterface'
@@ -242,6 +242,11 @@ export default defineComponent({
     }
     onMounted(() => {
       request.getDepartmentList()
+    })
+    onUnmounted(() => {
+      Object.keys(Form).forEach((key: string) => {
+        ;(Form as any)[key] = ''
+      })
     })
     return { ...methods, ...toRefs(state), formRef, Rule, Form }
   }

@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-05 16:30:38
+ * @LastEditTime: 2022-05-25 17:42:31
 -->
 <template>
   <!-- 开单 -->
@@ -139,12 +139,7 @@
           ref="DeinfoAddRef"
         ></DeinfoAdd>
       </div>
-      <!-- 勾选是否确认出库 -->
-      <div style="margin: 20px;">
-        <el-checkbox size="large" border v-model="is_delivery">{{
-          $t('common.confirmDe')
-        }}</el-checkbox>
-      </div>
+
       <div class="box-button">
         <!-- 提交 -->
         <el-button @click="onSubmitAdd" type="success" plain>{{ $t('common.submit') }}</el-button>
@@ -164,8 +159,6 @@ import { IValid } from '../typings'
 import DeinfoAdd from './DeinfoAdd.vue'
 import { defineComponent, ref, reactive, toRefs, computed } from 'vue'
 interface IState {
-  /**是否确认出库 */
-  is_delivery: number | null
   addForm: {
     delivery_order_number: any
     /**销售单号 */
@@ -202,8 +195,6 @@ export default defineComponent({
   setup(props, ctx) {
     const { t } = useI18n()
     const state: IState = reactive({
-      /**是否确认出库 */
-      is_delivery: null,
       addForm: {
         delivery_order_number: '',
         /**销售单号 */
@@ -315,7 +306,6 @@ export default defineComponent({
         const data = dataStructure(
           { power_url: 'V1/InventoryDelivery/add' },
           {
-            is_delivery: state.is_delivery ? state.is_delivery : false,
             delivery_order_number: state.addForm.delivery_order_number,
             destination: state.addForm.destination,
             license_plate_number: state.addForm.license_plate_number,

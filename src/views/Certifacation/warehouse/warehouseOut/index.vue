@@ -2,7 +2,7 @@
  * @Description: 销售单
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-18 14:30:49
+ * @LastEditTime: 2022-05-25 18:17:47
 -->
 <template>
   <el-card style="width: 600px;height: 100%;">
@@ -198,6 +198,11 @@ export default defineComponent({
     }
     onMounted(() => {
       request.getDepartmentList()
+    })
+    onMounted(() => {
+      Object.keys(Form).forEach((key: string) => {
+        ;(Form as any)[key] = ''
+      })
     })
     return { ...methods, ...toRefs(state), formRef, Rule, Form }
   }

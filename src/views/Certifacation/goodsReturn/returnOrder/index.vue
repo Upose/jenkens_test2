@@ -2,7 +2,7 @@
  * @Description: 退货单
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 16:28:46
+ * @LastEditTime: 2022-05-25 18:18:52
 -->
 <template>
   <el-card style="width: 700px;height: 100%;">
@@ -131,7 +131,7 @@
   </el-card>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, ref, computed } from 'vue'
+import { defineComponent, reactive, toRefs, onMounted, ref, computed, onUnmounted } from 'vue'
 import { returnOrderApi } from '../api'
 import dataStructure from '@/utils/dataStructure'
 import { IRequest } from '@/@types/httpInterface'
@@ -427,6 +427,11 @@ export default defineComponent({
       request.generate_return_order_no()
       request.getMoneyUnitList()
       request.getCustomerList()
+    })
+    onUnmounted(() => {
+      Object.keys(Form).forEach((key: string) => {
+        ;(Form as any)[key] = ''
+      })
     })
     return { ...methods, ...toRefs(state), formRef, Rule, Form }
   }
