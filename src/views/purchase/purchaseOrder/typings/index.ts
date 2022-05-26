@@ -1,10 +1,10 @@
 /*
- * @Descripttion:
+ * @Description:
  * @version:
  * @Author: XJ
  * @Date: 2021-05-13 11:57:26
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-30 15:26:06
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-26 18:14:52
  */
 
 export interface ISelection {
@@ -13,6 +13,11 @@ export interface ISelection {
   }
 }
 export interface IState {
+  /**是否显示底部内容 */
+  showBotContent: boolean
+  tableCheck: any
+  /**底部表格默认选中样式 */
+  botTableActiveName: string
   tableData: any[]
   statistics: object
   scrollbarMaxHeight: string

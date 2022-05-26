@@ -2,9 +2,6 @@
   <div class="content">
     <div class="left_cont">
       <div class="box">
-        <!-- <div class="header">
-					<span>进货信息</span>
-				</div> -->
         <div class="reset_top">
           <el-form inline>
             <el-form-item>
@@ -148,11 +145,122 @@
           >
           </el-pagination>
         </div>
+        <!------------------------------------------------------底部详情表格------------------------------------------------------->
+        <div v-if="showBotContent">
+          <el-radio-group @change="resetBotTableData" v-model="botTableActiveName" size="small">
+            <el-radio-button label="detail">{{ $t('common.detail') }}</el-radio-button>
+            <el-radio-button label="pay_log">{{ $t('common.payer_log') }}</el-radio-button>
+          </el-radio-group>
+          <div class="bot-detail-table">
+            <el-table
+              v-if="botTableActiveName === 'detail'"
+              border
+              :data="purchaseDetailsForm.data"
+              :height="tableHeight"
+              highlight-current-row
+              row-key="id"
+              :tree-props="{
+                children: 'children',
+                hasChildren: 'hasChildren'
+              }"
+              default-expand-all
+            >
+              <el-table-column type="index"> </el-table-column>
+              <template v-for="(item, index) in purchaseDetailsForm.props" :key="index">
+                <el-table-column show-overflow-tooltip :prop="item" :label="$t(`common.${item}`)">
+                </el-table-column>
+              </template>
+            </el-table>
+            <el-table
+              v-else
+              border
+              :data="purchasePaymentForm.data"
+              :height="tableHeight"
+              highlight-current-row
+              row-key="id"
+              :tree-props="{
+                children: 'children',
+                hasChildren: 'hasChildren'
+              }"
+              default-expand-all
+            >
+              <el-table-column type="index"> </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="stock_statistics_id"
+                :label="$t('common.stock_statistics_id')"
+              >
+              </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="stock_type_name"
+                :label="$t('common.stock_type_name')"
+              >
+              </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="created_at"
+                :label="$t('common.created_at')"
+              >
+              </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="account_number"
+                :label="$t('common.account_number')"
+              >
+              </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="created_name"
+                :label="$t('common.payer')"
+              >
+              </el-table-column>
+              <el-table-column show-overflow-tooltip prop="number" :label="$t('common.number')">
+              </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="currency_unit_name"
+                :label="$t('common.settlement_currency')"
+              >
+              </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="payment_money"
+                :label="$t('common.surplus_real_payment_money')"
+              >
+              </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="wait_money"
+                :label="$t('common.wait_money')"
+              >
+              </el-table-column>
+              <el-table-column
+                show-overflow-tooltip
+                prop="real_payment_money"
+                :label="$t('common.this_payer')"
+              >
+              </el-table-column>
+            </el-table>
+          </div>
+          <el-pagination
+            @size-change="changeBotTableSize"
+            @current-change="changeBotTablePage"
+            :current-page="botTablePage.index"
+            :page-size="botTablePage.size"
+            :page-sizes="[13, 18, 23, 28]"
+            layout="total,  prev, pager, sizes,next, jumper"
+            :total="botTablePage.total"
+            style="text-align:right;"
+          >
+          </el-pagination>
+        </div>
+        <!------------------------------------------------------底部详情表格end------------------------------------------------------->
         <!-- 分割线 -->
         <!-- <div class="part_line" v-if="!isEmeptyObj"></div> -->
-        <div class="tab_cont tabStyle" v-if="!isEmeptyObj" ref="tabContRef">
+        <!-- <div class="tab_cont tabStyle" v-if="!isEmeptyObj" ref="tabContRef">
           <StockInventory ref="childRef"></StockInventory>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- 添加抽屉 -->
@@ -273,6 +381,11 @@ export default defineComponent({
     })
 
     const state: IState = reactive({
+      /**是否显示底部内容 */
+      showBotContent: false,
+      /**底部表格默认选中样式 */
+      botTableActiveName: 'detail',
+      tableCheck: [],
       tableData: [],
       statistics: {},
       scrollbarMaxHeight: '100%',
@@ -388,7 +501,68 @@ export default defineComponent({
     const tabContRef = ref()
     const financialChildRef = ref()
     const storageChildRef = ref()
+    /**进货详情列表 */
+    const purchaseDetailsForm = reactive({
+      props: [] as any,
+      data: [] as any
+    })
+    /**进货付款详情列表 */
+    const purchasePaymentForm = reactive({
+      props: [] as any,
+      data: [] as any
+    })
+    /**底部表格分页数据 */
+    const botTablePage = reactive({
+      index: 1,
+      size: 18,
+      total: 0
+    })
     const requests = {
+      /**查询进货单详情数据 */
+      getPurchaseDetails() {
+        const data = dataStructure(
+          {},
+          {
+            page: state.pagination.page,
+            perpage: state.pagination.perpage,
+            id: state.tableCheck.id
+          }
+        )
+        purchaseApi
+          .get_inventory_list(data)
+          .then(res => {
+            let { status, custom_data } = res as IRequest
+            if (status === 200) {
+              purchaseDetailsForm.props = custom_data.all_array || []
+              purchaseDetailsForm.data = custom_data.data || []
+              botTablePage.total = custom_data.total || 0
+            }
+          })
+          .catch(err => err)
+      },
+      /**查询进货单付款记录数据 */
+      getPurchasePayment() {
+        const data = dataStructure(
+          {},
+          {
+            id: state.tableCheck.id,
+            order_by: 1
+          }
+        )
+        purchaseApi
+          .get_certificate_of_payment_list(data)
+          .then(res => {
+            console.log(res)
+
+            let { status, custom_data } = res as IRequest
+            if (status === 200) {
+              purchasePaymentForm.props = custom_data.all_array || []
+              purchasePaymentForm.data = custom_data.data || []
+              botTablePage.total = custom_data.total || 0
+            }
+          })
+          .catch(err => err)
+      },
       getSwitch() {
         const args = dataStructure(
           { power_url: 'V1/Stock/transfer_of_order' },
@@ -621,6 +795,48 @@ export default defineComponent({
       }
     }
     const methods = {
+      /**改变底部表格每页显示多少条数据 并获取列表 */
+      changeBotTableSize(size: number) {
+        botTablePage.size = size
+        switch (state.botTableActiveName) {
+          case 'detail':
+            requests.getPurchaseDetails()
+            break
+          case 'pay_log':
+            requests.getPurchasePayment()
+            break
+          default:
+            break
+        }
+      },
+      /**改变底部表格分页数据 并获取列表 */
+      changeBotTablePage(index: number) {
+        botTablePage.index = index
+        switch (state.botTableActiveName) {
+          case 'detail':
+            requests.getPurchaseDetails()
+            break
+          case 'pay_log':
+            requests.getPurchasePayment()
+            break
+          default:
+            break
+        }
+      },
+      /**重新设置底部表格数据 */
+      resetBotTableData(name: string) {
+        switch (name) {
+          case 'detail':
+            requests.getPurchaseDetails()
+            break
+          case 'pay_log':
+            requests.getPurchasePayment()
+            break
+          default:
+            break
+        }
+        state.botTableActiveName = name
+      },
       // 头部选择改变
       headerChange() {
         requests.getList()
@@ -806,23 +1022,31 @@ export default defineComponent({
         requests.getList()
       },
       // 单击事件
-      async rowClick(row: any) {
-        let id = selection.singleSelection?.id
-        if (id === row.id) {
-          const CommonTableref = CommonTableRef
-          CommonTableref.value.setCurrentRow()
-          selection.singleSelection = {}
+      rowClick(row: any) {
+        state.showBotContent = true
+        if (row.id === state.tableCheck.id) return
+        state.tableCheck = row
+        if (state.botTableActiveName === 'detail') {
+          requests.getPurchaseDetails()
         } else {
-          selection.singleSelection = row
-          await nextTick() //数据更改后等待dom更新后执行后续的代码
-          let order_number = row?.order_number
-          let id = row?.id
-          const childref = childRef
-          childref.value.order_number = order_number
-          childref.value.id = id
-          childref.value.tableData = []
-          childref.value.selectRequest()
+          requests.getPurchasePayment()
         }
+        // let id = selection.singleSelection?.id
+        // if (id === row.id) {
+        //   const CommonTableref = CommonTableRef
+        //   CommonTableref.value.setCurrentRow()
+        //   selection.singleSelection = {}
+        // } else {
+        //   selection.singleSelection = row
+        //   await nextTick() //数据更改后等待dom更新后执行后续的代码
+        //   let order_number = row?.order_number
+        //   let id = row?.id
+        //   const childref = childRef
+        //   childref.value.order_number = order_number
+        //   childref.value.id = id
+        //   childref.value.tableData = []
+        //   childref.value.selectRequest()
+        // }
       },
 
       // ----------------------------------------------详情
@@ -879,7 +1103,11 @@ export default defineComponent({
       isEmeptyObj,
       tabContRef,
       updChildRef,
-      storageChildRef
+      storageChildRef,
+      /*******************************/
+      purchaseDetailsForm,
+      purchasePaymentForm,
+      botTablePage
     }
   }
 })

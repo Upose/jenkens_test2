@@ -1,16 +1,17 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: XJ
  * @Date: 2021-06-18 11:24:23
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-30 17:07:53
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-26 17:10:58
 -->
 <!--  -->
 <template>
   <div class="content">
     <el-button-group class="btns" size="mini">
       <!-- <el-button plain type="primary">{{ $t('common.detail') }}</el-button> -->
+      <!-- 详情 -->
       <el-button
         @click="clickBtns('detail')"
         plain
@@ -52,7 +53,6 @@
       <el-table
         v-else
         border
-        :key="Math.random()"
         :data="tableData"
         :height="tableHeight"
         highlight-current-row
@@ -165,12 +165,11 @@ export default defineComponent({
             let { status, custom_data, info } = res as IRequest
             if (status === 200) {
               if (!custom_data || !custom_data.data) return
-
               // 展示字段若已经赋过值，则此次请求不赋值
               if (!state.customArgs.all_array.length) {
-                state.customArgs.all_array = custom_data.all_array
+                state.customArgs.all_array = custom_data.all_array || []
               }
-              state.pagination.total = custom_data.total
+              state.pagination.total = custom_data.total || 0
               // 如果拿到数据为空则不用赋值
               if (!(custom_data.data && custom_data.data.length)) return
               let data: any = dateNormArray(custom_data.data)
@@ -204,11 +203,9 @@ export default defineComponent({
     const methods = {
       clickBtns(arg: any) {
         state.activeTable = arg
-
         methods.selectRequest()
       },
       selectRequest() {
-        const id = state.id
         switch (state.activeTable) {
           case 'detail':
             requests.getInventoryList()
