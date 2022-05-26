@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2021-10-25 16:06:14
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 18:33:52
+ * @LastEditTime: 2022-05-26 10:02:22
 -->
 <template>
   <div class="tabs-box">
@@ -22,7 +22,23 @@
           </template>
         </el-tab-pane>
       </el-tabs>
-      <!-- <MoreButton></MoreButton> -->
+    </div>
+    <div class="select">
+      <el-dropdown trigger="click">
+        <span class="el-dropdown-link">
+          操作<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <template #dropdown>
+          <!-- 关闭当前 -->
+          <el-dropdown-menu>
+            <el-dropdown-item @click="closeCurrentTab">关闭当前页面</el-dropdown-item>
+            <!-- 关闭其他 -->
+            <el-dropdown-item @click="closeOtherTab">关闭其他</el-dropdown-item>
+            <!-- 关闭全部 -->
+            <el-dropdown-item @click="closeAllTab">关闭全部</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 </template>
@@ -58,6 +74,43 @@ export default defineComponent({
       }
     )
     const methods = {
+      /**关闭当前tab */
+      closeCurrentTab() {
+        const tabs = state.tabs
+        for (let i = 0; i < tabs.length; i++) {
+          if (route.path === state.homePath) return
+          if (tabs[i].menu_url === route.path) {
+            tabs.splice(i, 1)
+          }
+        }
+        const item = tabs[tabs.length - 1]
+        item.isChecked = true
+        router.push(item.menu_url)
+        state.activeName = item.menu_url
+        store.commit(MutationConstants.SET_TABS, tabs)
+      },
+      closeOtherTab() {
+        let leftTabs = []
+        const tabs = state.tabs
+        for (let i = 0; i < tabs.length; i++) {
+          if (tabs[i].menu_url === route.path) {
+            leftTabs.push(tabs[i])
+          }
+          if (tabs[i].menu_url === state.homePath) {
+            leftTabs.push(tabs[i])
+          }
+        }
+        store.commit(MutationConstants.SET_TABS, leftTabs)
+      },
+      closeAllTab() {
+        const tabs = state.tabs
+        tabs.splice(1, tabs.length - 1)
+        const item = tabs[0]
+        item.isChecked = true
+        router.push(item.menu_url)
+        state.activeName = item.menu_url
+        store.commit(MutationConstants.SET_TABS, tabs)
+      },
       tabClick: (tabItem: any) => {
         let path = tabItem.props.name as string
         router.push(path)

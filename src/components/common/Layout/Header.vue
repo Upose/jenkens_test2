@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-04-07 09:50:15
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-10 17:21:05
+ * @LastEditTime: 2022-05-26 10:13:40
 -->
 <template>
   <header class="header">
@@ -184,12 +184,16 @@ export default defineComponent({
   .header_right {
     display: flex;
     align-items: center;
-    .header_first:not(:first-child) {
-      margin-left: 20px;
+    .header_first {
+      margin-left: 25px;
+      display: flex;
+      &:deep(.el-dropdown) {
+        font-size: 12px;
+      }
     }
     .right-avatar {
-      // display: flex;
-      margin-top: 4px;
+      display: flex;
+      align-items: center;
       .el-avatar {
         align-items: center;
       }
