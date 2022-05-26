@@ -2,7 +2,7 @@
  * @Description: 销售单
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 17:52:27
+ * @LastEditTime: 2022-05-26 16:22:32
 -->
 <template>
   <div class="content ">
@@ -10,87 +10,99 @@
       <div class="box">
         <!-- <div class="part_line"></div> -->
         <div class="reset_top">
-          <div class="headerFormStyle">
+          <el-form inline>
             <!-- 销售公司 -->
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.company"
-              @change="headerChange"
-              :placeholder="$t('common.sale_com_code_name')"
-            >
-              <el-option
-                v-for="item in commonLists.companyList2"
-                :key="item.com_code"
-                :label="item.com_name"
-                :value="item.com_code"
+            <el-form-item>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.company"
+                @change="headerChange"
+                :placeholder="$t('common.sale_com_code_name')"
               >
-                <span style="float: left">{{ item.com_name }}</span>
-                <span style="float: right;color: #999999;">{{ item.com_code }}</span>
-              </el-option>
-            </el-select>
+                <el-option
+                  v-for="item in commonLists.companyList2"
+                  :key="item.com_code"
+                  :label="item.com_name"
+                  :value="item.com_code"
+                >
+                  <span style="float: left">{{ item.com_name }}</span>
+                  <span style="float: right;color: #999999;">{{ item.com_code }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
             <!-- 客户名称 -->
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.buy_user"
-              @change="headerChange"
-              :placeholder="$t('common.buy_user')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.customerList2"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+            <el-form-item>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.buy_user"
+                @change="headerChange"
+                :placeholder="$t('common.buy_user')"
               >
-              </el-option>
-            </el-select>
+                <el-option
+                  v-for="(item, index) in commonLists.customerList2"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
             <!-- 付款状态 -->
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.payment_status"
-              @change="headerChange"
-              :placeholder="$t('common.payment_status_name')"
-            >
-              <el-option
-                v-for="item in commonLists.payStatusList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
+            <el-form-item>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.payment_status"
+                @change="headerChange"
+                :placeholder="$t('common.payment_status_name')"
               >
-              </el-option>
-            </el-select>
-            <el-date-picker
-              @change="headerChange"
-              style="margin-right:10px;margin-bottom:5px"
-              v-model="pagination.date"
-              type="daterange"
-              :start-placeholder="$t('common.start_at')"
-              :end-placeholder="$t('common.end_at')"
-              :unlink-panels="true"
-            >
-            </el-date-picker>
-            <!-- 搜索区 -->
-            <el-input
-              type="text"
-              style="margin-right:10px;margin-bottom:5px"
-              :placeholder="
-                `${$t('common.sale_order_number')}、${$t('common.sell_user')}、${$t(
-                  'common.explain'
-                )}`
-              "
-              v-model="pagination.search_value"
-              @input="input"
-              @change="onSearch"
-            >
-              <template #append>
-                <el-button icon="el-icon-search" @click="onSearch"></el-button>
-              </template>
-            </el-input>
+                <el-option
+                  v-for="item in commonLists.payStatusList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-date-picker
+                @change="headerChange"
+                style="margin-right:10px;margin-bottom:5px"
+                v-model="pagination.date"
+                type="daterange"
+                :start-placeholder="$t('common.start_at')"
+                :end-placeholder="$t('common.end_at')"
+                :unlink-panels="true"
+              >
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item>
+              <!-- 搜索区 -->
+              <el-input
+                type="text"
+                style="margin-right:10px;margin-bottom:5px"
+                :placeholder="
+                  `${$t('common.sale_order_number')}、${$t('common.sell_user')}、${$t(
+                    'common.explain'
+                  )}`
+                "
+                v-model="pagination.search_value"
+                @input="input"
+                @change="onSearch"
+              >
+                <template #append>
+                  <el-button icon="el-icon-search" @click="onSearch"></el-button>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-form>
+          <div class="headerFormStyle">
             <!-- </div> -->
           </div>
           <div>

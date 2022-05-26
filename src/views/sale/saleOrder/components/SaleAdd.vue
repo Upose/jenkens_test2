@@ -1,14 +1,15 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: XJ
  * @Date: 2021-07-09 11:37:00
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-05 09:23:01
+ * @LastEditTime: 2022-05-26 16:55:46
 -->
 <!--  -->
 <template>
   <div class="sale_add dividerStyle">
+    <!-- 数据汇总 -->
     <el-divider content-position="left">{{ $t('common.data_collect') }}</el-divider>
     <el-form ref="addFormDataRef" :model="addForm" class="tableFormStyle">
       <el-table
@@ -62,7 +63,7 @@
               ]"
             >
               <el-input
-                v-micrometer
+                v-thousands
                 v-model="scope.row.sale_number"
                 @change="unitMoneyAndNumChange('add')"
               ></el-input>
@@ -87,7 +88,7 @@
               ]"
             >
               <el-input
-                v-micrometer
+                v-thousands
                 v-model="scope.row.sale_unit_money"
                 @change="unitMoneyAndNumChange('add')"
               ></el-input>

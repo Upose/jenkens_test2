@@ -6,69 +6,76 @@
 					<span>进货信息</span>
 				</div> -->
         <div class="reset_top">
-          <el-row class="headerFormStyle">
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.supplier"
-              @change="headerChange"
-              :placeholder="$t('common.inventory_supplier_name')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.supplierList2"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+          <el-form inline>
+            <el-form-item>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.supplier"
+                @change="headerChange"
+                :placeholder="$t('common.inventory_supplier_name')"
               >
-              </el-option>
-            </el-select>
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.inventory_enter_type"
-              @change="headerChange"
-              :placeholder="$t('common.inventory_enter_type_name')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.enterTypeList2"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+                <el-option
+                  v-for="(item, index) in commonLists.supplierList2"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.inventory_enter_type"
+                @change="headerChange"
+                :placeholder="$t('common.inventory_enter_type_name')"
               >
-              </el-option>
-            </el-select>
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.payment_status"
-              @change="headerChange"
-              :placeholder="$t('common.payment_status_name')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.paymentStatusList2"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+                <el-option
+                  v-for="(item, index) in commonLists.enterTypeList2"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.payment_status"
+                @change="headerChange"
+                :placeholder="$t('common.payment_status_name')"
               >
-              </el-option>
-            </el-select>
-
-            <el-input
-              style="margin-right:10px;margin-bottom:5px"
-              type="text"
-              placeholder="进货单号、批次号、创建人"
-              v-model="pagination.search_value"
-              @input="input"
-              @change="onSearch"
-            >
-              <template #append>
-                <el-button icon="el-icon-search" @click="onSearch"></el-button>
-              </template>
-            </el-input>
-          </el-row>
+                <el-option
+                  v-for="(item, index) in commonLists.paymentStatusList2"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-input
+                style="margin-right:10px;margin-bottom:5px"
+                type="text"
+                placeholder="进货单号、批次号、创建人"
+                v-model="pagination.search_value"
+                @input="input"
+                @change="onSearch"
+              >
+                <template #append>
+                  <el-button icon="el-icon-search" @click="onSearch"></el-button>
+                </template>
+              </el-input>
+            </el-form-item>
+          </el-form>
           <div>
             <template v-for="item in buttonData" :key="item.widget_id">
               <!-- =1且无子集时遍历出按钮 -->

@@ -1,13 +1,14 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 11:42:28
  * @LastEditors: HYH
- * @LastEditTime: 2022-04-22 14:11:36
+ * @LastEditTime: 2022-05-26 16:55:58
 -->
 <!--  -->
 <template>
+  <!-- 开单 -->
   <el-drawer :title="$t(`common.billing`)" :size="800" v-model="showAdd">
     <div class="box-card">
       <div class="box-form">

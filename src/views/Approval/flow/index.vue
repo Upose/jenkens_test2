@@ -2,7 +2,7 @@
  * @Description: 流程
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 17:51:32
+ * @LastEditTime: 2022-05-26 11:04:15
 -->
 <template>
   <el-card style="height: 100%;margin-top: 3px;">
@@ -380,6 +380,7 @@
 import { IRequest } from '@/@types/httpInterface'
 import approvalApi from '@/http/api/approval'
 import router from '@/router'
+import { useRoute } from 'vue-router'
 import store from '@/store'
 import { GetterConstants, MutationConstants } from '@/store/modules/index/constants'
 import dataStructure from '@/utils/dataStructure'
@@ -792,6 +793,12 @@ export default defineComponent({
       }
     }
     onMounted(() => {
+      const route = useRoute()
+      const activeName = (route.query?.activeName as string) || ''
+      if (activeName) {
+        state.activeName = activeName
+        request.getMyFlow()
+      }
       request.checkPermission()
     })
     return {

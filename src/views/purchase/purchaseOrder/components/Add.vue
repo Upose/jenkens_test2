@@ -1,12 +1,13 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 09:20:30
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-01 15:04:57
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-26 16:09:05
 -->
 <template>
+  <!-- 开单 -->
   <el-drawer :title="$t(`common.billing`)" :size="1000" v-model="showAdd">
     <div class="box-card formStyle dividerStyle">
       <div class="box-form">
@@ -16,7 +17,7 @@
           label-width="200px"
           :rules="addRule"
           ref="addRef"
-          label-position="left"
+          label-position="right"
         >
           <el-row>
             <el-col :span="12">
@@ -86,7 +87,7 @@
           label-width="200px"
           :rules="addRuleVar"
           ref="addRefVar"
-          label-position="left"
+          label-position="right"
         >
           <el-row>
             <el-col :span="12">
@@ -157,22 +158,19 @@
           </el-row>
 
           <el-row>
+            <!-- 数量 -->
             <el-col :span="12">
               <el-form-item :label="$t('common.number')" prop="number">
-                <el-input
-                  v-micrometer
-                  v-model="addVarForm.number"
-                  @change="unitMoneyAndNumChange('add')"
-                >
-                </el-input>
+                <el-input v-thousands v-model="addVarForm.number" @blur="setTotalMoney"> </el-input>
               </el-form-item>
             </el-col>
+            <!-- 单价 -->
             <el-col :span="12">
               <el-form-item :label="$t('common.inventory_unit_money')" prop="inventory_unit_money">
                 <el-input
-                  v-micrometer
+                  v-thousands
                   v-model="addVarForm.inventory_unit_money"
-                  @change="unitMoneyAndNumChange('add')"
+                  @blur="setTotalMoney"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -180,11 +178,13 @@
 
           <el-row>
             <el-col :span="12">
+              <!-- 入库金额 -->
               <el-form-item :label="$t('common.inventory_money')" prop="inventory_money">
                 <el-input v-model="addVarForm.inventory_money" disabled></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
+              <!-- 货位 -->
               <el-form-item :label="$t('common.inventory_location')" prop="inventory_location">
                 <el-input v-model="addVarForm.inventory_location"></el-input>
               </el-form-item>
@@ -235,12 +235,13 @@ import { purchaseApi } from '@/http/api/othcustom/stockset/purchase'
 import { IRequest } from '@/@types/httpInterface'
 import dataStructure from '@/utils/dataStructure'
 import { defineComponent, reactive, toRefs, onMounted, computed, ref, onActivated } from 'vue'
-import { IValid } from '../typings'
 import { useI18n } from 'vue-i18n'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { operationMul, operationAdd } from '@/utils/operation'
 import AddTable from './AddTable.vue'
-import { checkOnlyNum, checkTwoDeci } from '@/utils/regp'
+import { defineRules, formatPrice } from '@/utils/formValid'
+import { delComma } from '@/utils/thousand'
+const { inputInfo, selectInfo, email, isNumber, two_length_number, debounce } = defineRules
 export default defineComponent({
   props: {
     commonLists: {
@@ -286,86 +287,22 @@ export default defineComponent({
     const addRef = ref()
     const addRefVar = ref()
     const addTableRef = ref()
-    const addRule = computed(() => {
-      const rule = {
-        payment_money: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ],
-
-        supplier: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ],
-        currency_unit: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ],
-        warehouse: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ]
-      }
-      return rule
+    const addRule = reactive({
+      payment_money: selectInfo,
+      supplier: selectInfo,
+      currency_unit: selectInfo,
+      warehouse: selectInfo
     })
-    const addRuleVar = computed(() => {
-      const rule = {
-        // ========
-        model_number: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ],
-
-        number: [
-          {
-            required: true,
-            validator: checkOnlyNum
-          }
-        ],
-        inventory_unit_money: [
-          {
-            required: true,
-            validator: checkTwoDeci
-          }
-        ],
-
-        unit: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ],
-        inventory_type: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ],
-        inventory_money: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ],
-        product_grade: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          }
-        ]
-      }
-      return rule
+    const addRuleVar = reactive({
+      model_number: selectInfo,
+      number: isNumber,
+      inventory_unit_money: two_length_number,
+      unit: selectInfo,
+      inventory_type: selectInfo,
+      inventory_money: selectInfo,
+      product_grade: selectInfo
     })
+
     const requests = {
       // 库存管理添加接口：V1/Stock/add
       getAdd() {
@@ -463,21 +400,15 @@ export default defineComponent({
           }
         })
       },
-      // 单位和数量改变
-      unitMoneyAndNumChange(arg: string) {
-        let unit_money: any
-        let number: any
-        unit_money = state.addVarForm.inventory_unit_money
-        number = state.addVarForm.number
-        unit_money = !unit_money ? 0 : unit_money
-        number = !number ? 0 : number
-        state.addVarForm.inventory_money = operationMul(unit_money, number, true)
+      /**设置入库总金额 */
+      setTotalMoney() {
+        // addVarForm.number 数量
+        // addVarForm.inventory_unit_money 单价
+        state.addVarForm.inventory_money = formatPrice(
+          delComma(state.addVarForm.number) * delComma(state.addVarForm.inventory_unit_money)
+        )
       },
-      // 添加时入库状态和时间改变，校验彼此
-      // typeAndAtChange(arg: string) {
-      // 	const addref = addRef
-      // 	addref.value.validateField(arg)
-      // },
+
       reset(arg: any) {
         // 重置基本信息表单
         const addref = addRef

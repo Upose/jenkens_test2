@@ -2,7 +2,7 @@
  * @Description: 开票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 18:37:49
+ * @LastEditTime: 2022-05-26 10:49:48
 -->
 <template>
   <el-card style="width: 600px;height: 95%;margin-top: 3px;">
@@ -186,6 +186,7 @@ import { GetterConstants } from '@/store/modules/users/constants'
 import { useI18n } from 'vue-i18n'
 import { checkIsImg } from '@/utils/formValid'
 import { returnOrderApi } from '../../goodsReturn/api'
+import router from '@/router'
 export default defineComponent({
   name: '',
   props: {},
@@ -292,7 +293,7 @@ export default defineComponent({
             console.log(res)
             let { status, custom_data } = res as IRequest
             if (status === 200) {
-              state.tableData = custom_data.data || []
+              state.tableData = custom_data?.data || []
             }
           })
           .catch(err => err)
@@ -364,18 +365,18 @@ export default defineComponent({
                   const form = formRef
                   form.value.validate((valid: boolean) => {
                     if (valid) {
-                      console.log(data)
                       billOpenApi
                         .submit_approval(data)
                         .then(res => {
                           let { status, info } = res as IRequest
                           if (status === 200) {
                             ElMessage.success(info)
-                            Object.keys(Form).forEach((key: string) => {
-                              ;(Form as any)[key] = ''
+                            router.push({
+                              path: '/index/approval/flow',
+                              query: {
+                                activeName: 'started_flow'
+                              }
                             })
-                            state.tableData = []
-                            uploadRef.value.uploadFiles = []
                           }
                         })
                         .catch(err => err)

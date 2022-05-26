@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2022-05-18 10:07:26
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-23 10:47:15
+ * @LastEditTime: 2022-05-26 15:59:18
  */
 import i18n from '@/locales'
 let currentPassword = '' //定义一个空字符串接受密码
@@ -120,6 +120,41 @@ function debounce(fn: Function, delay: number) {
     }
   }
 }
+// 去除 ','
+export const replaceComma = (num: any) => {
+  if (num === undefined || num === null || num === '') {
+    return ''
+  }
+  num = num.toString()
+  num = num.replace(/[ ]/g, '') //去除空格
+  num = num.replace(/,/gi, '')
+  return Number(num)
+}
+/**千分符去掉符号之后是否是大于零的正整数*/
+function isNumber(rule: object, value: string, callback: Function) {
+  const regp = /^[1-9]\d*$/
+  if (!value) {
+    callback(new Error(i18n.global.t('common.inputInfo')))
+  } else if (!regp.test(replaceComma(value).toString())) {
+    callback(new Error(i18n.global.t('common.regpOnlyNum')))
+  } else {
+    callback()
+  }
+}
+/**可保留两位小数*/
+function two_length_number(rule: object, value: any, callback: Function) {
+  const regp = /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/
+  if (value === '0') {
+    return callback(new Error(i18n.global.t('common.regpOnlyNum')))
+  }
+  if (!value) {
+    callback(new Error(i18n.global.t('common.inputInfo')))
+  } else if (!regp.test(replaceComma(value).toString())) {
+    callback(new Error('小数点后最多保留2位小数'))
+  } else {
+    callback()
+  }
+}
 /**公共校验规则 Element-plus=>Form */
 const trigger = ['change', 'blur']
 const required = true
@@ -133,6 +168,10 @@ export const defineRules = {
   email: [{ required, validator: checkemail, trigger }],
   /**数字 */
   number: [{ required, validator: checkIfNumber, trigger }],
+  /**两位小数（一般是价格） */
+  two_length_number: [{ required, validator: two_length_number, trigger }],
+  /**是否是大于零的正整数 */
+  isNumber: [{ required, validator: isNumber, trigger }],
   /**自定义校验方法 */
   valid: (validator: any) => [{ required, validator, trigger }],
   /**自定义提示信息 */

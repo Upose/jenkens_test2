@@ -2,11 +2,11 @@
  * @Description: 退票
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 18:38:52
+ * @LastEditTime: 2022-05-26 10:59:04
 -->
 <template>
   <el-card style="width: 600px;height: 100%;margin-top: 3px;">
-    <el-scrollbar>
+    <el-scrollbar style="height: calc(100vh - 140px);">
       <el-form ref="formRef" :model="Form" :rules="Rule">
         <!-- 部门 -->
         <el-form-item label="部门" prop="applicant_dept_id">
@@ -70,6 +70,7 @@ import dataStructure from '@/utils/dataStructure'
 import { IRequest } from '@/@types/httpInterface'
 import { ElMessage } from 'element-plus'
 import { formRef, Form, Rule } from './index'
+import router from '@/router'
 export default defineComponent({
   name: '',
   props: {},
@@ -121,7 +122,7 @@ export default defineComponent({
                   data: arr
                 }
               )
-              console.log(Data)
+
               const form = formRef
               form.value.validate((valid: boolean) => {
                 if (valid) {
@@ -131,12 +132,12 @@ export default defineComponent({
                       let { status, info } = res as IRequest
                       if (status === 200) {
                         ElMessage.success(info)
-                        // 重置选中的信息
-                        Form.applicant_dept_id = ''
-                        Form.invoice_order_number = ''
-                        Form.next_approver = ''
-                        Form.explain = ''
-                        request.getOrderNumList()
+                        router.push({
+                          path: '/index/approval/flow',
+                          query: {
+                            activeName: 'started_flow'
+                          }
+                        })
                       }
                     })
                     .catch(err => err)

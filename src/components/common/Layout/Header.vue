@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-04-07 09:50:15
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-26 10:13:40
+ * @LastEditTime: 2022-05-26 13:53:02
 -->
 <template>
   <header class="header">
@@ -12,7 +12,7 @@
       <div class="header_logo">
         <img src="@/assets/img/common/qishu.png" alt="#" />
       </div>
-      <div style="font-weight: bold;font-style: italic">
+      <div style="font-weight: bold;">
         {{ $t('common.warehouse_system') }}
       </div>
     </div>
@@ -21,11 +21,13 @@
         <el-dropdown @command="dropdownClick">
           <div class="drop-outer">
             <div class="drop-left">
-              <img
-                style="width:30px;height:30px;border-radius:50%"
-                :src="userInfo.photo"
+              <el-avatar
+                style="width:30px;height:30px;"
+                round
                 :onerror="defaultImg"
-              />
+                :src="userInfo.photo"
+                size="medium"
+              ></el-avatar>
             </div>
             <div class="drop-uname">
               <div>
@@ -35,10 +37,10 @@
           </div>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item icon="el-icon-user" command="per_center">{{
+              <el-dropdown-item icon="el-icon-user" command="userInfo">{{
                 $t('common.per_center')
               }}</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-edit" command="edit_upd">{{
+              <el-dropdown-item icon="el-icon-edit" command="changPassword">{{
                 $t('common.edit_upd')
               }}</el-dropdown-item>
               <el-dropdown-item icon="el-icon-back" command="exit_login">{{
@@ -130,15 +132,14 @@ export default defineComponent({
           case 'exit_login':
             requests.loginLogout()
             break
-          case 'edit_upd':
+          case 'changPassword':
             // 后台界面直接修改密码
-            router.push('/index/handles/editupd')
+            router.push('/index/userCenter/changPassword')
             break
-          case 'per_center':
-            router.push('/index/handles/percenter')
+          case 'userInfo':
+            router.push('/index/userCenter/userInfo')
             break
           default:
-            router.push('/index/handles')
             break
         }
       }

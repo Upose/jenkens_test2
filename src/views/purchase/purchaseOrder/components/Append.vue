@@ -1,13 +1,14 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 09:20:30
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-01 15:05:46
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-26 16:34:11
 -->
 <!--  -->
 <template>
+  <!-- 追加 -->
   <el-drawer :title="$t(`common.append`)" :size="1000" v-model="showAppend">
     <div class="box-card formStyle dividerStyle">
       <div class="box-form">
@@ -169,18 +170,18 @@
             <el-col :span="12">
               <el-form-item :label="$t('common.number')" prop="number">
                 <el-input
-                  v-micrometer
+                  v-thousands
                   v-model="addVarForm.number"
-                  @change="unitMoneyAndNumChange('add')"
+                  @change="setTotalMoney"
                 ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item :label="$t('common.inventory_unit_money')" prop="inventory_unit_money">
                 <el-input
-                  v-micrometer
+                  v-thousands
                   v-model="addVarForm.inventory_unit_money"
-                  @change="unitMoneyAndNumChange('add')"
+                  @change="setTotalMoney"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -252,7 +253,10 @@ import { useI18n } from 'vue-i18n'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { operationMul, operationAdd } from '@/utils/operation'
 import AddTable from './AddTable.vue'
-import { checkOnlyNum, checkTwoDeci, checkAt1 } from '@/utils/regp'
+import { defineRules, formatPrice } from '@/utils/formValid'
+import { delComma } from '@/utils/thousand'
+const { inputInfo, selectInfo, email, isNumber, two_length_number, debounce } = defineRules
+
 export default defineComponent({
   props: {
     commonLists: {
@@ -322,104 +326,23 @@ export default defineComponent({
     const addRef = ref()
     const addRefVar = ref()
     const addTableRef = ref()
-
-    const addRule = computed(() => {
-      const rule = {
-        id: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-        payment_money: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-        supplier: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-        currency_unit: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-        warehouse: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ]
-      }
-      return rule
+    const addRule = reactive({
+      id: inputInfo,
+      payment_money: inputInfo,
+      supplier: selectInfo,
+      currency_unit: selectInfo,
+      warehouse: selectInfo
     })
-    const addRuleVar = computed(() => {
-      const rule = {
-        // ========
-        model_number: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-        unit: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-
-        number: [
-          {
-            required: true,
-            validator: checkOnlyNum
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-        inventory_unit_money: [
-          {
-            required: true,
-            validator: checkTwoDeci
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-
-        inventory_type: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-        inventory_money: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ],
-        product_grade: [
-          {
-            required: true,
-            message: t('common.not_empty')
-          },
-          { validator: valid.checkOthers.validatorFun }
-        ]
-      }
-      return rule
+    const addRuleVar = reactive({
+      model_number: selectInfo,
+      unit: selectInfo,
+      number: isNumber,
+      inventory_unit_money: two_length_number,
+      inventory_type: selectInfo,
+      inventory_money: selectInfo,
+      product_grade: selectInfo
     })
+
     const requests = {
       // 追加请求
       getAppend() {
@@ -574,15 +497,13 @@ export default defineComponent({
           }
         })
       },
-      // 单位和数量改变
-      unitMoneyAndNumChange(arg: string) {
-        let unit_money: any
-        let number: any
-        unit_money = state.addVarForm.inventory_unit_money
-        number = state.addVarForm.number
-        unit_money = !unit_money ? 0 : unit_money
-        number = !number ? 0 : number
-        state.addVarForm.inventory_money = operationMul(unit_money, number)
+      /**设置入库总金额 */
+      setTotalMoney(arg: string) {
+        // addVarForm.number 数量
+        // addVarForm.inventory_unit_money 单价
+        state.addVarForm.inventory_money = formatPrice(
+          delComma(state.addVarForm.number) * delComma(state.addVarForm.inventory_unit_money)
+        )
       },
       reset(arg: any) {
         // 重置表单

@@ -1,5 +1,5 @@
 /*
- * @Descripttion:千分符相关方法
+ * @Description:千分符相关方法
  * @Author: HYH
  * @LastEditors: HYH
  * @LastEditTime: 2022-05-07 10:06:39

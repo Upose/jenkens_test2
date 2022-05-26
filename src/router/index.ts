@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2022-05-25 10:11:02
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 10:48:50
+ * @LastEditTime: 2022-05-26 14:04:12
  */
 
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
@@ -16,6 +16,7 @@ import purchase from '@/router/purchase'
 import sale from '@/router/sale'
 import finance from '@/router/finance'
 import system from '@/router/system'
+import userCenter from '@/router/userCenter'
 import i18n from '@/locales'
 import { handlesChild } from '@/router/handles'
 import { GetterConstants } from '@/store/modules/users/constants'
@@ -105,12 +106,13 @@ export const constantRoutes: Array<RouteRecordRaw> = [
         children: system
       },
       // ========以下非后端配置路由
+      // 用户（个人）中心
       {
-        path: 'handles',
-        name: 'handles',
-        // redirect: '/index/handles/percenter',
-        component: () => import('@/views/Handles/index.vue'),
-        children: handlesChild
+        path: 'userCenter',
+        name: 'UserCenter',
+        redirect: '/index/userCenter/userInfo',
+        component: () => import('@/views/UserCenter/index.vue'),
+        children: userCenter
       },
       // 无权限页面
       {
@@ -133,13 +135,20 @@ export const constantRoutes: Array<RouteRecordRaw> = [
   {
     path: '/404',
     name: '404',
-    component: () => import('@/views/404/404.vue') //懒加载，需要时在引入
+    component: () => import('@/views/404/index.vue') //懒加载，需要时在引入
   },
   // 无权限页面
   {
     path: '/noaccess',
     name: 'Noaccess',
     component: () => import('@/views/NoAccess/index.vue')
+  },
+  {
+    // 找不到路由重定向到404页面
+    path: '/:pathMatch(.*)',
+    redirect: {
+      name: '404'
+    }
   }
 ]
 

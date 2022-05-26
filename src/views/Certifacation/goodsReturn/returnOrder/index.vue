@@ -2,7 +2,7 @@
  * @Description: 退货单
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 18:39:05
+ * @LastEditTime: 2022-05-26 10:50:53
 -->
 <template>
   <el-card style="width: 700px;height: 100%;margin-top: 3px;">
@@ -138,6 +138,7 @@ import { IRequest } from '@/@types/httpInterface'
 import { ElMessage } from 'element-plus'
 import { formRef, Form, Rule } from './index'
 import { useI18n } from 'vue-i18n'
+import router from '@/router'
 export default defineComponent({
   name: '',
   props: {},
@@ -272,7 +273,7 @@ export default defineComponent({
             data: tableData
           }
         )
-        console.log(Data)
+
         const form = formRef
         form.value.validate((valid: boolean) => {
           if (valid) {
@@ -284,11 +285,12 @@ export default defineComponent({
                 let { status, info } = res as IRequest
                 if (status === 200) {
                   ElMessage.success(info)
-                  // 重置选中的信息
-                  Object.keys(Form).forEach((key: any) => {
-                    ;(Form as any)[key] = ''
+                  router.push({
+                    path: '/index/approval/flow',
+                    query: {
+                      activeName: 'started_flow'
+                    }
                   })
-                  state.tableData = []
                 }
               })
               .catch(err => err)
@@ -308,6 +310,7 @@ export default defineComponent({
       },
       getNewList() {
         request.getOrderNumList()
+        state.tableData = []
       }
     }
     const request = {
