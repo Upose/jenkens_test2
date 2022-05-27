@@ -7,105 +7,107 @@
 				</div> -->
         <!-- <div class="part_line"></div> -->
         <div class="reset_top">
-          <div class="headerFormStyle">
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.stockId"
-              @change="headerChange"
-              :placeholder="$t('common.stock_state')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.stockList"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+          <el-form inline>
+            <el-form-item
+              ><el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.stockId"
+                @change="headerChange"
+                :placeholder="$t('common.stock_state')"
               >
-              </el-option>
-            </el-select>
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.inventory_enter_type"
-              @change="headerChange"
-              :placeholder="$t('common.inventory_enter_type_name')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.enterTypeList2"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+                <el-option
+                  v-for="(item, index) in commonLists.stockList"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option>
+              </el-select>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.inventory_enter_type"
+                @change="headerChange"
+                :placeholder="$t('common.inventory_enter_type_name')"
               >
-              </el-option>
-            </el-select>
-
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              v-model="pagination.supplier"
-              filterable
-              clearable
-              @change="headerChange"
-              :placeholder="$t('common.inventory_supplier_name')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.supplierList2"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+                <el-option
+                  v-for="(item, index) in commonLists.enterTypeList2"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option> </el-select
+            ></el-form-item>
+            <el-form-item
+              ><el-select
+                style="margin-right:10px;margin-bottom:5px"
+                v-model="pagination.supplier"
+                filterable
+                clearable
+                @change="headerChange"
+                :placeholder="$t('common.inventory_supplier_name')"
               >
-                <span style="float: left">{{ item.name }}</span>
-                <span style="float: right;color: #999999;">{{ item.id }}</span>
-              </el-option>
-            </el-select>
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              v-model="pagination.inventory_type"
-              filterable
-              clearable
-              @change="headerChange"
-              :placeholder="$t('common.inventory_type_name')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.typeList2"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+                <el-option
+                  v-for="(item, index) in commonLists.supplierList2"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                  <span style="float: left">{{ item.name }}</span>
+                  <span style="float: right;color: #999999;">{{ item.id }}</span>
+                </el-option>
+              </el-select>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                v-model="pagination.inventory_type"
+                filterable
+                clearable
+                @change="headerChange"
+                :placeholder="$t('common.inventory_type_name')"
               >
-              </el-option>
-            </el-select>
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.product_grade"
-              @change="headerChange"
-              :placeholder="$t('common.product_grade')"
-            >
-              <el-option
-                v-for="item in commonLists.productGradeList2"
-                :key="item.id"
-                :label="item.name"
-                :value="item.product_grade"
+                <el-option
+                  v-for="(item, index) in commonLists.typeList2"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option> </el-select
+            ></el-form-item>
+            <el-form-item
+              ><el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.product_grade"
+                @change="headerChange"
+                :placeholder="$t('common.product_grade')"
               >
-              </el-option>
-            </el-select>
-
-            <el-input
-              style="margin-right:10px;margin-bottom:5px"
-              type="text"
-              :placeholder="$t('common.searchValue')"
-              v-model="pagination.search_value"
-              @input="input"
-              @change="onSearch"
-            >
-              <template #append>
-                <el-button icon="el-icon-search" @click="onSearch"></el-button>
-              </template>
-            </el-input>
-            <!-- </div> -->
-          </div>
+                <el-option
+                  v-for="item in commonLists.productGradeList2"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.product_grade"
+                >
+                </el-option> </el-select
+            ></el-form-item>
+            <el-form-item
+              ><el-input
+                style="margin-right:10px;margin-bottom:5px"
+                type="text"
+                :placeholder="$t('common.searchValue')"
+                v-model="pagination.search_value"
+                @input="input"
+                @change="onSearch"
+              >
+                <template #append>
+                  <el-button icon="el-icon-search" @click="onSearch"></el-button>
+                </template> </el-input
+            ></el-form-item>
+          </el-form>
+          <div class="headerFormStyle"></div>
           <div>
             <template v-for="item in buttonData" :key="item.widget_id">
               <!-- =1且无子集时遍历出按钮 -->

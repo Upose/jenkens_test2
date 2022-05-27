@@ -1,19 +1,15 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: XJ
  * @Date: 2021-05-10 10:39:40
- * @LastEditors: TJ
- * @LastEditTime: 2021-11-10 16:44:04
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-27 10:52:17
 -->
 <template>
   <div class="content">
     <div class="left_cont">
       <div class="box">
-        <div class="header">
-          <span>{{ $t('common.curinfo_header') }}</span>
-        </div>
-        <!-- <div class="part_line"></div> -->
         <div class="top">
           <div>
             <el-input
@@ -120,91 +116,71 @@
         </div>
       </div>
     </div>
+    <!-- 新增 -->
+    <el-drawer :title="$t(`common.${itemName}`)" v-model="drawer.showAdd">
+      <el-scrollbar>
+        <!-- 表单 -->
+        <el-form :model="addForm" :rules="addRule" ref="addRef">
+          <el-form-item :label="$t('common.id')" prop="id">
+            <el-input v-model="addForm.id"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_cn')" prop="name_cn">
+            <el-input v-model="addForm.name_cn"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_en')" prop="name_en">
+            <el-input v-model="addForm.name_en"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_fr')" prop="name_fr">
+            <el-input v-model="addForm.name_fr"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.is_enabled')" prop="is_enabled">
+            <el-switch
+              :active-value="1"
+              :inactive-value="0"
+              v-model="addForm.is_enabled"
+            ></el-switch>
+          </el-form-item>
+        </el-form>
 
-    <el-drawer :title="$t(`common.${itemName}`)" :size="576" v-model="drawer.showAdd">
-      <div class="box-card formStyle">
-        <div class="box-form">
-          <!-- 表单 -->
-          <el-form
-            :model="addForm"
-            label-width="200px"
-            label-position="left"
-            :rules="addRule"
-            ref="addRef"
-          >
-            <el-form-item :label="$t('common.id')" prop="id">
-              <el-input v-model="addForm.id"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_cn')" prop="name_cn">
-              <el-input v-model="addForm.name_cn"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_en')" prop="name_en">
-              <el-input v-model="addForm.name_en"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_fr')" prop="name_fr">
-              <el-input v-model="addForm.name_fr"></el-input>
-            </el-form-item>
-            <!-- <el-form-item :label="$t('common.sort')" prop="sort">
-              <el-input
-                 v-model="addForm.sort"
-              ></el-input>
-            </el-form-item> -->
-
-            <el-form-item :label="$t('common.is_enabled')" prop="is_enabled">
-              <el-switch
-                :active-value="1"
-                :inactive-value="0"
-                v-model="addForm.is_enabled"
-              ></el-switch>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="box-button">
+        <div style="text-align: right;margin:5px;">
           <el-button @click="onSubmitAdd" type="success">{{ $t('common.submit') }}</el-button>
         </div>
-      </div>
+      </el-scrollbar>
     </el-drawer>
-    <el-drawer :title="$t(`common.${itemName}`)" :size="576" v-model="drawer.showUpd">
-      <div class="box-card formStyle">
-        <div class="box-form">
-          <el-form
-            :model="updForm"
-            label-width="200px"
-            label-position="left"
-            :rules="updRule"
-            ref="updRef"
-          >
-            <el-form-item :label="$t('common.id')" prop="id">
-              <el-input v-model="updForm.id"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_cn')" prop="name_cn">
-              <el-input v-model="updForm.name_cn"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_en')" prop="name_en">
-              <el-input v-model="updForm.name_en"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_fr')" prop="name_fr">
-              <el-input v-model="updForm.name_fr"></el-input>
-            </el-form-item>
-            <!-- <el-form-item :label="$t('common.sort')" prop="sort">
+    <!-- 修改 -->
+    <el-drawer :title="$t(`common.${itemName}`)" v-model="drawer.showUpd">
+      <el-scrollbar>
+        <el-form :model="updForm" :rules="updRule" ref="updRef">
+          <el-form-item :label="$t('common.id')" prop="id">
+            <el-input v-model="updForm.id"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_cn')" prop="name_cn">
+            <el-input v-model="updForm.name_cn"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_en')" prop="name_en">
+            <el-input v-model="updForm.name_en"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_fr')" prop="name_fr">
+            <el-input v-model="updForm.name_fr"></el-input>
+          </el-form-item>
+          <!-- <el-form-item :label="$t('common.sort')" prop="sort">
               <el-input
                  v-model="updForm.sort"
               ></el-input>
             </el-form-item> -->
 
-            <el-form-item :label="$t('common.is_enabled')" prop="is_enabled">
-              <el-switch
-                :active-value="1"
-                :inactive-value="0"
-                v-model="updForm.is_enabled"
-              ></el-switch>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="box-button">
+          <el-form-item :label="$t('common.is_enabled')" prop="is_enabled">
+            <el-switch
+              :active-value="1"
+              :inactive-value="0"
+              v-model="updForm.is_enabled"
+            ></el-switch>
+          </el-form-item>
+        </el-form>
+        <div style="text-align: right;margin:5px;">
           <el-button @click="onSubmitUpd" type="success">{{ $t('common.submit') }}</el-button>
         </div>
-      </div>
+      </el-scrollbar>
     </el-drawer>
     <el-drawer :title="$t(`common.${itemName}`)" :size="576" v-model="drawer.showDetail">
       <div class="box-card desLabel">

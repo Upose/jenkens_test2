@@ -2,10 +2,6 @@
   <div class="content">
     <div class="left_cont">
       <div class="box">
-        <div class="header">
-          <span>{{ $t('common.roleinfo_header') }}</span>
-        </div>
-        <!-- <div class="part_line"></div> -->
         <div class="top">
           <div>
             <el-input
@@ -137,124 +133,88 @@
         </div>
       </div>
     </div>
-    <el-drawer :title="$t(`common.${itemName}`)" :size="576" v-model="drawer.showAdd">
-      <div class="box-card formStyle">
-        <div class="box-form">
-          <el-form
-            :model="addForm"
-            label-width="200px"
-            label-position="left"
-            :rules="addRule"
-            ref="addRef"
-          >
-            <el-form-item :label="$t('common.com_code')" prop="com_code">
-              <el-select filterable clearable v-model="addForm.com_code">
-                <el-option
-                  v-for="item in companyList"
-                  :key="item.com_code"
-                  :label="item.com_code"
-                  :value="item.com_code"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_cn')" prop="name_cn">
-              <el-input v-model="addForm.name_cn"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_en')" prop="name_en">
-              <el-input v-model="addForm.name_en"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_fr')" prop="name_fr">
-              <el-input v-model="addForm.name_fr"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.role_remark')" prop="role_remark">
-              <el-input v-model="addForm.role_remark"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.is_enabled')" prop="is_enabled">
-              <el-switch
-                :active-value="1"
-                :inactive-value="0"
-                v-model="addForm.is_enabled"
-              ></el-switch>
-            </el-form-item>
-            <el-form-item :label="$t('common.examine')" prop="examine">
-              <el-select filterable clearable v-model="addForm.examine">
-                <el-option
-                  v-for="(item, index) in roleExamineList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="box-button">
+    <!-- 新增 -->
+    <el-drawer :title="$t(`common.${itemName}`)" v-model="drawer.showAdd">
+      <el-scrollbar>
+        <el-form :model="addForm" :rules="addRule" ref="addRef">
+          <el-form-item :label="$t('common.com_code')" prop="com_code">
+            <el-select style="width: 100%;" filterable clearable v-model="addForm.com_code">
+              <el-option
+                v-for="item in companyList"
+                :key="item.com_code"
+                :label="item.com_code"
+                :value="item.com_code"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_cn')" prop="name_cn">
+            <el-input v-model="addForm.name_cn"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_en')" prop="name_en">
+            <el-input v-model="addForm.name_en"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_fr')" prop="name_fr">
+            <el-input v-model="addForm.name_fr"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.role_remark')" prop="role_remark">
+            <el-input v-model="addForm.role_remark"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.is_enabled')" prop="is_enabled">
+            <el-switch
+              :active-value="1"
+              :inactive-value="0"
+              v-model="addForm.is_enabled"
+            ></el-switch>
+          </el-form-item>
+        </el-form>
+        <div style="text-align: right;margin:5px;">
           <el-button @click="onSubmitAdd" type="success">{{ $t('common.submit') }}</el-button>
         </div>
-      </div>
+      </el-scrollbar>
     </el-drawer>
-    <el-drawer :title="$t(`common.${itemName}`)" :size="576" v-model="drawer.showUpd">
-      <div class="box-card formStyle">
-        <div class="box-form">
-          <el-form
-            :model="updForm"
-            label-width="200px"
-            label-position="left"
-            :rules="updRule"
-            ref="updRef"
-          >
-            <el-form-item :label="$t('common.ID')" prop="id">
-              <el-input v-model="updForm.id" disabled></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.com_code')" prop="com_code">
-              <el-select filterable clearable v-model="updForm.com_code">
-                <el-option
-                  v-for="item in companyList"
-                  :key="item.com_code"
-                  :label="item.com_code"
-                  :value="item.com_code"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_cn')" prop="name_cn">
-              <el-input v-model="updForm.name_cn"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_en')" prop="name_en">
-              <el-input v-model="updForm.name_en"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.name_fr')" prop="name_fr">
-              <el-input v-model="updForm.name_fr"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.role_remark')" prop="role_remark">
-              <el-input v-model="updForm.role_remark"></el-input>
-            </el-form-item>
-            <el-form-item :label="$t('common.is_enabled')" prop="is_enabled">
-              <el-switch
-                :active-value="1"
-                :inactive-value="0"
-                v-model="updForm.is_enabled"
-              ></el-switch>
-            </el-form-item>
-            <el-form-item :label="$t('common.examine')" prop="examine">
-              <el-select filterable clearable v-model="updForm.examine">
-                <el-option
-                  v-for="(item, index) in roleExamineList"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.id"
-                >
-                </el-option>
-              </el-select>
-            </el-form-item>
-          </el-form>
-        </div>
-        <div class="box-button">
+    <!-- 修改 -->
+    <el-drawer :title="$t(`common.${itemName}`)" v-model="drawer.showUpd">
+      <el-scrollbar>
+        <el-form :model="updForm" :rules="updRule" ref="updRef">
+          <el-form-item :label="$t('common.ID')" prop="id">
+            <el-input v-model="updForm.id" disabled></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.com_code')" prop="com_code">
+            <el-select style="width: 100%;" filterable clearable v-model="updForm.com_code">
+              <el-option
+                v-for="item in companyList"
+                :key="item.com_code"
+                :label="item.com_code"
+                :value="item.com_code"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_cn')" prop="name_cn">
+            <el-input v-model="updForm.name_cn"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_en')" prop="name_en">
+            <el-input v-model="updForm.name_en"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.name_fr')" prop="name_fr">
+            <el-input v-model="updForm.name_fr"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.role_remark')" prop="role_remark">
+            <el-input v-model="updForm.role_remark"></el-input>
+          </el-form-item>
+          <el-form-item :label="$t('common.is_enabled')" prop="is_enabled">
+            <el-switch
+              :active-value="1"
+              :inactive-value="0"
+              v-model="updForm.is_enabled"
+            ></el-switch>
+          </el-form-item>
+        </el-form>
+        <div style="text-align: right;margin:5px;">
           <el-button @click="onSubmitUpd" type="success">{{ $t('common.submit') }}</el-button>
         </div>
-      </div>
+      </el-scrollbar>
     </el-drawer>
     <el-drawer :title="$t(`common.${itemName}`)" :size="576" v-model="drawer.showDetail">
       <div class="box-card desLabel">
@@ -533,27 +493,6 @@ export default defineComponent({
       return rule
     })
     const requests = {
-      // 角色可查看接口获取接口：V1/Role/role_examine
-      getRoleExamine(role_id: any = null) {
-        const data = dataStructure(
-          {},
-          {
-            role_id
-          }
-        )
-        roleinfoApi
-          .get_role_examine(data)
-          .then(res => {
-            let { status, custom_data } = res as IRequest
-            if (status === 200) {
-              state.roleExamineList = custom_data.data
-              if (state.itemName == 'upd') {
-                state.updForm.examine = custom_data.data.find((item: any) => item.pitch_on)?.id
-              }
-            }
-          })
-          .catch(err => err)
-      },
       // 2.16 公司获取接口：V1/Company/list
       getCompanyList() {
         const data = dataStructure(
@@ -846,7 +785,6 @@ export default defineComponent({
         if (!state.companyList.length) {
           requests.getCompanyList()
         }
-        requests.getRoleExamine()
       },
 
       // 删除按钮
@@ -877,7 +815,6 @@ export default defineComponent({
           if (!state.companyList.length) {
             requests.getCompanyList()
           }
-          requests.getRoleExamine(id)
           state.itemName = 'upd'
           state.drawer.showUpd = true
         })

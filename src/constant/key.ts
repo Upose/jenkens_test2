@@ -1,10 +1,10 @@
 /*
- * @Descripttion: 默认语言常量定义
+ * @Description: 默认语言常量定义
  * @version:
  * @Author: TJ
  * @Date: 2021-03-26 14:43:25
  * @LastEditors: HYH
- * @LastEditTime: 2021-08-31 19:25:17
+ * @LastEditTime: 2022-05-27 09:35:50
  */
 class Keys {
   static languageKey = 'qihongkeji-languageKey'

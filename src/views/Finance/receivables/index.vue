@@ -7,79 +7,87 @@
 				</div> -->
         <!-- <div class="part_line"></div> -->
         <div class="reset_top">
-          <div class="headerFormStyle">
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.currency_unit"
-              @change="headerChange"
-              :placeholder="$t('common.currency_unit_name')"
-            >
-              <el-option
-                v-for="item in commonLists.currencyUnitList2"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
+          <el-form inline>
+            <el-form-item
+              ><el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.currency_unit"
+                @change="headerChange"
+                :placeholder="$t('common.currency_unit_name')"
               >
-                <span style="float: left">{{ item.name }}</span>
-                <span style="float: right;color: #999999;">{{ item.id }}</span>
-              </el-option>
-            </el-select>
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.status_type"
-              @change="headerChange"
-              :placeholder="$t('common.status_type')"
+                <el-option
+                  v-for="item in commonLists.currencyUnitList2"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                  <span style="float: left">{{ item.name }}</span>
+                  <span style="float: right;color: #999999;">{{ item.id }}</span>
+                </el-option>
+              </el-select></el-form-item
             >
-              <el-option
-                v-for="(item, index) in commonLists.statusTypeList"
-                :key="index"
-                :label="item.name"
-                :value="item.id"
+            <el-form-item
+              ><el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.status_type"
+                @change="headerChange"
+                :placeholder="$t('common.status_type')"
               >
-              </el-option>
-            </el-select>
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.buy_user"
-              @change="headerChange"
-            >
-              <el-option
-                v-for="item in commonLists.customerList2"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
+                <el-option
+                  v-for="(item, index) in commonLists.statusTypeList"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option> </el-select
+            ></el-form-item>
+            <el-form-item>
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.buy_user"
+                @change="headerChange"
               >
-              </el-option>
-            </el-select>
-            <el-date-picker
-              @change="headerChange"
-              style="margin-right:10px;margin-bottom:5px"
-              v-model="pagination.date"
-              :unlink-panels="true"
-              type="daterange"
-              :start-placeholder="$t('common.start_at')"
-              :end-placeholder="$t('common.end_at')"
-            >
-            </el-date-picker>
-            <el-input
-              style="margin-right:10px;margin-bottom:5px"
-              type="text"
-              placeholder="收款单号、收款人、创建人、备注"
-              v-model="pagination.search_value"
-              @input="input"
-              @change="onSearch"
-            >
-              <template #append>
-                <el-button icon="el-icon-search" @click="onSearch"></el-button>
-              </template>
-            </el-input>
-          </div>
+                <el-option
+                  v-for="item in commonLists.customerList2"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                >
+                </el-option> </el-select
+            ></el-form-item>
+            <el-form-item
+              ><el-date-picker
+                @change="headerChange"
+                style="margin-right:10px;margin-bottom:5px"
+                v-model="pagination.date"
+                :unlink-panels="true"
+                type="daterange"
+                :start-placeholder="$t('common.start_at')"
+                :end-placeholder="$t('common.end_at')"
+              >
+              </el-date-picker
+            ></el-form-item>
+            <el-form-item>
+              <el-input
+                style="margin-right:10px;margin-bottom:5px"
+                type="text"
+                placeholder="收款单号、收款人、创建人、备注"
+                v-model="pagination.search_value"
+                @input="input"
+                @change="onSearch"
+              >
+                <template #append>
+                  <el-button icon="el-icon-search" @click="onSearch"></el-button>
+                </template> </el-input
+            ></el-form-item>
+          </el-form>
+          <div class="headerFormStyle"></div>
           <div>
             <template v-for="item in buttonData" :key="item.widget_id">
               <!-- =1且无子集时遍历出按钮 status_type-->

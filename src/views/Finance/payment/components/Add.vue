@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 
+ * @Description: 
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
- * @LastEditors: XJ
- * @LastEditTime: 2022-04-02 14:14:34
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-27 10:42:53
 -->
 <!--  -->
 <template>
@@ -18,7 +18,7 @@
           label-width="200px"
           :rules="addRule"
           ref="addRef"
-          label-position="left"
+          label-position="right"
         >
           <el-row>
             <el-col :span="12">
@@ -108,7 +108,7 @@
           label-width="200px"
           :rules="addVarRule"
           ref="addVarRef"
-          label-position="left"
+          label-position="right"
         >
           <el-row>
             <el-col :span="12">

@@ -152,108 +152,110 @@
             <el-radio-button label="pay_log">{{ $t('common.payer_log') }}</el-radio-button>
           </el-radio-group>
           <div class="bot-detail-table">
-            <el-table
-              v-if="botTableActiveName === 'detail'"
-              border
-              :data="purchaseDetailsForm.data"
-              :height="tableHeight"
-              highlight-current-row
-              row-key="id"
-              :tree-props="{
-                children: 'children',
-                hasChildren: 'hasChildren'
-              }"
-              default-expand-all
-            >
-              <el-table-column type="index"> </el-table-column>
-              <template v-for="(item, index) in purchaseDetailsForm.props" :key="index">
-                <el-table-column show-overflow-tooltip :prop="item" :label="$t(`common.${item}`)">
+            <div v-if="botTableActiveName === 'detail'">
+              <el-table
+                border
+                :data="purchaseDetailsForm.data"
+                :height="tableHeight"
+                highlight-current-row
+                row-key="id"
+                :tree-props="{
+                  children: 'children',
+                  hasChildren: 'hasChildren'
+                }"
+                default-expand-all
+              >
+                <el-table-column type="index"> </el-table-column>
+                <template v-for="(item, index) in purchaseDetailsForm.props" :key="index">
+                  <el-table-column show-overflow-tooltip :prop="item" :label="$t(`common.${item}`)">
+                  </el-table-column>
+                </template>
+              </el-table>
+              <el-pagination
+                @size-change="changeBotTableSize"
+                @current-change="changeBotTablePage"
+                :current-page="botTablePage.index"
+                :page-size="botTablePage.size"
+                :page-sizes="[13, 18, 23, 28]"
+                layout="total,  prev, pager, sizes,next, jumper"
+                :total="botTablePage.total"
+                style="text-align:right;"
+              >
+              </el-pagination>
+            </div>
+            <div v-else>
+              <el-table
+                border
+                :data="purchasePaymentForm.data"
+                :height="tableHeight"
+                highlight-current-row
+                row-key="id"
+                :tree-props="{
+                  children: 'children',
+                  hasChildren: 'hasChildren'
+                }"
+                default-expand-all
+              >
+                <el-table-column type="index"> </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="stock_statistics_id"
+                  :label="$t('common.stock_statistics_id')"
+                >
                 </el-table-column>
-              </template>
-            </el-table>
-            <el-table
-              v-else
-              border
-              :data="purchasePaymentForm.data"
-              :height="tableHeight"
-              highlight-current-row
-              row-key="id"
-              :tree-props="{
-                children: 'children',
-                hasChildren: 'hasChildren'
-              }"
-              default-expand-all
-            >
-              <el-table-column type="index"> </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="stock_statistics_id"
-                :label="$t('common.stock_statistics_id')"
-              >
-              </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="stock_type_name"
-                :label="$t('common.stock_type_name')"
-              >
-              </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="created_at"
-                :label="$t('common.created_at')"
-              >
-              </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="account_number"
-                :label="$t('common.account_number')"
-              >
-              </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="created_name"
-                :label="$t('common.payer')"
-              >
-              </el-table-column>
-              <el-table-column show-overflow-tooltip prop="number" :label="$t('common.number')">
-              </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="currency_unit_name"
-                :label="$t('common.settlement_currency')"
-              >
-              </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="payment_money"
-                :label="$t('common.surplus_real_payment_money')"
-              >
-              </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="wait_money"
-                :label="$t('common.wait_money')"
-              >
-              </el-table-column>
-              <el-table-column
-                show-overflow-tooltip
-                prop="real_payment_money"
-                :label="$t('common.this_payer')"
-              >
-              </el-table-column>
-            </el-table>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="stock_type_name"
+                  :label="$t('common.stock_type_name')"
+                >
+                </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="created_at"
+                  :label="$t('common.created_at')"
+                >
+                </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="account_number"
+                  :label="$t('common.account_number')"
+                >
+                </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="created_name"
+                  :label="$t('common.payer')"
+                >
+                </el-table-column>
+                <el-table-column show-overflow-tooltip prop="number" :label="$t('common.number')">
+                </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="currency_unit_name"
+                  :label="$t('common.settlement_currency')"
+                >
+                </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="payment_money"
+                  :label="$t('common.surplus_real_payment_money')"
+                >
+                </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="wait_money"
+                  :label="$t('common.wait_money')"
+                >
+                </el-table-column>
+                <el-table-column
+                  show-overflow-tooltip
+                  prop="real_payment_money"
+                  :label="$t('common.this_payer')"
+                >
+                </el-table-column>
+              </el-table>
+            </div>
           </div>
-          <el-pagination
-            @size-change="changeBotTableSize"
-            @current-change="changeBotTablePage"
-            :current-page="botTablePage.index"
-            :page-size="botTablePage.size"
-            :page-sizes="[13, 18, 23, 28]"
-            layout="total,  prev, pager, sizes,next, jumper"
-            :total="botTablePage.total"
-            style="text-align:right;"
-          >
-          </el-pagination>
         </div>
         <!------------------------------------------------------底部详情表格end------------------------------------------------------->
         <!-- 分割线 -->

@@ -1,15 +1,16 @@
 /*
- * @Descripttion: 初始化样式
+ * @Description: 初始化样式
  * @version: 
  * @Author: TJ
  * @Date: 2021-04-06 18:27:09
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-09 17:39:55
+ * @LastEditTime: 2022-05-27 11:11:07
  */
 html,
 body {
   margin: 0;
   padding: 0;
+  padding-right: 0 !important;
 }
 h1,
 h2,
@@ -86,4 +87,31 @@ textarea {
 .cursor:hover {
   color: #1890ff;
   cursor: pointer;
+}
+.el-drawer {
+  min-width: 600px !important;
+  z-index: 1 !important;
+  .el-drawer__header {
+    margin-bottom: 20px;
+    span {
+      font-size: 16px;
+    }
+  }
+  .el-drawer__body {
+    margin: 20px 30px;
+    .el-scrollbar {
+      height: calc(100vh - 100px);
+      .el-descriptions__label {
+        width: 150px;
+        text-align: center;
+      }
+      .el-descriptions__content {
+        word-break: break-all;
+        img {
+          max-width: 100%;
+          height: auto;
+        }
+      }
+    }
+  }
 }

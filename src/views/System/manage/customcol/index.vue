@@ -2,10 +2,6 @@
   <div class="content">
     <div class="left_cont">
       <div class="box">
-        <div class="header">
-          <span>{{ $t('common.customcol_header') }}</span>
-        </div>
-        <!-- <div class="part_line"></div> -->
         <div class="top">
           <div>
             <el-input

@@ -2,7 +2,7 @@
  * @Description: 出库单
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 18:23:48
+ * @LastEditTime: 2022-05-27 10:28:53
 -->
 <template>
   <div class="content">
@@ -13,72 +13,78 @@
 				</div> -->
         <!-- <div class="part_line"></div> -->
         <div class="reset_top">
+          <el-form inline>
+            <el-form-item
+              ><el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.collator"
+                @change="headerChange"
+                :placeholder="$t('common.collator')"
+              >
+                <el-option
+                  v-for="(item, index) in commonLists.staffList2"
+                  :key="index"
+                  :label="item.full_name"
+                  :value="item.id"
+                >
+                </el-option> </el-select
+            ></el-form-item>
+            <el-form-item
+              ><!-- 装货人 -->
+              <el-select
+                style="margin-right:10px;margin-bottom:5px"
+                filterable
+                clearable
+                v-model="pagination.shipper"
+                @change="headerChange"
+                :placeholder="$t('common.shipper')"
+              >
+                <el-option
+                  v-for="(item, index) in commonLists.staffList2"
+                  :key="index"
+                  :label="item.full_name"
+                  :value="item.id"
+                >
+                </el-option> </el-select
+            ></el-form-item>
+            <el-form-item>
+              <!-- 开始 结束时间 -->
+              <el-date-picker
+                @change="headerChange"
+                style="margin-right:10px;margin-bottom:5px"
+                v-model="pagination.date"
+                :unlink-panels="true"
+                type="daterange"
+                :start-placeholder="$t('common.start_at')"
+                :end-placeholder="$t('common.end_at')"
+              >
+              </el-date-picker
+            ></el-form-item>
+            <el-form-item>
+              <!-- 出库单号，销售单号，备注 -->
+              <el-input
+                style="margin-right:10px;margin-bottom:5px"
+                type="text"
+                :placeholder="
+                  $t('common.delivery_order_number') +
+                    '、' +
+                    $t('common.sale_order_number') +
+                    '、' +
+                    $t('common.explain')
+                "
+                v-model="pagination.search_value"
+                @input="input"
+                @change="onSearch"
+              >
+                <template #append>
+                  <el-button icon="el-icon-search" @click="onSearch"></el-button>
+                </template> </el-input
+            ></el-form-item>
+          </el-form>
           <!-- 核对人 -->
-          <div class="headerFormStyle">
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.collator"
-              @change="headerChange"
-              :placeholder="$t('common.collator')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.staffList2"
-                :key="index"
-                :label="item.full_name"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select>
-            <!-- 装货人 -->
-            <el-select
-              style="margin-right:10px;margin-bottom:5px"
-              filterable
-              clearable
-              v-model="pagination.shipper"
-              @change="headerChange"
-              :placeholder="$t('common.shipper')"
-            >
-              <el-option
-                v-for="(item, index) in commonLists.staffList2"
-                :key="index"
-                :label="item.full_name"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select>
-            <!-- 开始 结束时间 -->
-            <el-date-picker
-              @change="headerChange"
-              style="margin-right:10px;margin-bottom:5px"
-              v-model="pagination.date"
-              :unlink-panels="true"
-              type="daterange"
-              :start-placeholder="$t('common.start_at')"
-              :end-placeholder="$t('common.end_at')"
-            >
-            </el-date-picker>
-            <!-- 出库单号，销售单号，备注 -->
-            <el-input
-              style="margin-right:10px;margin-bottom:5px"
-              type="text"
-              :placeholder="
-                $t('common.delivery_order_number') +
-                  '、' +
-                  $t('common.sale_order_number') +
-                  '、' +
-                  $t('common.explain')
-              "
-              v-model="pagination.search_value"
-              @input="input"
-              @change="onSearch"
-            >
-              <template #append>
-                <el-button icon="el-icon-search" @click="onSearch"></el-button>
-              </template>
-            </el-input>
-          </div>
+          <div class="headerFormStyle"></div>
           <div>
             <template v-for="item in buttonData" :key="item.widget_id">
               <!-- =1且无子集时遍历出按钮  出库只有在 is_delivery 等于 0 才能点击-->

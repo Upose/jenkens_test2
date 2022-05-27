@@ -1,10 +1,10 @@
 <!--
- * @Descripttion: 开单
+ * @Description: 开单
  * @version: 
  * @Author: HYH
  * @Date: 2021-08-30 15:36:38
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 17:42:31
+ * @LastEditTime: 2022-05-27 10:15:29
 -->
 <template>
   <!-- 开单 -->
@@ -19,7 +19,7 @@
           label-width="130px"
           :rules="addRule"
           ref="addRef"
-          label-position="left"
+          label-position="right"
           :validate-on-rule-change="false"
         >
           <el-row>

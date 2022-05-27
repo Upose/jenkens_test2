@@ -1,10 +1,10 @@
 /*
- * @Descripttion: 状态码定义
+ * @Description: 状态码定义
  * @version:
  * @Author: TJ
  * @Date: 2021-03-29 15:59:31
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-07 14:11:09
+ * @LastEditTime: 2022-05-27 09:35:31
  */
 
 /**成功 */
