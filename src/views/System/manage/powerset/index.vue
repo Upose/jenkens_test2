@@ -599,18 +599,7 @@ export default defineComponent({
           .then(res => {
             let { status, power, custom_data } = res as IRequest
             if (status === 200) {
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  state.typeList = custom_data
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
-              }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              state.typeList = custom_data
             }
           })
           .catch(err => err)

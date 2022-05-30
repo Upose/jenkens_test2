@@ -387,25 +387,14 @@ export default defineComponent({
           .then(res => {
             let { status, power } = res as IRequest
             if (status === 200) {
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  requests.getList()
-                  if (!state.commonLists.supplierList.length) {
-                    requests.getSupplierList()
-                  }
-                  if (!state.commonLists.currencyUnitList.length) {
-                    requests.getCurrencyUnitList()
-                  }
-                  state.buttonData = power
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
+              requests.getList()
+              if (!state.commonLists.supplierList.length) {
+                requests.getSupplierList()
               }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              if (!state.commonLists.currencyUnitList.length) {
+                requests.getCurrencyUnitList()
+              }
+              state.buttonData = power
             }
           })
           .catch(err => err)

@@ -4,7 +4,7 @@
  * @Author: XJ
  * @Date: 2021-05-06 11:17:19
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 14:56:52
+ * @LastEditTime: 2022-05-27 11:19:08
  */
 //页面基础布局样式一
 import '@/assets/icon/iconfont.css'

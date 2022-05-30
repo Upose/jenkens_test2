@@ -2,10 +2,6 @@
   <div class="content">
     <div class="left_cont">
       <div class="box">
-        <!-- <div class="header">
-					<span>{{ $t('common.invmodel_header') }}</span>
-				</div> -->
-        <!-- <div class="part_line"></div> -->
         <div class="top">
           <div>
             <el-select
@@ -314,20 +310,9 @@ export default defineComponent({
           .then(res => {
             let { status, power } = res as IRequest
             if (status === 200) {
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  requests.getList()
-                  state.buttonData = power
-                  requests.getTypeList()
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
-              }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              requests.getList()
+              state.buttonData = power
+              requests.getTypeList()
             }
           })
           .catch(err => err)

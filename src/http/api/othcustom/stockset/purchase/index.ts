@@ -1,10 +1,10 @@
 /*
- * @Descripttion: 系统管理模块api
+ * @Description: 系统管理模块api
  * @version:
  * @Author: TJ
  * @Date: 2021-04-30 14:17:56
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-29 18:13:55
+ * @LastEditors: HYH
+ * @LastEditTime: 2022-05-27 16:02:10
  */
 import request from '@/http/axios/request'
 import { IParams } from '@/@types/httpInterface'
@@ -61,8 +61,11 @@ export const purchaseApi = {
   // 金额货币单位接口：V1/Unit/all_list
   get_currency_unit_list: (params: IParams) => request.post(`/V1/Unit/all_list`, params),
   // 供应商接口：V1/InventorySupplier/all_list
-  get_supplier_list: (params: IParams) => request.post(`/V1/InventorySupplier/all_list`, params)
+  get_supplier_list: (params: IParams) => request.post(`/V1/InventorySupplier/all_list`, params),
   // ===========================
   // 开始日期接口：V1/Inventory/start_at
   // get_start_at: (params: IParams) => request.post(`/V1/Inventory/start_at`, params)
+
+  /**锁定 */
+  lock: (params: IParams) => request.post(`/V1/Stock/lock`, params)
 }

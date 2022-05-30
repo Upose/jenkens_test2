@@ -73,52 +73,11 @@
               </el-input>
             </el-form-item>
           </el-form>
-          <div>
-            <template v-for="item in buttonData" :key="item.widget_id">
-              <!-- =1且无子集时遍历出按钮 -->
-              <el-button
-                style="margin-bottom:5px"
-                type="success"
-                plain
-                v-if="item.widget_type == 1 && !item.children"
-                :disabled="
-                  item.widget_id == 'add'
-                    ? false
-                    : item.widget_id == 'append'
-                    ? !(!isEmeptyObj && !singleSelection.payment_status)
-                    : item.widget_id == 'in_warehouse_status'
-                    ? !(!isEmeptyObj && singleSelection.inventory_enter_type !== 1)
-                    : isEmeptyObj
-                "
-                @click="handle(item.widget_id)"
-                >{{ item.name }}</el-button
-              >
-              <el-dropdown
-                v-else-if="item.widget_type == 1 && item.children"
-                style="margin:0 10px 5px"
-              >
-                <el-button type="success" plain>
-                  {{ item.name }}<i class="el-icon-arrow-down"></i>
-                </el-button>
-                <template #dropdown>
-                  <el-dropdown-menu v-for="(item2, index2) in item.children" :key="index2">
-                    <el-dropdown-item @click="handle(item2.widget_id)">{{
-                      item2.name
-                    }}</el-dropdown-item>
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-
-            <el-button
-              style="margin-bottom:5px"
-              type="success"
-              plain
-              :disabled="isEmeptyObj"
-              @click="handle('detail')"
-              >{{ $t('common.detail') }}</el-button
-            >
-          </div>
+          <BtnGroup
+            :buttonData="buttonData"
+            @handleClick="handleClick"
+            :handleBtnDisabled="handleBtnDisabled"
+          />
         </div>
         <div class="tab">
           <CommonTable
@@ -354,6 +313,8 @@ import StockInventory from './components/StockInventory.vue'
 import Export from './components/Export.vue'
 import Upd from './components/Upd.vue'
 import Storage from './components/Storage.vue'
+import BtnGroup from '@/components/common/BtnGroup/index.vue'
+import btnName from '@/constant/btnName'
 
 export default defineComponent({
   components: {
@@ -367,7 +328,8 @@ export default defineComponent({
     StockInventory,
     Export,
     Upd,
-    Storage
+    Storage,
+    BtnGroup
   },
   setup() {
     const { t } = useI18n()
@@ -387,7 +349,7 @@ export default defineComponent({
       showBotContent: false,
       /**底部表格默认选中样式 */
       botTableActiveName: 'detail',
-      tableCheck: [],
+      tableCheck: {},
       tableData: [],
       statistics: {},
       scrollbarMaxHeight: '100%',
@@ -754,6 +716,7 @@ export default defineComponent({
       },
       //  库存管理列表获取接口：V1/Stock/list
       getList() {
+        state.tableCheck = {}
         const data = dataStructure({}, state.pagination)
         purchaseApi
           .get_list(data)
@@ -775,28 +738,68 @@ export default defineComponent({
           .get_index(data)
           .then(res => {
             let { status, power } = res as IRequest
-
             if (status === 200) {
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  requests.getSupplierList()
-                  requests.getList()
-                  state.buttonData = power
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
-              }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              requests.getSupplierList()
+              requests.getList()
+              state.buttonData = power
             }
           })
           .catch(err => err)
       }
     }
     const methods = {
+      /**处理按钮的不可点击状态 */
+      handleBtnDisabled(name: string) {
+        /**是否是空对象 */
+        const emptyObj = Object.keys(state.tableCheck).length === 0
+        const tableCheck = state.tableCheck
+        switch (name) {
+          case btnName.LOCK:
+            return tableCheck.lock === 1 || emptyObj
+          case btnName.DETAIL:
+            return emptyObj
+          case btnName.ADD:
+            return
+          case btnName.DELETE:
+            return emptyObj
+          case btnName.EDIT:
+            return emptyObj
+          case btnName.APPEND:
+            return (
+              tableCheck.lock === 1 ||
+              tableCheck.payment_status === 1 ||
+              tableCheck.inventory_enter_type === 1 ||
+              emptyObj
+            )
+          default:
+            break
+        }
+      },
+      /**锁定 */
+      lock() {
+        ElMessageBox.confirm('确认锁定?', t('common.tip'), {
+          confirmButtonText: t('common.confirm'),
+          cancelButtonText: t('common.cancel'),
+          type: 'warning'
+        }).then(() => {
+          const data = dataStructure(
+            { power_url: 'V1/Stock/lock' },
+            {
+              id: state.tableCheck.id
+            }
+          )
+          purchaseApi
+            .lock(data)
+            .then(res => {
+              let { status, info } = res as IRequest
+              if (status === 200) {
+                ElMessage.success(info)
+                requests.getList()
+              }
+            })
+            .catch(err => err)
+        })
+      },
       /**改变底部表格每页显示多少条数据 并获取列表 */
       changeBotTableSize(size: number) {
         botTablePage.size = size
@@ -867,8 +870,11 @@ export default defineComponent({
       cancelConfig() {
         state.showSortableCustom = false
       },
-      handle(arg: any) {
+      handleClick(arg: any, param?: any) {
         switch (arg) {
+          case 'lock':
+            methods.lock()
+            break
           case 'upd':
             methods.doUpd()
             break
@@ -1033,22 +1039,6 @@ export default defineComponent({
         } else {
           requests.getPurchasePayment()
         }
-        // let id = selection.singleSelection?.id
-        // if (id === row.id) {
-        //   const CommonTableref = CommonTableRef
-        //   CommonTableref.value.setCurrentRow()
-        //   selection.singleSelection = {}
-        // } else {
-        //   selection.singleSelection = row
-        //   await nextTick() //数据更改后等待dom更新后执行后续的代码
-        //   let order_number = row?.order_number
-        //   let id = row?.id
-        //   const childref = childRef
-        //   childref.value.order_number = order_number
-        //   childref.value.id = id
-        //   childref.value.tableData = []
-        //   childref.value.selectRequest()
-        // }
       },
 
       // ----------------------------------------------详情

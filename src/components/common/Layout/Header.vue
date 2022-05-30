@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-04-07 09:50:15
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-26 13:53:02
+ * @LastEditTime: 2022-05-27 18:16:37
 -->
 <template>
   <header class="header">
@@ -40,7 +40,7 @@
               <el-dropdown-item icon="el-icon-user" command="userInfo">{{
                 $t('common.per_center')
               }}</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-edit" command="changPassword">{{
+              <el-dropdown-item icon="el-icon-edit" command="changePassword">{{
                 $t('common.edit_upd')
               }}</el-dropdown-item>
               <el-dropdown-item icon="el-icon-back" command="exit_login">{{
@@ -132,9 +132,9 @@ export default defineComponent({
           case 'exit_login':
             requests.loginLogout()
             break
-          case 'changPassword':
+          case 'changePassword':
             // 后台界面直接修改密码
-            router.push('/index/userCenter/changPassword')
+            router.push('/index/userCenter/changePassword')
             break
           case 'userInfo':
             router.push('/index/userCenter/userInfo')

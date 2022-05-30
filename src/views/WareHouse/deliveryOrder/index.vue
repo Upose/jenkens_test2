@@ -2,7 +2,7 @@
  * @Description: 出库单
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-27 10:28:53
+ * @LastEditTime: 2022-05-27 16:59:03
 -->
 <template>
   <div class="content">
@@ -368,26 +368,11 @@ export default defineComponent({
           .then(res => {
             let { status, power } = res as IRequest
             if (status === 200) {
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  // requests.getStartAt().then(() => {
-
-                  // }) //拿到时间后在加载数据
-                  if (!state.commonLists.staffList.length) {
-                    requests.getStaffInfo()
-                  }
-
-                  requests.getList()
-                  state.buttonData = power
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
+              if (!state.commonLists.staffList.length) {
+                requests.getStaffInfo()
               }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              requests.getList()
+              state.buttonData = power
             }
           })
           .catch(err => err)

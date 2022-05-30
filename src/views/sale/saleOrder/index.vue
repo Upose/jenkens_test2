@@ -2,7 +2,7 @@
  * @Description: 销售单
  * @Author: HYH
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-26 16:22:32
+ * @LastEditTime: 2022-05-27 17:01:53
 -->
 <template>
   <div class="content ">
@@ -582,30 +582,19 @@ export default defineComponent({
           .then(res => {
             let { status, power } = res as IRequest
             if (status === 200) {
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  // 初始化搜索栏日期
-                  state.pagination.date = getCurMonthFirstDayAndLastDay()
-                  if (!state.commonLists.customerList.length) {
-                    requests.getCustomerName()
-                  }
-                  if (!state.commonLists.companyList.length) {
-                    requests.getCompanyList()
-                  }
-                  if (search_value) {
-                    state.pagination.search_value = search_value
-                  }
-                  requests.getList()
-                  state.buttonData = power
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
+              // 初始化搜索栏日期
+              state.pagination.date = getCurMonthFirstDayAndLastDay()
+              if (!state.commonLists.customerList.length) {
+                requests.getCustomerName()
               }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              if (!state.commonLists.companyList.length) {
+                requests.getCompanyList()
+              }
+              if (search_value) {
+                state.pagination.search_value = search_value
+              }
+              requests.getList()
+              state.buttonData = power
             }
           })
           .catch(err => err)

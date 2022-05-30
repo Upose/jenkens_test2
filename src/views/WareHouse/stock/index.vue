@@ -545,29 +545,17 @@ export default defineComponent({
           .then(res => {
             let { status, power } = res as IRequest
             if (status === 200) {
-              // foreach是同步的
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  if (!state.commonLists.productGradeList.length) {
-                    requests.getStockTypeList()
-                  }
-                  if (!state.commonLists.typeList.length) {
-                    requests.getTypeList()
-                  }
-                  if (!state.commonLists.supplierList.length) {
-                    requests.getSupplierList()
-                  }
-                  requests.getList()
-                  state.buttonData = power
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
+              if (!state.commonLists.productGradeList.length) {
+                requests.getStockTypeList()
               }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              if (!state.commonLists.typeList.length) {
+                requests.getTypeList()
+              }
+              if (!state.commonLists.supplierList.length) {
+                requests.getSupplierList()
+              }
+              requests.getList()
+              state.buttonData = power
             }
           })
           .catch(err => err)

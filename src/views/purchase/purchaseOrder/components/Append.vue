@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2021-08-30 09:20:30
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-26 16:34:11
+ * @LastEditTime: 2022-05-27 15:47:58
 -->
 <!--  -->
 <template>
@@ -19,7 +19,7 @@
           label-width="200px"
           :rules="addRule"
           ref="addRef"
-          label-position="left"
+          label-position="right"
         >
           <el-row>
             <el-col :span="12">
@@ -96,7 +96,7 @@
           label-width="200px"
           :rules="addRuleVar"
           ref="addRefVar"
-          label-position="left"
+          label-position="right"
         >
           <el-row>
             <el-col :span="12">

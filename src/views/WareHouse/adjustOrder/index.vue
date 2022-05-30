@@ -278,19 +278,8 @@ export default defineComponent({
           .then(res => {
             let { status, power } = res as IRequest
             if (status === 200) {
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  requests.getList()
-                  state.buttonData = power
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
-              }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              requests.getList()
+              state.buttonData = power
             }
           })
           .catch(err => err)

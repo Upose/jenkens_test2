@@ -4,7 +4,7 @@
  * @Author: XJ
  * @Date: 2021-05-10 10:39:40
  * @LastEditors: HYH
- * @LastEditTime: 2022-05-27 10:52:17
+ * @LastEditTime: 2022-05-27 17:04:56
 -->
 <template>
   <div class="content">
@@ -432,19 +432,8 @@ export default defineComponent({
           .then((res: any) => {
             let { status, power } = res as IRequest
             if (status === 200) {
-              let hasView
-              power.forEach((item: IPower) => {
-                if (item.widget_id === 'view') {
-                  requests.getList()
-                  state.buttonData = power
-                  hasView = true
-                }
-              })
-              if (!hasView) {
-                router.push('/index/noaccess')
-              }
-            } else if (status === 422) {
-              router.push('/index/noaccess')
+              requests.getList()
+              state.buttonData = power
             }
           })
           .catch((err: any) => err)
