@@ -1,8 +1,8 @@
 /*
  * @Description:流程名称
  * @Author: HYH
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-23 13:47:03
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-07 16:28:15
  */
 /**流程id */
 export enum flowTypeId {
@@ -21,7 +21,9 @@ export enum flowTypeId {
   /**多收 */
   OVER_CHARGE = 25,
   /**少收 */
-  UNDER_CHARGE = 26
+  UNDER_CHARGE = 26,
+  /**进货锁定锁定审核 */
+  WAREHOUSE_LOCK = 27
 }
 /**流程名称 */
 export enum flowTypeName {
@@ -40,5 +42,7 @@ export enum flowTypeName {
   /**多收 */
   OVER_CHARGE = 'overChargeDetails',
   /**少收 */
-  UNDER_CHARGE = 'underChargeDetails'
+  UNDER_CHARGE = 'underChargeDetails',
+  /**进货锁定锁定审核 */
+  WAREHOUSE_LOCK = 'warehouseLockDetails'
 }

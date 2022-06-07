@@ -3,8 +3,8 @@
  * @version:
  * @Author: TJ
  * @Date: 2021-03-24 13:44:33
- * @LastEditors: XJ
- * @LastEditTime: 2022-03-29 17:07:57
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-06 18:24:01
  */
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
@@ -34,6 +34,7 @@ module.exports = {
   // 删除无效的插件 减小体积，避免加载多余的资源
   chainWebpack: config => {
     config.plugins.delete('prefetch-admin')
+    config.resolve.alias.set('vue-i18n', 'vue-i18n/dist/vue-i18n.cjs.js')
   },
   configureWebpack: config => {
     // 生产环境相关配置

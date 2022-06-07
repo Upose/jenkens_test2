@@ -1,8 +1,8 @@
 <!--
  * @Description: 流程
  * @Author: HYH
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-26 11:04:15
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-07 16:38:54
 -->
 <template>
   <el-card style="height: 100%;margin-top: 3px;">
@@ -10,10 +10,10 @@
       <el-tab-pane label="流程中心" name="flow_center">
         <el-scrollbar style="height:calc(100vh - 150px);">
           <!-- 流程中心 -->
-          <div class="flow-center" v-for="item in flowCenterList">
+          <div class="flow-center" v-for="item in flowCenterList" :key="item.name">
             <div class="title">{{ item.name }}({{ item.list_app.length }})</div>
             <div class="items">
-              <div class="item" v-for="content in item.list_app">
+              <div class="item" v-for="content in item.list_app" :key="content.name">
                 <el-card shadow="hover" @click="handleJumpUrl(content)" style="cursor: pointer;">
                   <div class="item_name"><i :class="content.img"></i>{{ content.name }}</div>
                 </el-card>
@@ -242,6 +242,7 @@
             >
               <el-step
                 v-for="item in detailsForm.approval_record"
+                :key="item.flow_state_name"
                 :description="item.flow_state_name"
               >
                 <template #title>
@@ -275,7 +276,7 @@
     </el-scrollbar>
   </el-drawer>
   <!-- 查看详情end -->
-  <!-- 审批发起的审批（抽屉） -->
+  <!-- 审批（抽屉） -->
   <el-drawer v-model="approvalFlowDrawer" size="700px" :title="detailsForm.title_name">
     <el-scrollbar style="padding: 20px;height: calc(100vh - 150px);">
       <!-- 审批详情 -->
@@ -297,6 +298,7 @@
               <el-step
                 v-for="item in detailsForm.approval_record"
                 :description="item.flow_state_name"
+                :key="item.full_name"
               >
                 <template #title>
                   <div class="flow_step_title">
@@ -328,6 +330,28 @@
       </component>
       <!-- 表单验证部分 -->
       <el-form ref="approvalRef" :rules="approvalRule" :model="approvalResultForm">
+        <!-- 当is_return_money === 1  && module_parameters === ’REFUND‘ 时候才显示-->
+        <template
+          v-if="
+            detailsForm.item.is_return_money === 1 && detailsForm.module_parameters === 'REFUND'
+          "
+        >
+          <el-form-item label="退款单号" prop="refund_id">
+            <el-input v-model="approvalResultForm.refund_id" />
+          </el-form-item>
+          <el-form-item label="公司名称" prop="company">
+            <el-input v-model="approvalResultForm.company" />
+          </el-form-item>
+          <el-form-item label="账户" prop="account">
+            <el-input v-model="approvalResultForm.account" />
+          </el-form-item>
+          <el-form-item label="开户行" prop="account_openning_address">
+            <el-input v-model="approvalResultForm.account_openning_address" />
+          </el-form-item>
+          <el-form-item label="备注" prop="explain">
+            <el-input v-model="approvalResultForm.explain" />
+          </el-form-item>
+        </template>
         <!-- 是否同意 -->
         <el-form-item label="是否同意" prop="result_id">
           <el-select
@@ -374,7 +398,7 @@
       </div>
     </el-scrollbar>
   </el-drawer>
-  <!-- 审批发起的审批（抽屉） -->
+  <!-- 审批（抽屉） -->
 </template>
 <script lang="ts">
 import { IRequest } from '@/@types/httpInterface'
@@ -397,6 +421,7 @@ import underChargeDetails from './components/details/underCharge.vue'
 import billReturnDetails from './components/details/billReturn.vue'
 import billOpenDetails from './components/details/billOpen.vue'
 import goodsReturnDetails from './components/details/goodsReturn.vue'
+import warehouseLockDetails from './components/details/warehouseLock.vue'
 
 export default defineComponent({
   name: '',
@@ -409,7 +434,8 @@ export default defineComponent({
     underChargeDetails,
     billReturnDetails,
     billOpenDetails,
-    goodsReturnDetails
+    goodsReturnDetails,
+    warehouseLockDetails
   },
   setup() {
     const { t } = useI18n()
@@ -460,7 +486,17 @@ export default defineComponent({
         /**下级审批人 */
         next_approver: '',
         /**流程类型 */
-        flow_type: null as any
+        flow_type: null as any,
+        /**退款单号 */
+        refund_id: '',
+        /**公司名称 */
+        company: '',
+        /**账户 */
+        account: '',
+        /**开户行 */
+        account_openning_address: '',
+        /**备注 */
+        explain: ''
       },
       /**（审批） 下级审批人列表 */
       nextApproverList: [] as any
@@ -494,6 +530,9 @@ export default defineComponent({
           case flowTypeId.GOODS_RETURN:
             componentName.value = flowTypeName.GOODS_RETURN
             break
+          case flowTypeId.WAREHOUSE_LOCK:
+            componentName.value = flowTypeName.WAREHOUSE_LOCK
+            break
 
           default:
             break
@@ -516,10 +555,14 @@ export default defineComponent({
             result_id: state.approvalResultForm.result_id,
             approval_comments: state.approvalResultForm.approval_comments,
             next_approver: state.approvalResultForm.next_approver,
+            refund_id: state.approvalResultForm.refund_id,
+            company: state.approvalResultForm.company,
+            account: state.approvalResultForm.account,
+            account_openning_address: state.approvalResultForm.account_openning_address,
+            explain: state.approvalResultForm.account,
             ...otherData
           }
         )
-        console.log(data)
         const form = approvalRef
         form.value.validate((valid: boolean) => {
           if (valid) {
@@ -766,7 +809,6 @@ export default defineComponent({
         approvalApi
           .my_approve_flow(data)
           .then(res => {
-            console.log(res)
             let { status, custom_data } = res as IRequest
             if (status === 200) {
               state.myApproveFlowList = custom_data.data || []

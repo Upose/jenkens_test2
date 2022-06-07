@@ -400,7 +400,14 @@ const common_fr = {
     adjust_type_normal: 'Inchangé',
     quantity_warning: "Type d'alerte",
     warning_chao_number: 'Différence',
-    specification: 'Spécification '
+    specification: 'Spécification ',
+    lock_name: 'Etat de blocage',
+    is_delivery_name: 'Etat de sortie de stock',
+    flow_state_name: 'Etat de vérification',
+    product_grade_type: "Type d'ajustement",
+    more_charge: 'Réduction',
+    little_charge: 'Supplément',
+    refund: 'Remboursement'
   }
 }
 export default common_fr

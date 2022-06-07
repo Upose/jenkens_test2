@@ -3,8 +3,8 @@
  * @version:
  * @Author: XJ
  * @Date: 2021-06-08 18:20:36
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 10:41:51
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-07 15:55:13
  */
 export const certifacation = [
   // 开票相关
@@ -38,6 +38,12 @@ export const certifacation = [
         path: 'warehouseIn',
         name: 'WarehouseIn',
         component: () => import('@/views/Certifacation/warehouse/warehouseIn/index.vue')
+      },
+      // 进货锁定审核
+      {
+        path: 'warehouseInLock',
+        name: 'warehouseInLock',
+        component: () => import('@/views/Certifacation/warehouse/warehouseInLock/index.vue')
       },
       // 出库
       {

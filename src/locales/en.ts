@@ -403,7 +403,14 @@ const common_en = {
     adjust_type_normal: 'Unchanged ',
     quantity_warning: 'Alert type',
     warning_chao_number: 'Difference',
-    specification: 'Specification'
+    specification: 'Specification',
+    lock_name: 'Lock status',
+    is_delivery_name: 'Outbound status',
+    flow_state_name: 'Review status',
+    product_grade_type: 'Adjustment type',
+    more_charge: 'Overcharge',
+    little_charge: 'Undercharge',
+    refund: 'Refund amount'
   }
 }
 export default common_en

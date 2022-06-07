@@ -3,8 +3,8 @@
  * @version:
  * @Author: XJ
  * @Date: 2021-06-17 14:17:22
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-24 14:11:25
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-07 16:30:42
  */
 import request from '../../axios/request'
 import { IParams } from '@/@types/httpInterface'
@@ -57,6 +57,9 @@ const approvalApi = {
       case flowTypeId.GOODS_RETURN:
         url = 'ApprovalReturn'
         break
+      case flowTypeId.WAREHOUSE_LOCK:
+        url = 'ApprovalInWarehouseLock'
+        break
       default:
         break
     }
@@ -94,6 +97,9 @@ const approvalApi = {
         break
       case flowTypeId.GOODS_RETURN:
         url = 'ApprovalReturn'
+        break
+      case flowTypeId.WAREHOUSE_LOCK:
+        url = 'ApprovalInWarehouseLock'
         break
       default:
         break

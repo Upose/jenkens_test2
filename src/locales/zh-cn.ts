@@ -544,7 +544,14 @@ const common_zh = {
     store_name: '店名',
     storage: '入库',
     part_at: '首次入库日期',
-    all_at: '全部入库日期'
+    all_at: '全部入库日期',
+    lock_name: '锁定状态',
+    is_delivery_name: '出库状态',
+    flow_state_name: '审核状态',
+    product_grade_type: '调整类型',
+    more_charge: '多收',
+    little_charge: '少收',
+    refund: '退款金额'
   }
 }
 export default common_zh
