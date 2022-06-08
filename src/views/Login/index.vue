@@ -157,7 +157,6 @@ export default defineComponent({
             if (status === 200) {
               const { data, flat_data } = custom_data
               store.commit(indexMutationConstants.SET_MENUS, data)
-              let tabs = store.getters[indexGetterConstants.GET_TABS]
               // 设置默认第一个菜单选中状态
               let { id, name, menu_url } = data[0]
               store.commit(indexMutationConstants.SET_TABS, [
