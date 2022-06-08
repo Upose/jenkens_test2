@@ -4,7 +4,7 @@
  * @Author: TJ
  * @Date: 2021-03-30 16:54:53
  * @LastEditors: TJ
- * @LastEditTime: 2022-06-08 16:08:47
+ * @LastEditTime: 2022-06-08 16:43:37
 -->
 
 <template>
@@ -61,7 +61,11 @@ export default defineComponent({
       languageList: [] as Array<Ilanguagelist>,
       getTitle() {
         return store.state.users.language
-      }
+      },
+      tabs: computed(() => {
+        return store.getters.GET_TABS
+      }),
+      datas: [] as any[]
     })
 
     const requests = {
@@ -122,16 +126,30 @@ export default defineComponent({
             const { status, custom_data } = res as IRequest
             if (status === 200) {
               const { data, flat_data } = custom_data
+              const datas = methods.flat(data)
+              state.tabs.forEach((item: any) => {
+                datas.forEach(items => {
+                  if (item.id === items.id) {
+                    item.name = items.name
+                  }
+                })
+              })
               store.commit(indexMutationConstants.SET_MENUS, data)
               window.location.reload()
-              // 设置默认第一个菜单选中状态
-              // let { id, name, menu_url } = data[0]
-              // store.commit(indexMutationConstants.SET_TABS, [
-              //   { id: id, name, menu_url, isChecked: true }
-              // ])
             }
           })
           .catch(err => err)
+      },
+
+      flat(source: any[]): any[] {
+        source.forEach(el => {
+          if (el.children.length === 0) {
+            state.datas.push(el)
+          } else {
+            methods.flat(el.children)
+          }
+        })
+        return state.datas
       }
     }
 
