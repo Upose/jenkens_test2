@@ -1,8 +1,8 @@
 <!--
  * @Description: 出库单
  * @Author: HYH
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-27 16:59:03
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-15 17:56:38
 -->
 <template>
   <div class="content">
@@ -165,7 +165,7 @@
     <Details :singleSelection="singleSelection" v-bind="customArgs" v-model="showDetail"></Details>
 
     <!-- ================= -->
-    <el-dialog title="列配置" v-model="showSortableCustom" :width="540">
+    <el-dialog :title="$t('common.columnConfiguration')" v-model="showSortableCustom" :width="540">
       <Custom @cancelConfig="cancelConfig" v-bind="customArgs"></Custom>
     </el-dialog>
     <el-dialog :title="$t('common.select_language')" v-model="dialog.dialogVisible" :width="500">
@@ -443,6 +443,7 @@ export default defineComponent({
       },
 
       handle(arg: any, name?: string) {
+        console.log(arg)
         switch (arg) {
           case 'add':
             methods.doAdd()
@@ -452,6 +453,9 @@ export default defineComponent({
             break
           case 'outbound':
             methods.doOutboundOrder()
+            break
+          case 'outbound_order':
+            methods.doSalesOfAl()
             break
           case 'detail':
             methods.doDetail()
@@ -494,7 +498,7 @@ export default defineComponent({
         }
         state.dialog.dialogVisible = false
         switch (state.itemName) {
-          case 'outboundOrder':
+          case 'outbound_order':
             requests.getOutboundOrder(language_id, id)
             break
           default:
@@ -531,7 +535,11 @@ export default defineComponent({
         state.itemName = 'export'
         state.showExport = true
       },
-
+      // 生成pdf方法
+      doSalesOfAl() {
+        state.itemName = 'outbound_order'
+        state.dialog.dialogVisible = true
+      },
       handleSizeChange(perpage: number) {
         state.pagination.perpage = perpage
         requests.getList() //传参顺序
@@ -594,7 +602,8 @@ export default defineComponent({
           await nextTick()
           // 调用子组件中的方法
           const childref = childRef
-          childref.value.getLogList(row.id)
+          childref.value.id = row.id
+          childref.value.selectRequest()
         }
       }
     }

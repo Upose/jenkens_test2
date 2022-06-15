@@ -4,7 +4,7 @@
  * @Author: HYH
  * @Date: 2021-10-25 16:06:14
  * @LastEditors: TJ
- * @LastEditTime: 2022-06-08 16:34:39
+ * @LastEditTime: 2022-06-15 16:01:36
 -->
 <template>
   <div class="tabs-box">
@@ -26,16 +26,20 @@
     <div class="select">
       <el-dropdown trigger="click">
         <span class="el-dropdown-link">
-          操作<i class="el-icon-arrow-down el-icon--right"></i>
+          {{ $t('common.handle') }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <template #dropdown>
           <!-- 关闭当前 -->
           <el-dropdown-menu>
-            <el-dropdown-item @click="closeCurrentTab">关闭当前页面</el-dropdown-item>
+            <el-dropdown-item @click="closeCurrentTab">{{
+              $t('common.isClosePage')
+            }}</el-dropdown-item>
             <!-- 关闭其他 -->
-            <el-dropdown-item @click="closeOtherTab">关闭其他</el-dropdown-item>
+            <el-dropdown-item @click="closeOtherTab">{{
+              $t('common.isCloseOther')
+            }}</el-dropdown-item>
             <!-- 关闭全部 -->
-            <el-dropdown-item @click="closeAllTab">关闭全部</el-dropdown-item>
+            <el-dropdown-item @click="closeAllTab">{{ $t('common.isCloseAll') }}</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

@@ -3,8 +3,8 @@
  * @version: 
  * @Author: XJ
  * @Date: 2021-06-18 11:24:37
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-20 10:46:00
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-15 16:38:38
 -->
 <!--  -->
 <template>
@@ -31,13 +31,13 @@
         :class="{ selected_btn: activeTable === 'return_log' }"
         >{{ $t('common.return_log') }}</el-button
       >
-      <el-button
+      <!-- <el-button
         @click="clickBtns('adjust_log')"
         plain
         type="primary"
         :class="{ selected_btn: activeTable === 'adjust_log' }"
         >{{ $t('common.adjust_log') }}</el-button
-      >
+      > -->
       <el-button
         @click="clickBtns('payee_log')"
         plain

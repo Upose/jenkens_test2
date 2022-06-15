@@ -2,12 +2,12 @@
  * @Description: 流程
  * @Author: HYH
  * @LastEditors: TJ
- * @LastEditTime: 2022-06-07 16:38:54
+ * @LastEditTime: 2022-06-15 16:01:35
 -->
 <template>
   <el-card style="height: 100%;margin-top: 3px;">
     <el-tabs v-model="activeName" type="card" @tab-click="handleClickTab">
-      <el-tab-pane label="流程中心" name="flow_center">
+      <el-tab-pane :label="$t('common.processCenter')" name="flow_center">
         <el-scrollbar style="height:calc(100vh - 150px);">
           <!-- 流程中心 -->
           <div class="flow-center" v-for="item in flowCenterList" :key="item.name">
@@ -22,7 +22,7 @@
           </div>
         </el-scrollbar>
       </el-tab-pane>
-      <el-tab-pane label="发起的流程" name="started_flow">
+      <el-tab-pane :label="$t('common.aprovalProcess')" name="started_flow">
         <el-form inline>
           <!-- 流程类型 -->
           <el-form-item>
@@ -76,9 +76,17 @@
           <!-- 用户名 -->
           <el-table-column show-overflow-tooltip prop="full_name" :label="$t('common.full_name')" />
           <!-- 流程名称 -->
-          <el-table-column show-overflow-tooltip prop="tid_name" label="流程名称" />
+          <el-table-column
+            show-overflow-tooltip
+            prop="tid_name"
+            :label="$t('common.processName')"
+          />
           <!-- 流程标题名称 -->
-          <el-table-column show-overflow-tooltip prop="title_name" label="流程标题名称" />
+          <el-table-column
+            show-overflow-tooltip
+            prop="title_name"
+            :label="$t('common.processTitle')"
+          />
           <!-- 审核状态 -->
           <el-table-column
             show-overflow-tooltip
@@ -121,7 +129,7 @@
         </div>
       </el-tab-pane>
       <!-- 审批的流程 -->
-      <el-tab-pane label="审批的流程" name="approval_flow">
+      <el-tab-pane :label="$t('common.aprovalProcess')" name="approval_flow">
         <el-form inline>
           <!-- 流程类型 -->
           <el-form-item>
@@ -348,7 +356,7 @@
           <el-form-item label="开户行" prop="account_openning_address">
             <el-input v-model="approvalResultForm.account_openning_address" />
           </el-form-item>
-          <el-form-item label="备注" prop="explain">
+          <el-form-item :label="$t('common.remark')" prop="explain">
             <el-input v-model="approvalResultForm.explain" />
           </el-form-item>
         </template>

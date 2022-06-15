@@ -1,8 +1,8 @@
 <!--
  * @Description: 销售单
  * @Author: HYH
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-27 17:01:53
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-15 16:04:54
 -->
 <template>
   <div class="content ">
@@ -228,7 +228,7 @@
     ></Return>
 
     <!-- 特殊页面 -->
-    <el-dialog title="列配置" v-model="showSortableCustom" :width="540">
+    <el-dialog :title="$t('common.columnConfiguration')" v-model="showSortableCustom" :width="540">
       <Custom @cancelConfig="cancelConfig" v-bind="customArgs"></Custom>
     </el-dialog>
     <el-dialog :title="$t('common.select_language')" v-model="dialog.dialogVisible" :width="500">

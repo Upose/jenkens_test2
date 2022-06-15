@@ -1,10 +1,9 @@
 <template>
   <div class="content">
-    <el-alert title="已显示区和未显示区均可拖动，也可互相拖动" type="info" :closable="true">
-    </el-alert>
+    <el-alert :title="$t(`common.${item.isDrowg}`)" type="info" :closable="true"> </el-alert>
     <div class="title">
-      <div>已显示{{ tableData1.length }}项</div>
-      <div>未显示{{ tableData2.length }}项</div>
+      <div>{{ $t(`common.${item.isShow}`) }}{{ tableData1.length }}</div>
+      <div>{{ $t(`common.${item.notShow}`) }}{{ tableData2.length }}</div>
     </div>
     <div class="outer_cont">
       <!-- 左边需要显示的字段 -->
@@ -38,9 +37,11 @@
       <!-- <el-button disabled plain @click="restoreDefault">还原默认值</el-button> -->
       <div></div>
       <div>
-        <el-button plain @click="cancelConfig">取 消</el-button>
+        <el-button plain @click="cancelConfig">{{ $t(`common.${item.cancel}`) }}</el-button>
         <el-tooltip class="item" effect="dark" content="确定保存以上配置" placement="top">
-          <el-button type="success" plain @click="saveConfig">确 定</el-button>
+          <el-button type="success" plain @click="saveConfig">{{
+            $t(`common.${item.confirm}`)
+          }}</el-button>
         </el-tooltip>
       </div>
     </div>

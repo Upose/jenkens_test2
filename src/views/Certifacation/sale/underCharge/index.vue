@@ -1,8 +1,8 @@
 <!--
  * @Description: 少收
  * @Author: HYH
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-26 11:04:46
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-15 19:00:07
 -->
 <template>
   <el-card style="width: 600px;height: 100%;margin-top: 3px;">
@@ -30,15 +30,11 @@
             remote
             reserve-keyword
             :remote-method="remoteMethod"
+            :allow-create="false"
             style="width: 100%;"
             v-model="Form.sale_order_number"
           >
-            <el-option
-              v-for="item in orderNumList"
-              :label="item.sale_order_number"
-              :value="item.sale_order_number"
-              :key="item.sale_order_number"
-            />
+            <el-option v-for="item in orderNumList" :label="item" :value="item" :key="item" />
           </el-select>
         </el-form-item>
         <!-- 原因 -->
@@ -175,6 +171,7 @@ export default defineComponent({
           .then(res => {
             let { status, custom_data } = res as IRequest
             if (status === 200) {
+              console.log(custom_data)
               state.orderNumList = custom_data.data || []
             }
           })

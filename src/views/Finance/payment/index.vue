@@ -71,7 +71,7 @@
             <el-input
               style="margin-right:10px;margin-bottom:5px"
               type="text"
-              placeholder="付款单号、付款人、创建人、备注"
+              :placeholder="$t('common.serarchRemark2')"
               v-model="pagination.search_value"
               @input="input"
               @change="onSearch"
@@ -160,7 +160,7 @@
 
     <!-- 导出-->
     <Export v-model="showExport" @reset="reset" :commonLists="commonLists"></Export>
-    <el-dialog title="列配置" v-model="showSortableCustom" :width="540">
+    <el-dialog :title="$t('common.columnConfiguration')" v-model="showSortableCustom" :width="540">
       <Custom @cancelConfig="cancelConfig" v-bind="customArgs"></Custom>
     </el-dialog>
   </div>

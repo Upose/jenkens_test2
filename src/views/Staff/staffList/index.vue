@@ -72,7 +72,7 @@
       <Details :singleSelection="singleSelection" v-bind="customArgs"></Details>
     </el-drawer>
     <!-- 自定义字段组件 -->
-    <el-dialog title="列配置" v-model="drawer.showSortableCustom" :width="540">
+    <el-dialog :title="$t('common.columnConfiguration')" v-model="drawer.showSortableCustom" :width="540">
       <Custom @cancelConfig="cancelConfig" v-bind="customArgs"></Custom>
     </el-dialog>
   </div>

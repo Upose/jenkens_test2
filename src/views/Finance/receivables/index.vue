@@ -77,7 +77,7 @@
               <el-input
                 style="margin-right:10px;margin-bottom:5px"
                 type="text"
-                placeholder="收款单号、收款人、创建人、备注"
+                :placeholder="$t('common.serarchRemark')"
                 v-model="pagination.search_value"
                 @input="input"
                 @change="onSearch"
@@ -167,7 +167,7 @@
 
     <!-- 导出-->
     <Export v-model="showExport" @reset="reset" :commonLists="commonLists"></Export>
-    <el-dialog title="列配置" v-model="showSortableCustom" :width="540">
+    <el-dialog :title="$t('common.columnConfiguration')" v-model="showSortableCustom" :width="540">
       <Custom @cancelConfig="cancelConfig" v-bind="customArgs"></Custom>
     </el-dialog>
   </div>
@@ -226,21 +226,21 @@ export default defineComponent({
         supplierList: [],
         supplierList2: [],
         currencyUnitList: [],
-        currencyUnitList2: [{ id: 'all', name: '全部' }],
+        currencyUnitList2: [{ id: 'all', name: t('common.all') }],
         accountList: [],
         statusTypeList: [
-          { id: 'all', name: '全部' },
-          { id: 1, name: '未过账' },
-          { id: 2, name: '已过账' },
-          { id: 3, name: '已红冲' }
+          { id: 'all', name: t('common.all') },
+          { id: 1, name: t('common.notPosted') },
+          { id: 2, name: t('common.posted') },
+          { id: 3, name: t('common.reversed') }
         ],
         stockTypeList: [
           { id: 0, name: t('common.stockType_order') },
           { id: 1, name: t('common.stockType_official') }
         ],
         orderByList: [
-          { id: 0, name: '升序' },
-          { id: 1, name: '降序' }
+          { id: 0, name: t('common.ascend') },
+          { id: 1, name: t('common.descend') }
         ],
         customerList: [],
         customerList2: [],

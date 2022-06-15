@@ -1,10 +1,9 @@
 <template>
   <div class="content">
-    <el-alert title="已显示区和未显示区均可拖动，也可互相拖动" type="info" :closable="false">
-    </el-alert>
+    <el-alert :title="$t(`common.${item.isDrowg}`)" type="info" :closable="false"> </el-alert>
     <div class="title">
-      <div>已显示{{ tableData1.length }}项</div>
-      <div>未显示{{ tableData2.length }}项</div>
+      <div>{{ $t(`common.${item.isShow}`) }}{{ tableData1.length }}</div>
+      <div>{{ $t(`common.${item.notShow}`) }}{{ tableData2.length }}</div>
     </div>
     <div class="outer_cont">
       <!-- 左边需要显示的字段 -->

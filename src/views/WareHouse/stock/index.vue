@@ -222,7 +222,7 @@
     ></LotDetails>
 
     <!-- 自定义字段组件 -->
-    <el-dialog title="列配置" v-model="showSortableCustom" :width="540">
+    <el-dialog :title="$t('common.columnConfiguration')" v-model="showSortableCustom" :width="540">
       <Custom @cancelConfig="cancelConfig" v-bind="customArgs"></Custom>
     </el-dialog>
   </div>

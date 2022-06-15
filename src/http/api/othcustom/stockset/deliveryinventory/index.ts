@@ -3,8 +3,8 @@
  * @version:
  * @Author: XJ
  * @Date: 2021-06-18 16:50:23
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-05 15:38:55
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-15 17:00:50
  */
 import request from '@/http/axios/request'
 import { IParams } from '@/@types/httpInterface'
@@ -19,6 +19,9 @@ export const deliveryinventoryApi = {
   get_view: (params: IParams) => request.post(`/V1/InventoryDelivery/view`, params),
   // 出库信息库存管理操作记录接口：V1/InventoryDelivery/log_list
   get_log_list: (params: IParams) => request.post(`/V1/InventoryDelivery/log_list`, params),
+  // 出库信息退货记录
+  get_return_list: (params: IParams) =>
+    request.post(`/V1/InventoryDelivery/delivery_return_list`, params),
   // 出库信息添加卖出搜索接口：V1/InventoryDelivery/add_delivery_search
   get_search: (params: IParams) =>
     request.post(`/V1/InventoryDelivery/add_delivery_search`, params),

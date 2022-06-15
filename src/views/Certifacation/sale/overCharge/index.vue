@@ -1,8 +1,8 @@
 <!--
  * @Description: 多收
  * @Author: HYH
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-26 11:04:39
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-06-15 19:04:36
 -->
 <template>
   <el-card style="width: 600px;height: 100%;margin-top: 3px;">
@@ -28,17 +28,13 @@
           <el-select
             filterable
             remote
+            :allow-create="false"
             reserve-keyword
             :remote-method="remoteMethod"
             style="width: 100%;"
             v-model="Form.sale_order_number"
           >
-            <el-option
-              v-for="item in orderNumList"
-              :label="item.sale_order_number"
-              :value="item.sale_order_number"
-              :key="item.sale_order_number"
-            />
+            <el-option v-for="item in orderNumList" :label="item" :value="item" :key="item" />
           </el-select>
         </el-form-item>
         <!-- 原因 -->
@@ -173,7 +169,7 @@ export default defineComponent({
           .then(res => {
             let { status, custom_data } = res as IRequest
             if (status === 200) {
-              state.orderNumList = custom_data.data || []
+              state.orderNumList = custom_data?.data || []
             }
           })
           .catch(err => err)
@@ -190,7 +186,6 @@ export default defineComponent({
               state.getFlowApprovalInfo.tid = custom_data.data.tid
               state.getFlowApprovalInfo.uid = custom_data.data.uid
               state.getFlowApprovalInfo.up_uid = custom_data.data.up_uid
-              request.getOrderNumList()
             }
           })
           .catch(err => err)

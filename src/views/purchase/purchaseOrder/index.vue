@@ -270,7 +270,7 @@
     <Export :commonLists="commonLists" v-model="showExport" @reset="reset"></Export>
 
     <!-- 自定义字段组件 -->
-    <el-dialog title="列配置" v-model="showSortableCustom" :width="540">
+    <el-dialog :title="$t('common.columnConfiguration')" v-model="showSortableCustom" :width="540">
       <Custom @cancelConfig="cancelConfig" v-bind="customArgs"></Custom>
     </el-dialog>
   </div>
@@ -970,7 +970,8 @@ export default defineComponent({
         if (!state.commonLists.supplierList.length) requests.getSupplierList()
         if (!state.commonLists.productGradeList.length) requests.getStockTypeList()
         await nextTick()
-        const id = selection.singleSelection?.id
+        const id = state.tableCheck.id
+        console.log(selection)
         const appendchildref = appendChildRef
         appendchildref.value.getAppendSearch(id)
       },
@@ -1034,6 +1035,7 @@ export default defineComponent({
         state.showBotContent = true
         if (row.id === state.tableCheck.id) return
         state.tableCheck = row
+        console.log(state.tableCheck)
         if (state.botTableActiveName === 'detail') {
           requests.getPurchaseDetails()
         } else {
