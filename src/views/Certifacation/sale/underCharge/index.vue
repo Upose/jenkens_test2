@@ -90,6 +90,9 @@ export default defineComponent({
     const methods = {
       /**流程审批 */
       submit() {
+        if (!Form.sale_order_number) {
+          ElMessage.warning()
+        }
         const userInfo = JSON.parse(localStorage.getItem('userInfo') as string)
         const data = dataStructure(
           {},
@@ -101,7 +104,6 @@ export default defineComponent({
           }
         )
         const form = formRef
-        console.log(data)
 
         form.value.validate((valid: boolean) => {
           if (valid) {

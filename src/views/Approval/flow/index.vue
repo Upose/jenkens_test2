@@ -2,7 +2,7 @@
  * @Description: 流程
  * @Author: HYH
  * @LastEditors: TJ
- * @LastEditTime: 2022-06-15 16:01:35
+ * @LastEditTime: 2022-06-16 14:08:44
 -->
 <template>
   <el-card style="height: 100%;margin-top: 3px;">
@@ -22,7 +22,8 @@
           </div>
         </el-scrollbar>
       </el-tab-pane>
-      <el-tab-pane :label="$t('common.aprovalProcess')" name="started_flow">
+      <!-- 发起的流程 -->
+      <el-tab-pane :label="$t('common.initiatedProcess')" name="started_flow">
         <el-form inline>
           <!-- 流程类型 -->
           <el-form-item>

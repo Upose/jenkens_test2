@@ -1,9 +1,9 @@
 <template>
   <div class="content">
-    <el-alert :title="$t(`common.${item.isDrowg}`)" type="info" :closable="false"> </el-alert>
+    <el-alert :title="$t(`common.isDrowg`)" type="info" :closable="false"> </el-alert>
     <div class="title">
-      <div>{{ $t(`common.${item.isShow}`) }}{{ tableData1.length }}</div>
-      <div>{{ $t(`common.${item.notShow}`) }}{{ tableData2.length }}</div>
+      <div>{{ $t(`common.isShow`) }}{{ tableData1.length }}</div>
+      <div>{{ $t(`common.notShow`) }}{{ tableData2.length }}</div>
     </div>
     <div class="outer_cont">
       <!-- 左边需要显示的字段 -->
