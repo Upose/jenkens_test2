@@ -3,8 +3,8 @@
  * @version:
  * @Author: TJ
  * @Date: 2021-03-29 16:36:39
- * @LastEditors: HYH
- * @LastEditTime: 2022-05-25 09:35:31
+ * @LastEditors: TJ
+ * @LastEditTime: 2022-12-07 13:16:49
  */
 import * as codes from '@/constant/code'
 import { MutationConstants, GetterConstants } from '@/store/modules/users/constants'
@@ -33,7 +33,7 @@ const CancelToken = axios.CancelToken //axios.CancelToken用来取消请求
 const instance = axios.create({
   // baseURL: 'http://192.168.10.225:8082',
   baseURL: process.env.VUE_APP_QIHONG_URL,
-  timeout: 90000,
+  timeout: 300000,
   responseType: 'json'
 })
 

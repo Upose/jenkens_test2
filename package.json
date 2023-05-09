@@ -17,6 +17,7 @@
 		"compression-webpack-plugin": "^5.0.1",
 		"datejs": "^1.0.0-rc3",
 		"dayjs-plugin-utc": "^0.1.2",
+		"dlib3-tinymce": "^1.0.23",
 		"element-plus": "^1.0.2-beta.44",
 		"js-base64": "^3.6.0",
 		"js-cookie": "^2.2.1",
